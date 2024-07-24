@@ -6,11 +6,12 @@ use Darryldecode\Cart\Facades\CartFacade as Cart;
 use App\Models\Denomination;
 use Livewire\Component;
 use App\Models\Product;
+use App\Models\Sale;
 use DB;
 
 class PosController extends Component
 {
-    public $total, $itemsQuantity, $efectivo, $change;
+    public $total, $itemsQuantity, $efectivo, $change, $totalPayed;
 
     public function mount()
     {
@@ -18,19 +19,20 @@ class PosController extends Component
         $this->efectivo = 0;
         $this->change = 0;
         $this->itemsQuantity = Cart::getTotalQuantity();
+        $this->totalPayed = 0;
     }
 
     public function render()
     {
-        $this->denominations = Denomination::all();
+        // $this->denominations = Denomination::all();
         return view('livewire.pos.component',[ 
         'denominations' => Denomination::orderBy('value','desc')->get(),
-        'cart'=> Cart::getContent()->sortBy('name')
+        'cart'=> Cart::getContent()->sortBy('name'),
         ])
         ->extends('layouts.theme.app')
         ->section('content');
     }
-
+        
     public function ACash($value)
     {
         $this->efectivo += ($value == 0 ?  $this->total : $value);
@@ -201,6 +203,8 @@ class PosController extends Component
         }
 
         DB::beginTransaction();
+
+        // dd($this);ç
 
         try {
             $sale = Sale::create([

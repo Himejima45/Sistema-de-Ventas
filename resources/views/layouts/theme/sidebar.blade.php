@@ -36,7 +36,7 @@
                     </div>
                 </a>
             </li>
-ñ
+
             <li class=" ">
                 <a href="{{ url('clients') }}" class="menu-toggle" data-active="false">
                     <div class="base-menu">

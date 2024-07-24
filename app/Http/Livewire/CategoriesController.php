@@ -60,7 +60,7 @@ class CategoriesController extends Component
     {
 
         $rules = [
-            'name' => 'required|unique:categories|min:3'
+            'name' => 'required|unique:categories|min:2'
         ];
         $messages = [
             'name.required' => 'El Nombre de la categoria es requerido',

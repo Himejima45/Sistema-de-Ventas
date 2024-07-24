@@ -3,6 +3,7 @@
         <div class="col-sm-12 col-md-8">
             <!-- DETALLES -->
             <livewire:search-controller>
+
                 
             @include('livewire.pos.partials.detail')
         </div>

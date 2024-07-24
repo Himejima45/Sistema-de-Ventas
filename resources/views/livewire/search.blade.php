@@ -9,6 +9,17 @@
             <input id="code"type="text" wire:keydown.enter.prevent="$emit('scan-code', $('#code').val())" class="form-control search-form-control  ml-lg-auto" placeholder="Codigo producto...">
         </div>
     </div>
+    <div class="col-lg-4 col-md-4 col-sm-12">
+        <select name="client" id="client" class="form-control" wire.change='selectClient(this.val)'>
+            <option value="" disabled selected>Seleccionar</option>
+
+            @foreach ($clients as $client)
+                <option value="{{ $client->id }}">
+                {{ $client->document }} {{ $client->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
 </div>
 
 

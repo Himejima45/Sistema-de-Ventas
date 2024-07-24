@@ -44,13 +44,13 @@
                                 </td>
                                 <td class="text-center">
 
-                                    <button onclick="Confirm('{{$item->price}}', 'removeItem', 'CONFIRMAR ELIMINAR EL PRODUCTO?')" class="btn btn-dark mbmobile">
+                                    <button onclick="Confirm('{{$item->price}}', 'removeItem', 'CONFIRMAR ELIMINAR EL PRODUCTO?')" class="btn btn-danger mbmobile">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
-                                    <button wire:click.prevent="decreaseQty({{$item->id}})" class="btn btn-dark mbmobile">
+                                    <button wire:click.prevent="decreaseQty({{$item->id}})" class="btn btn-light mbmobile">
                                         <i class="fas fa-minus"></i>
                                     </button>
-                                    <button wire:click.prevent="increaseQty({{$item->id}})" class="btn btn-dark mbmobile">
+                                    <button wire:click.prevent="increaseQty({{$item->id}})" class="btn btn-success mbmobile">
                                         <i class="fas fa-plus"></i>
                                     </button>
                                 </td>

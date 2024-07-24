@@ -81,11 +81,6 @@
 
    function Confirm(id)
     {
-        if(products > 0)
-        {
-            swal('NO SE PUEDE ELIMINAR LA CATEGORIA PORQUE TIENES PRODUCTOS RELACIONADOS')
-            return;
-        }
         swal({
                 title: 'CONFIRMAR',
                 text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
