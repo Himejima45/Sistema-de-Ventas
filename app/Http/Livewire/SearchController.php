@@ -20,6 +20,11 @@ class SearchController extends Component
 
     public function selectClient($id) {
         $this->client = Client::find($id);
+<<<<<<< HEAD
+=======
+
+        dd($client);
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
     }
 
     public function render()

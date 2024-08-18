@@ -33,7 +33,11 @@ class CategoriesController extends Component
 
     public function render()
     {
+<<<<<<< HEAD
         if(strlen($this->search) > 0)
+=======
+        if(strlen($this->search) > 0 )
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
          $data = Category::where('name', 'like', '%' . $this->search . '%')->paginate($this->pagination);
         else
          $data = Category::orderBy('id','desc')->paginate($this->pagination);

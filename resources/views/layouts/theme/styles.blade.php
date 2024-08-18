@@ -7,7 +7,11 @@
 
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 <link href="{{ asset('plugins/apex/apexcharts.css') }}" rel="stylesheet" type="text/css">
+<<<<<<< HEAD
 <link href="{{ asset('plugins/sweetalerts/sweetalert.css') }}" rel="stylesheet" type="text/css">
+=======
+<link href="{{ asset('plugins/sweetalerts/sweetalert.css') }}">
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
 <link href="{{ asset('assets/css/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
 <link href="{{ asset('assets/css/dashboard/dash_2.css') }}" rel="stylesheet" type="text/css" class="dashboard-sales" />
 <link href="{{ asset('assets/css/apps/notes.css') }}" rel="stylesheet" type="text/css">
@@ -62,6 +66,9 @@
 }
 </style>
 
+<<<<<<< HEAD
 <link href="{{ asset('plugins/flatpickr/flatpickr.material.blue.css') }}" rel="stylesheet" type="text/css">
 
+=======
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
 @livewireStyles

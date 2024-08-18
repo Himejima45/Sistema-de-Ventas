@@ -39,6 +39,9 @@
     }
 </script>
 
+<<<<<<< HEAD
 <script src="{{ asset('plugins/flatpickr/flatpickr.js') }}"></script>
 
+=======
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
 @livewireScripts

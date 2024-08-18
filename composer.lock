@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "8d511bea55d58748f2d820e251cef843",
+=======
+    "content-hash": "cd25925d05c3d628775f8e2daf948997",
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -63,6 +67,7 @@
             "time": "2023-11-14T13:51:46+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "barryvdh/laravel-dompdf",
             "version": "v2.2.0",
             "source": {
@@ -140,6 +145,8 @@
             "time": "2024-04-25T13:16:04+00:00"
         },
         {
+=======
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
             "name": "brick/math",
             "version": "0.9.3",
             "source": {
@@ -574,6 +581,7 @@
             "time": "2022-02-28T11:07:21+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "dompdf/dompdf",
             "version": "v2.0.8",
             "source": {
@@ -636,6 +644,8 @@
             "time": "2024-04-29T13:06:17+00:00"
         },
         {
+=======
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
             "name": "dragonmantank/cron-expression",
             "version": "v3.3.3",
             "source": {
@@ -2061,6 +2071,7 @@
             "time": "2023-08-11T04:02:34+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "maatwebsite/excel",
             "version": "v1.1.5",
             "source": {
@@ -2187,6 +2198,8 @@
             "time": "2024-03-31T07:05:07+00:00"
         },
         {
+=======
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
             "name": "monolog/monolog",
             "version": "2.9.3",
             "source": {
@@ -2667,6 +2680,7 @@
             "time": "2022-01-27T09:35:39+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "phenx/php-font-lib",
             "version": "0.5.6",
             "source": {
@@ -2824,6 +2838,8 @@
             "time": "2018-11-22T23:07:24+00:00"
         },
         {
+=======
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
             "name": "phpoption/phpoption",
             "version": "1.9.2",
             "source": {
@@ -3617,6 +3633,7 @@
             "time": "2021-09-25T23:10:38+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "sabberworm/php-css-parser",
             "version": "v8.6.0",
             "source": {
@@ -3764,6 +3781,8 @@
             "time": "2023-10-25T05:12:01+00:00"
         },
         {
+=======
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
             "name": "swiftmailer/swiftmailer",
             "version": "v6.3.0",
             "source": {

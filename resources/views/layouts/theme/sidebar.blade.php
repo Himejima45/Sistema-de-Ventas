@@ -49,7 +49,11 @@
             </li>
 
             <li class="">
+<<<<<<< HEAD
                 <a href="{{ url('roles')}}" class="menu-toggle" data-active="false">
+=======
+                <a href="" class="menu-toggle" data-active="false">
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
                     <div class="base-menu">
                         <div class="base-icons">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-key"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>
@@ -60,7 +64,11 @@
             </li>
 
             <li class="">
+<<<<<<< HEAD
                 <a href="{{ url('permisos')}}" class="menu-toggle" data-active="false">
+=======
+                <a href="" class="menu-toggle" data-active="false">
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
                     <div class="base-menu">
                         <div class="base-icons">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-square"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2H11"></path></svg>
@@ -71,7 +79,11 @@
             </li>
 
             <li class="active">
+<<<<<<< HEAD
                 <a href="{{ url('asignar')}}" class="menu-toggle" data-active="false">
+=======
+                <a href="" class="menu-toggle" data-active="false">
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
                     <div class="base-menu">
                         <div class="base-icons">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
@@ -81,7 +93,11 @@
                 </a>
             </li>
             <li class="active">
+<<<<<<< HEAD
                 <a href="{{ url('user')}}" class="menu-toggle" data-active="false">
+=======
+                <a href="" class="menu-toggle" data-active="false">
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
                     <div class="base-menu">
                         <div class="base-icons">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>                       
@@ -102,7 +118,11 @@
             </li>
 
             <li class="active">
+<<<<<<< HEAD
                 <a href="{{url('cashout')}}" class="menu-toggle" data-active="false">
+=======
+                <a href="" class="menu-toggle" data-active="false">
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
                     <div class="base-menu">
                         <div class="base-icons">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
@@ -112,7 +132,11 @@
                 </a>
             </li>
             <li class="active">
+<<<<<<< HEAD
                 <a href="{{url('reports')}}" class="menu-toggle" data-active="false">
+=======
+                <a href="" class="menu-toggle" data-active="false">
+>>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
                     <div class="base-menu">
                         <div class="base-icons"> 
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-pie-chart"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
