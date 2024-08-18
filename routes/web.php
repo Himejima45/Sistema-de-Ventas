@@ -1,25 +1,19 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-<<<<<<< HEAD
 use App\Http\Livewire\AsignarController;
 use App\Http\Livewire\CashoutController;
-=======
->>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
 use App\Http\Livewire\CategoriesController;
 use App\Http\Livewire\ProductsController;
 use App\Http\Livewire\CoinsController;
 use App\Http\Livewire\PosController;
 use App\Http\Livewire\ClientsController;
-<<<<<<< HEAD
 use App\Http\Livewire\RolesController;
 use App\Http\Livewire\PermisosController;
 use App\Http\Livewire\UsersController;
 use App\Http\Livewire\ReportsController;
 
 
-=======
->>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
 
 /*
 |--------------------------------------------------------------------------
@@ -41,21 +35,14 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-<<<<<<< HEAD
 Route::get('asignar', AsignarController::class);
-=======
->>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
 Route::get('categories', CategoriesController::class);
 Route::get('products', ProductsController::class);
 Route::get('coins', CoinsController::class);
 Route::get('pos', PosController::class);
-<<<<<<< HEAD
 Route::get('clients', ClientsController::class);
 Route::get('roles', RolesController::class);
 Route::get('permisos', PermisosController::class);
 Route::get('user', UsersController::class);
 Route::get('cashout', CashoutController::class);
 Route::get('reports', ReportsController::class);
-=======
-Route::get('clients', ClientsController::class);
->>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
