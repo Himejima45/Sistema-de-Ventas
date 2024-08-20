@@ -6,6 +6,7 @@
     <li>cp .env.example .env</li>
     <li>php artisan key:generate</li>
     <li>php artisan migrate --seed</li>
+    <li>php artisan serve</li>
 </ul>
 
 <h2>Actualizar</h2>
