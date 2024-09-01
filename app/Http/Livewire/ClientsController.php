@@ -29,19 +29,19 @@ class ClientsController extends Component
 
     public function render()
     {
-        if(strlen($this->search) > 0 )
-         $data = Client::where('name', 'like', '%' . $this->search . '%')->paginate($this->pagination);
+        if (strlen($this->search) > 0)
+            $data = Client::where('name', 'like', '%' . $this->search . '%')->paginate($this->pagination);
         else
-         $data = Client::orderBy('id','desc')->paginate($this->pagination);
+            $data = Client::orderBy('id', 'desc')->paginate($this->pagination);
 
-        return view('livewire.client.clientes', ['clients'=> $data])
-        ->extends('layouts.theme.app')
-        ->section('content');
+        return view('livewire.client.clientes', ['clients' => $data])
+            ->extends('layouts.theme.app')
+            ->section('content');
     }
 
     public function Edit($id)
     {
-        $record = Client::find($id, ['id','name','last_name','document','phone','address']);
+        $record = Client::find($id, ['id', 'name', 'last_name', 'document', 'phone', 'address']);
         $this->name = $record->name;
         $this->last_name = $record->last_name;
         $this->document = $record->document;
@@ -61,7 +61,7 @@ class ClientsController extends Component
             'document' => 'required',
             'phone' => 'required',
             'address' => 'required'
-            
+
         ];
         $messages = [
             'name.required' => 'El Nombre es requerido',
@@ -75,7 +75,7 @@ class ClientsController extends Component
 
         $this->validate($rules, $messages);
 
-        $client = Client::create([
+        Client::create([
             'name' => $this->name,
             'last_name' => $this->last_name,
             'document' => $this->document,
@@ -85,11 +85,10 @@ class ClientsController extends Component
 
         $this->resetUI();
         $this->emit('client-added', 'Cliente Registrado');
-
     }
     public function Update()
     {
-        $rules =[
+        $rules = [
             'name' => "required|min:2|unique:clients,name,{$this->selected_id}",
             'last_name' => 'required',
             'document' => 'required',
@@ -97,7 +96,7 @@ class ClientsController extends Component
             'address' => 'required'
         ];
 
-        $messages =[
+        $messages = [
             'name.required' => 'Nombre es requerido',
             'name.min' => 'El nombre debe tener al menos 2 caracteres',
             'name.unique' => 'El nombre ya existe',
@@ -117,25 +116,24 @@ class ClientsController extends Component
             'phone' => $this->phone,
             'address' => $this->address
         ]);
-        
+
         $this->resetUI();
         $this->emit('client-updated', 'Cliente Actualizada');
-
     }
 
     public function resetUI()
     {
 
-        $this->name ='';
-        $this->last_name ='';
-        $this->document ='';
-        $this->phone ='';
-        $this->address='';
-        $this->search ='';
-        $this->selected_id =0;
+        $this->name = '';
+        $this->last_name = '';
+        $this->document = '';
+        $this->phone = '';
+        $this->address = '';
+        $this->search = '';
+        $this->selected_id = 0;
     }
 
-    protected $listeners = [ 'Destroy' ];
+    protected $listeners = ['Destroy'];
 
     public function Destroy(Client $client)
     {
@@ -143,7 +141,5 @@ class ClientsController extends Component
 
         $this->resetUI();
         $this->emit('client-deleted', 'Cliente Eliminado');
-
     }
-
 }

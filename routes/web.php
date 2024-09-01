@@ -12,8 +12,7 @@ use App\Http\Livewire\RolesController;
 use App\Http\Livewire\PermisosController;
 use App\Http\Livewire\UsersController;
 use App\Http\Livewire\ReportsController;
-
-
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +27,6 @@ use App\Http\Livewire\ReportsController;
 
 Route::get('/', function () {
     return redirect('/home');
-    return view('welcome');
 });
 
 Auth::routes();

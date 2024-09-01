@@ -6,18 +6,10 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-<<<<<<< HEAD
-use Spatie\Permission\Traits\HasRoles;
-=======
->>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
-<<<<<<< HEAD
-    use HasRoles;
-=======
->>>>>>> 297e68f7f57f7ca13172559bba6a59959bfb7596
 
     /**
      * The attributes that are mass assignable.
@@ -25,7 +17,13 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','profile','phone','status','image',
+        'name',
+        'email',
+        'password',
+        'profile',
+        'phone',
+        'status',
+        'image',
     ];
 
     /**
@@ -34,7 +32,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**

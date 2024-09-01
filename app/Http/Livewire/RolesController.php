@@ -16,7 +16,7 @@ class RolesController extends Component
 
     public $roleName, $search, $selected_id, $pageTitle, $componentName;
     private $pagination = 5;
-    
+
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -29,17 +29,17 @@ class RolesController extends Component
     }
     public function render()
     {
-        if(strlen($this->search) > 0)
-           $roles = Role::where('name', 'like', '%' . $this->search . '%')->paginate($this->pagination);
+        if (strlen($this->search) > 0)
+            $roles = Role::where('name', 'like', '%' . $this->search . '%')->paginate($this->pagination);
         else
-           $roles = Role::orderBy('name','asc')->paginate($this->pagination);
+            $roles = Role::orderBy('name', 'asc')->paginate($this->pagination);
 
 
-        return view('livewire.roles.component',[
+        return view('livewire.roles.component', [
             'roles' => $roles
         ])
-        ->extends('layouts.theme.app')
-        ->section('content');
+            ->extends('layouts.theme.app')
+            ->section('content');
     }
 
     public function CreateRole()
@@ -56,12 +56,11 @@ class RolesController extends Component
         $this->validate($rules, $messages);
 
         Role::create([
-        'name' => $this->roleName
+            'name' => $this->roleName
         ]);
 
         $this->resetUI();
         $this->emit('role-added', 'Se registro el role con exito');
-
     }
 
     public function Edit(Role $role)
@@ -70,7 +69,7 @@ class RolesController extends Component
         $this->selected_id = $role->id;
         $this->roleName = $role->name;
 
-        $this->emit('show-modal', 'Show modal');
+        $this->emit('show.modal', 'Show modal');
     }
 
     public function UpdateRole()
@@ -90,17 +89,16 @@ class RolesController extends Component
         $role->name = $this->roleName;
         $role->save();
 
-        $this->resetUI(); 
+        $this->resetUI();
         $this->emit('role-updated', 'Se actualizó el rol con exito');
     }
 
-    protected $listeners = ['Destroy'];
+    protected $listeners = ['Destroy', 'Edit'];
 
     public function Destroy($id)
-    { 
+    {
         $permissionsCount = Role::find($id)->permissions->count();
-        if($permissionsCount > 0)
-        {
+        if ($permissionsCount > 0) {
             $this->emit('role-error', 'No se puede eliminar el rol porque tiene permisos asociados');
             return;
         }
@@ -110,30 +108,27 @@ class RolesController extends Component
         $this->emit('role-deleted', 'Se elimino con exito');
     }
 
-    
+
     public function resetUI()
     {
- 
-        $this->roleName ='';
-        $this->search ='';
+
+        $this->roleName = '';
+        $this->search = '';
         $this->selected_id = 0;
         $this->resetValidation();
-        
     }
 
 
-   /* public function AsignarRoles($rolesList)
-    {
-        if($this->userSelected > 0)
-        {
-            $user = User::find($this->userSelected);
-            if($user) {
-                $user->syncRoles($rolesList);
-                $this->emit('msg-ok', 'Roles asignados correctamente');
-                $this->resetUI();
-            }
-        }
-    } */
-
+    // /* public function AsignarRoles($rolesList)
+    // {
+    //     if($this->userSelected > 0)
+    //     {
+    //         $user = User::find($this->userSelected);
+    //         if($user) {
+    //             $user->syncRoles($rolesList);
+    //             $this->emit('msg-ok', 'Roles asignados correctamente');
+    //             $this->resetUI();
+    //         }
+    //     }
+    // } */
 }
-

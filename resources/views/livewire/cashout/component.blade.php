@@ -3,7 +3,7 @@
         <div class="widget widget-chart-one">
             <div class="widget-heading">
                 <h4 class="card-title text-center"><b>
-                    Corte de Caja</b></h4>
+                        Corte de Caja</b></h4>
             </div>
 
             <div class="widget-content">
@@ -12,13 +12,13 @@
                         <div class="form-group">
                             <label>Usuario</label>
                             <select wire:model="userid" class="form-control">
-                                <option value="0" disabled >Elegir</option>
+                                <option value="0" disabled>Elegir</option>
                                 @foreach ($users as $u)
-                                    <option value="{{$u->id}}">{{$u->name}}</option>
+                                    <option value="{{ $u->id }}">{{ $u->name }}</option>
                                 @endforeach
                             </select>
-                            @error('userid') <span class="text-danger">{{$message}}</span>
-                                
+                            @error('userid')
+                                <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -27,8 +27,8 @@
                         <div class="form-group">
                             <label>Fecha Inicial</label>
                             <input type="date" wire:model.lazy="fromDate" class="form-control flatpickr">
-                            @error('fromDate') <span class="text-danger">{{$message}}</span>
-                                 
+                            @error('fromDate')
+                                <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -37,18 +37,20 @@
                         <div class="form-group">
                             <label>Fecha Final</label>
                             <input type="date" wire:model.lazy="toDate" class="form-control flatpickr">
-                            @error('toDate') <span class="text-danger">{{$message}}</span>
-                                 
+                            @error('toDate')
+                                <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-3 aling-self-center d-flex justify-content-around">
-                        @if ($userid > 0 && $fromDate !=null && $toDate !=null)    
-                        <button wire:click.prevent="Consultar" type="button" class="btn btn-light">Consultar</button>
+                        @if ($userid > 0 && $fromDate != null && $toDate != null)
+                            <button wire:click.prevent="Consultar" type="button"
+                                class="btn btn-light">Consultar</button>
                         @endif
 
-                        @if ($total > 0)    
-                        <button wire:click.prevent="Print()" type="button" class="btn btn-secondary">Imprimir</button>
+                        @if ($total > 0)
+                            <button wire:click.prevent="Print()" type="button"
+                                class="btn btn-secondary">Imprimir</button>
                         @endif
                     </div>
 
@@ -57,8 +59,8 @@
             <div class="row mt-5">
                 <div class="col-sm-12 col-md-4 mbmobile">
                     <div class="connect-sorting bg-dark">
-                        <h5 class="text-white">Ventas Totales: {{number_format($total,2)}}</h5>
-                        <h5 class="text-white">Articulos: {{$items}}</h5>
+                        <h5 class="text-white">Ventas Totales: {{ number_format($total, 2) }}</h5>
+                        <h5 class="text-white">Articulos: {{ $items }}</h5>
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-8">
@@ -73,18 +75,31 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if ($total <=0)
-                                <tr><td colspan="5"><h6 class="text-center">No hay ventas en la fecha</h6></td></tr>
+                                @if ($total <= 0)
+                                    <tr>
+                                        <td colspan="5">
+                                            <h6 class="text-center">No hay ventas en la fecha</h6>
+                                        </td>
+                                    </tr>
                                 @endif
 
-                                @foreach($sales as $row)
+                                @foreach ($sales as $row)
                                     <tr>
-                                        <td class="text-center"><h6>{{$row->id}}</h6></td>
-                                        <td class="text-center"><h6>{{number_format($row->total,2)}}</h6></td>
-                                        <td class="text-center"><h6>{{$row->items}}</h6></td>
-                                        <td class="text-center"><h6>{{$row->created_at}}</h6></td>
                                         <td class="text-center">
-                                            <button wire:click.prevent="viewDetails({{$row}})" class="btn btn-dark btn-sm">
+                                            <h6>{{ $row->id }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6>{{ number_format($row->total, 2) }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6>{{ $row->items }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6>{{ $row->created_at }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <button wire:click.prevent="viewDetails({{ $row }})"
+                                                class="btn btn-dark btn-sm">
                                                 <i class="fas fa-list"></i>
                                             </button>
                                         </td>
@@ -102,54 +117,54 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function(){
-        flatpickr(document.getElementByClassName('flatpickr'),{
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr(document.getElementByClassName('flatpickr'), {
             enableTime: false,
             dateFormat: 'Y-m-d',
             locale: {
                 firstDayofWeek: 1,
                 weekdays: {
-                shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                longhand: [
-                "Domingo",
-                "Lunes",
-                "Martes",
-                "Miércoles",
-                "Jueves",
-                "Viernes",
-                "Sábado",
-                ],
-              },
-              months: {
-                shorthand: [
-                "Ene",
-                "Feb",
-                "Mar",
-                "Abr",
-                "May",
-                "Jun",
-                "Jul",
-                "Ago",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dic",
-                ],
-                longhand: [
-                "Enero",
-                "Febrero",
-                "Marzo",
-                "Abril",
-                "Mayo",
-                "Junio",
-                "Julio",
-                "Agosto",
-                "Septiembre",
-                "Octubre",
-                "Noviembre",
-                "Diciembre",
-                ],
-            },
+                    shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+                    longhand: [
+                        "Domingo",
+                        "Lunes",
+                        "Martes",
+                        "Miércoles",
+                        "Jueves",
+                        "Viernes",
+                        "Sábado",
+                    ],
+                },
+                months: {
+                    shorthand: [
+                        "Ene",
+                        "Feb",
+                        "Mar",
+                        "Abr",
+                        "May",
+                        "Jun",
+                        "Jul",
+                        "Ago",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dic",
+                    ],
+                    longhand: [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre",
+                    ],
+                },
 
             }
         })

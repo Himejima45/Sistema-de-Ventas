@@ -10,13 +10,13 @@ use App\Models\User;
 use DB;
 
 class PermisosController extends Component
-{ 
-    
+{
+
     use WithPagination;
 
     public $permissionName, $search, $selected_id, $pageTitle, $componentName;
     private $pagination = 10;
-    
+
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -29,17 +29,17 @@ class PermisosController extends Component
     }
     public function render()
     {
-        if(strlen($this->search) > 0)
-           $permisos = Permission::where('name', 'like', '%' . $this->search . '%')->paginate($this->pagination);
+        if (strlen($this->search) > 0)
+            $permisos = Permission::where('name', 'like', '%' . $this->search . '%')->paginate($this->pagination);
         else
-           $permisos = Permission::orderBy('name','desc')->paginate($this->pagination);
+            $permisos = Permission::orderBy('name', 'desc')->paginate($this->pagination);
 
 
-        return view('livewire.permisos.component',[
+        return view('livewire.permisos.component', [
             'permisos' => $permisos
         ])
-        ->extends('layouts.theme.app')
-        ->section('content');
+            ->extends('layouts.theme.app')
+            ->section('content');
     }
 
     public function CreatePermission()
@@ -56,21 +56,20 @@ class PermisosController extends Component
         $this->validate($rules, $messages);
 
         Permission::create([
-        'name' => $this->permissionName
+            'name' => $this->permissionName
         ]);
 
         $this->resetUI();
         $this->emit('permiso-added', 'Se registro el permiso con exito');
-
     }
 
     public function Edit(Permission $permiso)
     {
-        
+
         $this->selected_id = $permiso->id;
         $this->permissionName = $permiso->name;
 
-        $this->emit('show-modal', 'Show modal');
+        $this->emit('show.modal', 'Show modal');
     }
 
     public function UpdatePermission()
@@ -90,17 +89,16 @@ class PermisosController extends Component
         $permiso->name = $this->permissionName;
         $permiso->save();
 
-        $this->resetUI(); 
+        $this->resetUI();
         $this->emit('permiso-updated', 'Se actualizó el permiso con exito');
     }
 
-    protected $listeners = ['Destroy'];
+    protected $listeners = ['Destroy', 'Edit'];
 
     public function Destroy($id)
-    { 
+    {
         $rolesCount = Permission::find($id)->getRoleNames()->count();
-        if($rolesCount > 0)
-        {
+        if ($rolesCount > 0) {
             $this->emit('permiso-error', 'No se puede eliminar el permiso porque tiene roles asociados');
             return;
         }
@@ -110,19 +108,18 @@ class PermisosController extends Component
         $this->emit('permiso-deleted', 'Se elimino con exito');
     }
 
-    
+
     public function resetUI()
     {
- 
-        $this->permissionName ='';
-        $this->search ='';
+
+        $this->permissionName = '';
+        $this->search = '';
         $this->selected_id = 0;
         $this->resetValidation();
-        
     }
 
 
-   /* public function AsignarRoles($rolesList)
+    /* public function AsignarRoles($rolesList)
     {
         if($this->userSelected > 0)
         {
@@ -134,5 +131,4 @@ class PermisosController extends Component
             }
         }
     } */
-
 }
