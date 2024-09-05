@@ -7,24 +7,22 @@
         cursorborderradius: 3
     })
 
-    
-    function Confirm(id, eventName, text)
-    {  
-        swal({
-                title: 'CONFIRMAR',
-                text: text,
-                type: 'warning',
-                showCancelButton: true,
-                cancelButtonText: 'Cerrar',
-                cancelButtonColor: '#fff',
-                confirmButtonColor:'#3B3F5C',
-                confirmButtonText: 'Aceptar'
-            }).then(function(result) {
-                if(result.value){
-                    window.livewire.emit('eventName', id)
-                    swal.close()
-                }
-            })
-    }
 
+    function Confirm(id, eventName, text) {
+        swal({
+            title: 'CONFIRMAR',
+            text: text,
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#fff',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit(eventName, id)
+                swal.close()
+            }
+        })
+    }
 </script>

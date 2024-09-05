@@ -20,41 +20,43 @@
                     <table class="table table-bordered table-striped mt-1">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                                <th class="table-th text-white">NOMBRE</th>
+                                <th class="table-th text-white">MONTO</th>
+                                <th class="table-th text-white">FECHA</th>
                                 <th class="table-th text-white">ACCIONES</th>
                             </tr>
 
                         </thead>
                         <tbody>
-                            @foreach ($categories as $category)
+                            @foreach ($currencies as $currency)
                                 <tr>
                                     <td>
-                                        <h6>{{ $category->name }}</h6>
+                                        <h6>{{ $currency->value }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>{{ $currency->created_at->format('Y-m-d') }}</h6>
                                     </td>
                                     <td class="text-center">
 
-                                        <button wire:click="Edit({{ $category->id }})" class="btn btn-primary mtmobile"
+                                        <button wire:click="Edit({{ $currency->id }})" class="btn btn-primary mtmobile"
                                             title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        @if ($category->products->count() < 1)
-                                            <button
-                                                onclick="Confirm({{ $category->id }}; {{ count($category->products) }})"
-                                                class="btn btn-danger mtmobile" title="Borrar">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        @endif
+                                        <button
+                                            onclick="Confirm({{ $currency->id }}, 'Eliminar', '¿Está seguro de eliminar a este cliente?')"
+                                            class="btn btn-danger mtmobile" title="Borrar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    {{ $categories->links() }}
+
                 </div>
             </div>
         </div>
     </div>
-    @include('livewire.category.form')
+    @include('livewire.currency.form')
 </div>
 
 <script>
@@ -65,26 +67,21 @@
         window.livewire.on('show-modal', msg => {
             $('#theModal').modal('show')
         });
-        window.livewire.on('category-added', msg => {
+        window.livewire.on('currency-added', msg => {
             $('#theModal').modal('hide')
-            Success('Registrado', "Se ha registrado los datos de la categoría")
-
+            Success('Registrado', "Se ha añadido una nueva tasa")
         });
-        window.livewire.on('category-updated', msg => {
-            $('#theModal').modal('hide')
-            Success('Actualizado', "Se ha actualizado los datos del cliente")
-        });
-        window.livewire.on('category-deleted', msg => {
+        window.livewire.on('currency-deleted', msg => {
             $('#theModal').modal('hide')
             Deleted()
         });
+        window.livewire.on('currency-updated', msg => {
+            $('#theModal').modal('hide')
+            Success('Actualizado', "Se ha actualizado la tasa seleccionada")
+        });
     });
 
-    function Confirm(id, products) {
-        if (products > 0) {
-            swal('NO SE PUEDE ELIMINAR LA CATEGORIA PORQUE TIENES PRODUCTOS RELACIONADOS')
-            return;
-        }
+    function Confirm(id) {
         swal({
             title: 'CONFIRMAR',
             text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
@@ -107,7 +104,7 @@
             icon: "warning",
             type: "warning",
             title: "Eliminado",
-            text: "Se ha eliminado al cliente seleccionado",
+            text: "Se ha eliminado la tasa seleccionada",
             showConfirmButton: false
         })
     }

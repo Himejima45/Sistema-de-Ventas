@@ -14,8 +14,19 @@ class CategoriesController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $name, $search, $image, $selected_id, $pageTitle, $componentName, $customFileName;
+    public $name, $search, $selected_id, $pageTitle, $componentName, $customFileName;
     private $pagination = 5;
+
+    public $rules = [
+        'name' => ['required', 'min:2', 'max:30', 'regex:/^(?=.*[a-zA-Z])(?=\S*\s?\S*$)(?!.*\s{2,}).*$/', 'unique:categories,name'],
+    ];
+
+    // ! TODO 10
+    public $messages = [
+        'name.required' => 'El Nombre es requerido',
+        'name.unique' => 'Ya existe el nombre',
+        'name.min' => 'El nombre debe tener al menos 2 caracteres',
+    ];
 
     public function mount()
     {
@@ -28,8 +39,6 @@ class CategoriesController extends Component
     {
         return 'vendor.livewire.bootstrap';
     }
-
-
 
     public function render()
     {
@@ -47,10 +56,9 @@ class CategoriesController extends Component
 
     public function Edit($id)
     {
-        $record = Category::find($id, ['id', 'name', 'image']);
+        $record = Category::find($id, ['id', 'name']);
         $this->name = $record->name;
         $this->selected_id = $record->id;
-        $this->image = null;
 
         $this->emit('show-modal', 'show modal!');
     }
@@ -58,29 +66,8 @@ class CategoriesController extends Component
 
     public function Store()
     {
-
-        $rules = [
-            'name' => 'required|unique:categories|min:2'
-        ];
-        $messages = [
-            'name.required' => 'El Nombre de la categoria es requerido',
-            'name.unique' => 'Ya existe el nombre de la categoria',
-            'name.min' => 'El nombre de la categoria debe tener al menos 3 caracteres'
-        ];
-
-        $this->validate($rules, $messages);
-
-        $category = Category::create([
-            'name' => $this->name
-        ]);
-
-
-        if ($this->image) {
-            $customFileName = uniqid() . '_.' . $this->image->extension();
-            $this->image->storeAs('public/categories', $customFileName);
-            $category->image = $customFileName;
-            $category->save();
-        }
+        $data = $this->validate();
+        Category::create($data);
 
         $this->resetUI();
         $this->emit('category-added', 'Categoria Registrada');
@@ -89,36 +76,12 @@ class CategoriesController extends Component
     public function Update()
     {
         $rules = [
-            'name' => "required|min:3|unique:categories,name,{$this->selected_id}"
+            'name' => "required|min:2|max:30|regex:/^(?=.*[a-zA-Z])(?=\S*\s?\S*$)(?!.*\s{2,}).*$/|unique:categories,name,{$this->selected_id}",
         ];
 
-        $messages = [
-            'name.required' => 'Nombre de la categoria es requerido',
-            'name.min' => 'El nombre de la categoria debe tener al menos 3 caracteres',
-            'name.unique' => 'El nombre de la categoria ya existe'
-        ];
-
-        $this->validate($rules, $messages);
-
+        $data = $this->validate($rules);
         $category = Category::find($this->selected_id);
-        $category->update([
-            'name' => $this->name
-        ]);
-
-        if ($this->image) {
-            $customFileName = uniqid() . '_.' . $this->image->extension();
-            $this->image->storeAs('public/categories', $customFileName);
-            $imageName = $category->image;
-
-            $category->image = $customFileName;
-            $category->save();
-
-            if ($imageName != null) {
-                if (file_exists('storage/categories' . $imageName)) {
-                    unlink('storage/categories' . $imageName);
-                }
-            }
-        }
+        $category->update($data);
 
         $this->resetUI();
         $this->emit('category-updated', 'Categoria Actualizada');
@@ -126,27 +89,19 @@ class CategoriesController extends Component
 
     public function resetUI()
     {
-
         $this->name = '';
-        $this->image = null;
         $this->search = '';
         $this->selected_id = 0;
+        $this->resetErrorBag();
+        $this->resetValidation();
     }
     protected $listeners = [
         'Destroy'
-        // 'deleteRow ' => 'Destroy'
     ];
 
     public function Destroy(Category $category)
     {
-        $imageName = $category->image; //imagen temporal
         $category->delete();
-
-        // if($imageName !=null) 
-        // {
-        //     unlink('storage/categories/' . $imageName);
-        // }
-
         $this->resetUI();
         $this->emit('category-deleted', 'Categoria Eliminada');
     }

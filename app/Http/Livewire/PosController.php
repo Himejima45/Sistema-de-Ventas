@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Currency;
 use App\Models\SaleDetails;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use App\Models\Denomination;
@@ -10,45 +11,56 @@ use App\Models\Product;
 use App\Models\Sale;
 use DB;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 class PosController extends Component
 {
-    public $total, $itemsQuantity, $efectivo, $change, $totalPayed, $client;
+    public $total, $type, $barcode, $currency, $itemsQuantity, $efectivo, $change, $totalPayed, $client, $cart, $bs, $user, $currency_id;
 
     public function mount()
     {
+        $this->user = Auth::user()->id;
+        $last_currency = Currency::latest('created_at')->first();
+        $this->currency_id = $last_currency->id ?? 0;
         $this->total = Cart::getTotal();
-        $this->efectivo = 0;
+        $this->efectivo = null;
+        $this->bs = null;
         $this->change = 0;
         $this->itemsQuantity = Cart::getTotalQuantity();
         $this->totalPayed = 0;
         $this->client = '';
+        $this->currency = $last_currency;
+        $this->type = 'Elegir';
+        $this->cart = Cart::getContent()->sortBy('name');
     }
 
     public function render()
     {
+        is_null($this->currency)
+            ? $this->redirect('/currencies')
+            : $this->currency = is_string($this->currency)
+            ? $this->currency
+            : $this->currency->value;
         // $this->denominations = Denomination::all();
         return view('livewire.pos.component', [
-            'denominations' => Denomination::orderBy('value', 'desc')->get(),
-            'cart' => Cart::getContent()->sortBy('name'),
+            'currency' => Currency::orderBy('value', 'desc')->first(),
+            'cart' => $this->cart,
         ])
             ->extends('layouts.theme.app')
             ->section('content');
     }
 
-    public function ACash($value)
-    {
-        $this->efectivo += ($value == 0 ?  $this->total : $value);
-        $this->change = ($this->efectivo - $this->total);
-    }
-
     protected $listeners = [
         'scan-code' => 'ScanCode',
-        'removeItem' => 'removeItem',
+        'removeItem',
         'clearCart',
         'saveSale' => 'saveSale',
-        'client-selected' => 'setClient'
+        'client-selected' => 'setClient',
+        'type-selected' => 'setType',
+        'updateQty',
+        'addPayment',
+        'clearPayment'
     ];
 
     public function setClient($client)
@@ -56,66 +68,99 @@ class PosController extends Component
         $this->client = $client;
     }
 
+    public function setType($value)
+    {
+        $this->type = $value;
+    }
+
     public function ScanCode($barcode, $cant = 1)
     {
         $product = Product::where('barcode', $barcode)->first();
 
         if (!isset($product)) {
-            $this->emit('scan-notfound', 'El producto no esta registrado');
+            $this->emit('not-found', $barcode);
         } else {
+            $cartItem = Cart::get($product->id);
 
-            if ($this->InCart($product->id)) {
-                $this->increaseQty($product->id);
-                return;
+            if (!$cartItem) {
+                Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
+            } else {
+                if ($cartItem['quantity'] <= $product->stock) {
+                    $this->increaseQty($product->id);
+                    // $this->emit('increaseQty', $product->id);
+                }
             }
 
-            if ($product->stock < 1) {
-                $this->emit('no-stock', 'Stock insuficiente :/');
-                return;
-            }
-
-            Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
             $this->total = Cart::getTotal();
-
             $this->emit('scan-ok', 'Producto agregado');
         }
     }
+    // public function ScanCode($barcode, $cant = 1)
+    // {
+    //     $product = Product::where('barcode', $barcode)->first();
+
+    //     if (!isset($product)) {
+    //         $this->emit('not-found', $barcode);
+    //     } else {
+
+    //         if ($this->InCart($product->id)) {
+    //             $this->increaseQty($product->id);
+    //             dd(Cart::getTotal());
+    //             return;
+    //         }
+
+    //         if ($product->stock < 1) {
+    //             $this->emit('increaseQty', $product->id);
+    //             // $this->emit('no-stock', 'Stock insuficiente :/');
+    //             return;
+    //         }
+
+    //         Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
+    //         $this->total = Cart::getTotal();
+
+    //         $this->emit('scan-ok', 'Producto agregado');
+    //     }
+    // }
 
     public function InCart($productId)
     {
         $exist = Cart::get($productId);
-        if ($exist)
-            return true;
-        else
-            return false;
+        return is_null($exist);
     }
 
-    public function increaseQty($productId, $cant = 1)
+    public function increaseQty($productId, $quantity = 1)
     {
         $title = '';
         $product = Product::find($productId);
-        $exist = Cart::get($productId);
-        if ($exist)
+        $cartItem = Cart::get($productId);
+
+        if ($cartItem) {
             $title = 'Cantidad Actualizada';
-        else
-            $title = 'Producto Agregado';
+            $newQuantity = $cartItem->quantity + $quantity;
 
-        if ($exist) {
-            if ($product->stock < ($cant + $exist->quantity)) {
+            if ($newQuantity > $product->stock) {
+                Cart::update($productId, ['qty' => $product->stock]);
+
                 $this->emit('no-stock', 'Stock insuficiente');
-                return;
             }
-        }
 
-        Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
+            if ($cartItem->quantity + $quantity <= $product->stock) {
+                // Cart::update($productId, ['qty' => $newQuantity]);
+                Cart::add($product->id, $product->name, $product->price, $quantity, $product->image);
+            }
+        } else {
+            Cart::add($product->id, $product->name, $product->price, $quantity, $product->image);
+
+            $title = 'Producto Agregado';
+        }
 
         $this->total = Cart::getTotal();
         $this->itemsQuantity = Cart::getTotalQuantity();
-
         $this->emit('scan-ok', $title);
+        // dd($this->cart[2]);
     }
 
-    public function updateQty($productId, $cant = 1)
+    public function updateQty($productId, $quantity)
     {
         $title = '';
         $product = Product::find($productId);
@@ -126,7 +171,7 @@ class PosController extends Component
             $title = 'Producto Agregado';
 
         if ($exist) {
-            if ($product->stock < $cant) {
+            if ($product->stock < $quantity) {
                 $this->emit('no-stock', 'Stock insuficiente :/');
                 return;
             }
@@ -134,8 +179,8 @@ class PosController extends Component
 
         // $this->removeItem($productId);
 
-        if ($cant > 0) {
-            Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
+        if ($quantity > 0) {
+            Cart::add($product->id, $product->name, $product->price, $quantity, $product->image);
 
             $this->total = Cart::getTotal();
             $this->itemsQuantity = Cart::getTotalQuantity();
@@ -152,6 +197,29 @@ class PosController extends Component
         $this->itemsQuantity = Cart::getTotalQuantity();
 
         $this->emit('scan-ok', 'Producto Eliminado');
+    }
+
+    public function addPayment($value, $type)
+    {
+        $total_dollar = floatval($this->bs / $this->currency) + $this->efectivo;
+        $type === 'dollar'
+            ? $this->efectivo = $value
+            : $this->bs = $value;
+
+        $this->change = $total_dollar > $this->total
+            ? abs($this->total - $total_dollar)
+            : $total_dollar - $this->total;
+    }
+
+    public function clearPayment($type)
+    {
+        $total_dollar = floatval($this->bs / $this->currency) + $this->efectivo;
+        $type === 'dollar'
+            ? $this->efectivo = null
+            : $this->bs = null;
+        $this->change = $total_dollar > $this->total
+            ? abs($this->total - $total_dollar)
+            : $total_dollar - $this->total;
     }
 
     public function decreaseQty($productId)
@@ -172,7 +240,8 @@ class PosController extends Component
     public function clearCart()
     {
         Cart::clear();
-        $this->efectivo = 0;
+        $this->efectivo = null;
+        $this->bs = null;
         $this->change = 0;
         $this->total = Cart::getTotal();
         $this->itemsQuantity = Cart::getTotalQuantity();
@@ -195,27 +264,72 @@ class PosController extends Component
             return;
         }
 
-        // dd('TEST', $this, Cart::getContent());
+        if ($this->type !== 'PAID' && $this->type !== 'PENDING') {
+            $this->emit('sale-error', 'Debe seleccionar el estado de la venta');
+            return;
+        }
 
         // DB::beginTransaction();
 
-        // dd($this);ç
+        $messages = [
+            'total.required' => 'El monto es requerido',
+            'total.min' => 'El monto debe ser al menos 1',
+        ];
+
+        $rules = [
+            'total' => [
+                'required',
+                'min:1',
+                'numeric',
+            ],
+            'efectivo' =>
+            $this->bs > 0 ? 'nullable' :
+                [
+                    'required',
+                    'min:1',
+                    'numeric'
+                ],
+            'bs' => $this->efectivo > 0 ? 'nullable' :
+                [
+                    'required',
+                    'min:1',
+                    'numeric'
+                ],
+            'type' => [
+                'required',
+                'not_in:Elegir',
+                'in:PAID,PENDING'
+            ],
+            'client' => [
+                'required',
+                'numeric'
+            ],
+            'currency_id' => [
+                'required',
+                'numeric'
+            ]
+        ];
+
+        $this->validate($rules, $messages);
 
         try {
             // ! TODO #4
             $sale = Sale::create([
                 'total' => $this->total,
-                'items' => $this->itemsQuantity,
-                'cash' => $this->efectivo,
+                'cash' => $this->efectivo ?? 0,
+                'bs' => $this->bs ?? 0,
                 'change' => $this->change,
-                'client_id' => $this->client
+                'status' => $this->type,
+                'client_id' => $this->client,
+                'user_id' => $this->user,
+                'currency_id' => $this->currency_id
             ]);
 
 
             if ($sale) {
                 $items = Cart::getContent();
                 foreach ($items as $item) {
-                    $details = SaleDetails::create([
+                    SaleDetails::create([
                         'price' => $item->price,
                         'quantity' => $item->quantity,
                         'product_id' => $item->id,
@@ -232,16 +346,18 @@ class PosController extends Component
             // DB::commit();
 
             Cart::clear();
-            $this->efectivo = 0;
+            $this->efectivo = null;
+            $this->bs = null;
             $this->change = 0;
             $this->total = Cart::getTotal();
             $this->itemsQuantity = Cart::getTotalQuantity();
+            $this->client = 'Elegir';
+            $this->type = 'Elegir';
             $this->emit('sale-ok', 'Venta Registrada con exito');
             $this->emit('print-ticket', $sale->id);
         } catch (Exception $e) {
             // DB::rollback();
             $this->emit('sale-error', $e->getMessage());
-            dd($e);
         }
     }
 

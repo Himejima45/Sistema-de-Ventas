@@ -16,7 +16,7 @@ class CashoutController extends Component
     {
         $this->fromDate = null;
         $this->toDate = null;
-        $this->userid = null;
+        $this->userid = 0;
         $this->total = null;
         $this->sales = [];
         $this->details = [];
@@ -41,24 +41,22 @@ class CashoutController extends Component
         // ! TODO 6
         $this->sales = Sale::whereBetween('created_at', [$fi, $ff])
             ->where('status', 'PAID')
-            ->where('client_id', $this->userid)
+            ->where('user_id', $this->userid)
             ->get();
 
         $this->total = $this->sales ? $this->sales->sum('total') : 0;
         $this->items = $this->sales ? $this->sales->sum('items') : 0;
     }
 
+    // ! TODO 11
     public function viewDetails(Sale $sale)
     {
         $fi = Carbon::parse($this->fromDate)->format('Y-m-d') . '00:00:00';
         $ff = Carbon::parse($this->toDate)->format('Y-m-d') . '23:59:59';
 
-        $this->sales = Sale::join('sale_details as d', 'd.sale_id', 'sales_id')
+        $this->sales = Sale::join('sale_details as d', 'd.sale_id', 'sales.id')
             ->join('products as p', 'p.id', 'd.product_id')
             ->select('d.sale_id', 'p.name as product', 'd.quantity', 'd.price')
-            ->whereBetween('sales.created_at', [$fi, $ff])
-            ->where('sales.status', 'Paid')
-            ->where('sales.user_id', $this->userid)
             ->where('sales.id', $sale->id)
             ->get();
 

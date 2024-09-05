@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class SearchController extends Component
 {
-    public $search, $clients, $client;
+    public $search, $clients, $type, $selected_client;
 
     protected $listeners = [
         'selectClient',
@@ -16,18 +16,27 @@ class SearchController extends Component
     public function mount()
     {
         $this->clients = Client::all('id', 'name', 'document');
-        $this->client = null;
+        $this->selected_client = null;
+        $this->type = 'Elegir';
     }
 
     protected $rules = [
-        'client' => 'required|exists:clients,id'
+        'selected_client' => 'required|exists:clients,id'
     ];
 
     public function selectClient($id)
     {
         $this->validate();
-        $this->client = Client::find($id);
-        $this->emit('client-selected', $this->client->id);
+
+        $client = Client::find($id);
+        $this->selected_client = $client;
+        $this->emit('client-selected', $this->selected_client->id);
+        $this->selected_client = $client->id;
+    }
+
+    public function setType($value)
+    {
+        $this->emit('type-selected', $value);
     }
 
     public function render()

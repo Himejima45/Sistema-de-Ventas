@@ -21,40 +21,50 @@
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
                                 <th class="table-th text-white">NOMBRE</th>
+                                <th class="table-th text-white">DIRECCIÓN</th>
+                                <th class="table-th text-white">TELÉFONO</th>
+                                <th class="table-th text-white">RIF</th>
                                 <th class="table-th text-white">ACCIONES</th>
                             </tr>
 
                         </thead>
                         <tbody>
-                            @foreach ($categories as $category)
+                            @foreach ($providers as $provider)
                                 <tr>
                                     <td>
-                                        <h6>{{ $category->name }}</h6>
+                                        <h6>{{ $provider->name }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>{{ $provider->address }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>{{ $provider->phone }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>{{ $provider->rif }}</h6>
                                     </td>
                                     <td class="text-center">
 
-                                        <button wire:click="Edit({{ $category->id }})" class="btn btn-primary mtmobile"
+                                        <button wire:click="Edit({{ $provider->id }})" class="btn btn-primary mtmobile"
                                             title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        @if ($category->products->count() < 1)
-                                            <button
-                                                onclick="Confirm({{ $category->id }}; {{ count($category->products) }})"
-                                                class="btn btn-danger mtmobile" title="Borrar">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        @endif
+                                        <button
+                                            onclick="Confirm({{ $provider->id }}, 'Eliminar', '¿Está seguro de eliminar a este cliente?')"
+                                            class="btn btn-danger mtmobile" title="Borrar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    {{ $categories->links() }}
+
                 </div>
             </div>
         </div>
     </div>
-    @include('livewire.category.form')
+    @include('livewire.providers.form')
 </div>
 
 <script>
@@ -65,26 +75,21 @@
         window.livewire.on('show-modal', msg => {
             $('#theModal').modal('show')
         });
-        window.livewire.on('category-added', msg => {
+        window.livewire.on('provider-added', msg => {
             $('#theModal').modal('hide')
-            Success('Registrado', "Se ha registrado los datos de la categoría")
-
+            Success('Registrado', "Se ha añadido un nuevo proveedor")
         });
-        window.livewire.on('category-updated', msg => {
-            $('#theModal').modal('hide')
-            Success('Actualizado', "Se ha actualizado los datos del cliente")
-        });
-        window.livewire.on('category-deleted', msg => {
+        window.livewire.on('provider-deleted', msg => {
             $('#theModal').modal('hide')
             Deleted()
         });
+        window.livewire.on('provider-updated', msg => {
+            $('#theModal').modal('hide')
+            Success('Actualizado', "Se ha actualizado el proveedor seleccionado")
+        });
     });
 
-    function Confirm(id, products) {
-        if (products > 0) {
-            swal('NO SE PUEDE ELIMINAR LA CATEGORIA PORQUE TIENES PRODUCTOS RELACIONADOS')
-            return;
-        }
+    function Confirm(id) {
         swal({
             title: 'CONFIRMAR',
             text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
@@ -107,7 +112,7 @@
             icon: "warning",
             type: "warning",
             title: "Eliminado",
-            text: "Se ha eliminado al cliente seleccionado",
+            text: "Se ha eliminado el proveedor seleccionado",
             showConfirmButton: false
         })
     }

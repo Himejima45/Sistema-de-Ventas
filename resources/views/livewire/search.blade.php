@@ -10,14 +10,16 @@
                 class="form-control search-form-control  ml-lg-auto" placeholder="Codigo producto...">
         </div>
     </div>
+
     <div class="col-lg-4 col-md-4 col-sm-12">
-        <select name="client" id="client" class="form-control" wire:model="client"
+        <select name="client" id="client" class="form-control" wire:model="selected_client"
             wire:change='selectClient($event.target.value)'>
             <option value="">Seleccionar</option>
 
-            @foreach ($clients as $client)
-                <option value="{{ $client->id }}">
-                    {{ $client->document }} {{ $client->name }}
+            @foreach ($clients as $clientRow)
+                <option value="{{ $clientRow->id }}"
+                    selected="{{ is_null($selected_client) ? false : $selected_client === $clientRow->id }}">
+                    {{ $clientRow->document }} {{ $clientRow->name }}
                 </option>
             @endforeach
         </select>
@@ -29,7 +31,6 @@
     document.addEventListener('DOMContentLoaded', function() {
         livewire.on('scan-code', action => {
             $('#code').val('')
-
         })
     })
 </script>

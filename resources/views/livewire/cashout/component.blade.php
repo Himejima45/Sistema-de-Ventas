@@ -12,7 +12,7 @@
                         <div class="form-group">
                             <label>Usuario</label>
                             <select wire:model="userid" class="form-control">
-                                <option value="0" disabled>Elegir</option>
+                                <option value="0" selected disabled>Elegir</option>
                                 @foreach ($users as $u)
                                     <option value="{{ $u->id }}">{{ $u->name }}</option>
                                 @endforeach
@@ -92,7 +92,7 @@
                                             <h6>{{ number_format($row->total, 2) }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6>{{ $row->items }}</h6>
+                                            <h6>{{ $row->getTotalProducts() }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <h6>{{ $row->created_at }}</h6>

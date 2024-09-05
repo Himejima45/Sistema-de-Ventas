@@ -50,16 +50,15 @@
 
                                     <td class="text-center">
 
-                                        <a href="javascript:void(0)" wire:click="Edit({{ $client->id }})"
-                                            class="btn btn-primary mtmobile" title="Editar">
+                                        <button wire:click="Edit({{ $client->id }})" class="btn btn-primary mtmobile"
+                                            title="Editar">
                                             <i class="fas fa-edit"></i>
-                                        </a>
-
-                                        {{-- @if ($client->products->count() < 1)
-                                    <a href="javascript:void(0)" onclick="Confirm({{$category->id, count($category->products)}})" class="btn btn-danger" title="Eliminar">
-                                    <i class="fas fa-trash"></i>
-                                    </a>
-                                    @endif --}}
+                                        </button>
+                                        <button
+                                            onclick="Confirm({{ $client->id }}, 'Eliminar', '¿Está seguro de eliminar a este cliente?')"
+                                            class="btn btn-danger mtmobile" title="Borrar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -81,12 +80,16 @@
         });
         window.livewire.on('client-added', msg => {
             $('#theModal').modal('hide')
+            Success('Registrado', "Se ha añadido un nuevo cliente")
         });
-        window.livewire.on('category-updated', msg => {
+        window.livewire.on('client-deleted', msg => {
             $('#theModal').modal('hide')
+            Deleted()
         });
-
-
+        window.livewire.on('client-updated', msg => {
+            $('#theModal').modal('hide')
+            Success('Actualizado', "Se ha actualizado los datos del cliente")
+        });
     });
 
     function Confirm(id) {
@@ -104,6 +107,26 @@
                 window.livewire.emit('Destroy', id)
                 swal.close()
             }
+        })
+    }
+
+    function Deleted() {
+        swal({
+            icon: "warning",
+            type: "warning",
+            title: "Eliminado",
+            text: "Se ha eliminado al cliente seleccionado",
+            showConfirmButton: false
+        })
+    }
+
+    function Success(title, message) {
+        swal({
+            icon: "success",
+            type: "success",
+            title,
+            text: message,
+            showConfirmButton: false,
         })
     }
 </script>

@@ -17,6 +17,23 @@ class UsersController extends Component
 
     public $name, $phone, $status, $image, $password, $search, $email, $selected_id, $pageTitle, $componentName, $fileLoaded, $profile;
 
+    public $rules = [
+        'name' => ['required', 'min:2', 'max:30', 'regex:/^(?=.*[a-zA-Z])(?=\S*\s?\S*$)(?!.*\s{2,}).*$/'],
+        'email' => ['required', 'email', 'unique:users,email'],
+        'password' => ['required', 'min:3', 'max:12', 'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x]).*$/
+'],
+        'phone' => ['required', 'digits:11', 'unique:users,phone', 'numeric']
+    ];
+    public $messages = [
+        'name.required' => 'Ingresa el nombre',
+        'name.min' => 'El nombre de usuario debe tener al menos 3 caracteres',
+        'email.required' => 'Ingresa el correo',
+        'email.email' => 'Ingresa un correo valido',
+        'email.unique' => 'El email ya existe en el sistema',
+        'password.required' => 'Ingresa la contraseña',
+        'password.min' => 'La contraseña debe tener al menos 3 caracteres',
+    ];
+
     private $pagination = 5;
 
     public function paginationView()
@@ -77,47 +94,16 @@ class UsersController extends Component
 
     public function Store()
     {
-        $rules = [
-            'name' => 'required|min:3',
-            'email' => 'required|unique:users|email',
-            'status' => 'required|not_in:Elegir',
-            'profile' => 'required|not_in:Elegir',
-            'password' => 'required|min:3'
-        ];
-        $messages = [
-            'name.required' => 'Ingresa el nombre',
-            'name.min' => 'El nombre de usuario debe tener al menos 3 caracteres',
-            'email.required' => 'Ingresa el correo',
-            'email.email' => 'Ingresa un correo valido',
-            'email.unique' => 'El email ya existe en el sistema',
-            'status.required' => 'Selecciona el estado del usurario',
-            'status.not_in' => 'Selecciona el estado',
-            'profile.required' => 'Selecciona el perfil/rol del usuario',
-            'profile.not_in' => 'Selecciona un perfil distinto a Elegir',
-            'password.required' => 'Ingresa la contraseña',
-            'password.min' => 'La contraseña debe tener al menos 3 caracteres',
-        ];
+        $this->validate();
 
-        $this->validate($rules, $messages);
-
-        $user = User::create([
+        User::create([
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'status' => $this->status,
-            // 'profile' => $this->profile,
-            // ! TODO #1
-            'profile' => 'EMPLOYEE',
-            'password' => bcrypt($this->password)
-        ]);
+            'active' => 1,
+            'password' => bcrypt($this->password),
+        ])->assignRole('Employee');
 
-
-        if ($this->image) {
-            $customFileName = uniqid() . '_.' . $this->image->extension();
-            $this->image->storeAs('public/users', $customFileName);
-            $user->image = $customFileName;
-            $user->save();
-        }
 
         $this->resetUI();
         $this->emit('user-added', 'Usuario Registrado');
@@ -125,57 +111,39 @@ class UsersController extends Component
 
     public function Update()
     {
-        // ! TODO #3
-        $rules = [
-            'email' => "required|email|unique:users,email,{$this->selected_id}",
-            'name' => 'required|min:3',
-            'status' => 'required|not_in:Elegir',
-            'profile' => 'required|not_in:Elegir',
-            'password' => 'required|min:3'
+        $rules = array_merge(
+            $this->rules,
+            [
+                'email' => ['required', 'email', "unique:users,email,{$this->selected_id}"],
+                'phone' => ['required', 'digits:11', "unique:users,phone,{$this->selected_id}", 'numeric']
+            ]
+        );
 
-        ];
-        $messages = [
-            'name.required' => 'Ingresa el nombre',
-            'name.min' => 'El nombre de usuario debe tener al menos 3 caracteres',
-            'email.required' => 'Ingresa el correo',
-            'email.email' => 'Ingresa un correo valido',
-            'email.unique' => 'El email ya existe en el sistema',
-            'status.required' => 'Selecciona el estado del usurario',
-            'status.not_in' => 'Selecciona el estado',
-            'profile.required' => 'Selecciona el perfil/rol del usuario',
-            'profile.not_in' => 'Selecciona un perfil distinto a Elegir',
-            'password.required' => 'Ingresa la contraseña',
-            'password.min' => 'La contraseña debe tener al menos 3 caracteres',
-        ];
-
-        $this->validate($rules, $messages);
+        $this->validate($rules);
 
         $user = User::find($this->selected_id);
         $user->update([
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'status' => $this->status,
-            // ! TODO #1
-            // 'profile' => $this->profile,
             'password' => bcrypt($this->password)
         ]);
 
-        if ($this->image) {
-            $customFileName = uniqid() . '_.' . $this->image->extension();
-            $this->image->storeAs('public/users', $customFileName);
-            $imageTemp = $user->image;
+        // if ($this->image) {
+        //     $customFileName = uniqid() . '_.' . $this->image->extension();
+        //     $this->image->storeAs('public/users', $customFileName);
+        //     $imageTemp = $user->image;
 
-            $user->image = $customFileName;
-            $user->save();
+        //     $user->image = $customFileName;
+        //     $user->save();
 
 
-            if ($imageTemp != null) {
-                if (file_exists('storage/users/' . $imageTemp)) {
-                    unlink('storage/users/' . $imageTemp);
-                }
-            }
-        }
+        //     if ($imageTemp != null) {
+        //         if (file_exists('storage/users/' . $imageTemp)) {
+        //             unlink('storage/users/' . $imageTemp);
+        //         }
+        //     }
+        // }
 
 
 

@@ -4,19 +4,44 @@ namespace App\Http\Livewire;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Provider;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-
-use function Ramsey\Uuid\v1;
+use File;
+use Illuminate\Support\Facades\Storage;
 
 class ProductsController extends Component
 {
     use WithFileUploads;
     use WithPagination;
-    
-    public $name,$barcode,$cost,$price,$stock,$alerts,$categoryid,$search,$image,$selected_id,$pageTitle,$componentName;
+
+    public $name, $barcode, $cost, $price, $stock, $min_stock, $provider_id, $category_id, $search, $image, $selected_id, $pageTitle, $componentName;
     private $pagination = 5;
+
+    public $rules = [
+        'name' => [
+            'required',
+            'min:2',
+            'max:120',
+            'regex:/^(?=.*[a-zA-Z])(?=\S*\s?\S*$)(?!.*\s{2,}).*$/',
+            'unique:products,name'
+        ],
+        'barcode' => ['required', 'numeric', 'digits_between:3,20', 'unique:products,barcode'],
+        'cost' => ['required', 'min:1', 'max:100', 'numeric'],
+        'price' => ['required', 'min:1', 'max:100', 'numeric'],
+        'stock' => ['required', 'min:1', 'max:100000', 'numeric'],
+        'min_stock' => ['required', 'min:1', 'max:100', 'numeric'],
+        'image' => ['required', 'mimes:jpg,jpeg,png', 'max:2048', 'image', 'unique:products,image'],
+        'category_id' => ['required', 'not_in:0,Elegir'],
+        'provider_id' => ['required', 'not_in:0,Elegir']
+    ];
+
+    // ! TODO 10
+    public $messages = [
+        'name.required' => 'El monto es requerido',
+        'name.min' => 'El monto debe ser al menos 1',
+    ];
 
     public function paginationView()
     {
@@ -27,84 +52,75 @@ class ProductsController extends Component
     {
         $this->pageTitle = 'Listado';
         $this->componentName = 'Productos';
-        $this->categoryid = 'Elegir';
+        $this->category_id = 'Elegir';
+        $this->provider_id = 'Elegir';
     }
 
     public function render()
     {
-        if(strlen($this->search) > 0 )
+        if (strlen($this->search) > 0)
 
-          $products = Product::join('categories as c', 'c.id', 'products.category_id')
-                      ->select('products.*', 'c.name as category')
-                      ->where('products.name', 'like','%' . $this->search . '%')
-                      ->orWhere('products.barcode', 'like','%' . $this->search . '%')
-                      ->orWhere('c.name', 'like','%' . $this->search . '%')
-                      ->orderBy('products.name', 'asc' )
-                      ->paginate($this->pagination);
+            $products = Product::join('categories as c', 'c.id', 'products.category_id')
+                ->select('products.*', 'c.name as category')
+                ->where('products.name', 'like', '%' . $this->search . '%')
+                ->orWhere('products.barcode', 'like', '%' . $this->search . '%')
+                ->orWhere('c.name', 'like', '%' . $this->search . '%')
+                ->orderBy('products.name', 'asc')
+                ->paginate($this->pagination);
         else
-         $products = Product::join('categories as c', 'c.id', 'products.category_id')
-                      ->select('products.*', 'c.name as category')
-                      ->orderBy('products.name', 'asc' )
-                      ->paginate($this->pagination);
+            $products = Product::join('categories as c', 'c.id', 'products.category_id')
+                ->select('products.*', 'c.name as category')
+                ->orderBy('products.name', 'asc')
+                ->paginate($this->pagination);
 
 
 
 
-        return view('livewire.products.component',[
+        return view('livewire.products.component', [
             'data' => $products,
-            'categories' => Category::orderBy('name', 'asc')->get()
+            'categories' => Category::orderBy('name', 'asc')->get(),
+            'providers' => Provider::orderBy('name', 'asc')->get()
+        ])->extends('layouts.theme.app')
+            ->section('content');
+    }
 
-        ])
-        ->extends('layouts.theme.app')
-        ->section('content');
+    public function setCategory($value)
+    {
+        $this->category_id = $value;
+    }
+
+    public function setProvider($value)
+    {
+        $this->provider_id = $value;
     }
 
     public function Store()
     {
+        $this->withValidator(function ($validator) {
+            $validator->after(function ($validator) {
+                if (is_null($this->category_id) || !Category::find($this->category_id)->exists()) {
+                    $validator->errors()->add('category_id', 'La categoria seleccionada no existe');
+                }
 
-        $rules = [
-            'name' => 'required|unique:products|min:3',
-            'cost' => 'required',
-            'price' => 'required',
-            'stock' => 'required',
-            'alerts' => 'required',
-            'categoryid' => 'required|not_in:Elegir'
-        ];
-        $messages = [
-            'name.required' => 'El Nombre del producto es requerido',
-            'name.unique' => 'Ya existe el nombre del producto',
-            'name.min' => 'El nombre del productp debe tener al menos 3 caracteres',
-            'cost.required' => 'El costo es requerido',
-            'price.required' => 'El precio es requerido',
-            'stock.required' => 'El stock es requerido',
-            'alerts.required' => 'Ingresa el valor minino en existecias',
-            'categoryid.not_in' => 'Selecciona un nombre de categoria diferente a Elegir',
-        ];
+                if (is_null($this->provider_id) || !Provider::find($this->provider_id)->exists()) {
+                    $validator->errors()->add('provider_id', 'El proveedor seleccionado no existe');
+                }
+            });
+        })->validate();
 
-        $this->validate($rules, $messages);
+        $data = $this->validate();
 
-        $product = Product::create([
-            'name' => $this->name, 
-            'cost' => $this->cost,
-            'price' => $this->price,
-            'barcode' => $this->barcode,
-            'stock' => $this->stock,
-            'alerts' => $this->alerts, 
-            'category_id' => $this->categoryid 
-        ]);
-
-        
-        if($this->image)
-        {
-            $customFileName = uniqid() . '_.' . $this->image->extension();
-            $this->image->storeAs('public/products', $customFileName);
-            $product->image = $customFileName;
-            $product->save();
+        $img_url = '';
+        if ($this->image) {
+            $img_url = uniqid() . '_.' . $this->image->extension();
+            $this->image->storeAs('public/products', $img_url);
         }
+
+        $data = array_merge($data, ['image' => $img_url]);
+        Product::create($data);
 
         $this->resetUI();
         $this->emit('product-added', 'Producto Registrado');
-
     }
 
     public function Edit(Product $product)
@@ -114,107 +130,94 @@ class ProductsController extends Component
         $this->barcode = $product->barcode;
         $this->cost = $product->cost;
         $this->price = $product->price;
-        $this->stock= $product->stock;
-        $this->alerts = $product->alerts;
-        $this->categoryid = $product->category_id;
-        $this->image = null;
-
+        $this->stock = $product->stock;
+        $this->min_stock = $product->min_stock;
+        $this->category_id = $product->category_id;
+        $this->provider_id = $product->provider_id;
+        $this->image = $product->getImagenAttribute();
         $this->emit('modal-show', 'show modal!');
-       
     }
 
     public function Update()
     {
+        $rules = array_merge(
+            $this->rules,
+            [
+                'name' => [
+                    'required',
+                    'min:2',
+                    'max:120',
+                    'regex:/^(?=.*[a-zA-Z])(?=\S*\s?\S*$)(?!.*\s{2,}).*$/',
+                    "unique:products,name,{$this->selected_id}"
+                ],
+                'barcode' => [
+                    'required',
+                    'numeric',
+                    'digits_between:3,20',
+                    "unique:products,barcode,{$this->selected_id}"
+                ],
+                'image' => [
+                    is_string($this->image) ? [
+                        'required',
+                        'mimes:jpg,jpeg,png',
+                        'max:2048',
+                        'image',
+                        "unique:products,image,{$this->selected_id}"
+                    ] : [
+                        'nullable'
+                    ]
+                ]
+            ]
+        );
 
-        
-        $rules = [
-            'name' => "required|min:3|unique:products,name,{$this->selected_id}",
-            'cost' => 'required',
-            'price' => 'required',
-            'stock' => 'required',
-            'alerts' => 'required',
-            'categoryid' => 'required|not_in:Elegir'
-        ];
-        $messages = [
-            'name.required' => 'El Nombre del producto es requerido',
-            'name.unique' => 'Ya existe el nombre del producto',
-            'name.min' => 'El nombre del productp debe tener al menos 3 caracteres',
-            'cost.required' => 'El costo es requerido',
-            'price.required' => 'El precio es requerido',
-            'stock.required' => 'El stock es requerido',
-            'alerts.required' => 'Ingresa el valor minino en existecias',
-            'categoryid.not_in' => 'Selecciona un nombre de categoria diferente a Elegir',
-        ];
-
-        $this->validate($rules, $messages);
-
+        $data = $this->validate($rules);
         $product = Product::find($this->selected_id);
+        if ($this->image !== $product->getImagenAttribute()) {
+            $path = $product->getImagenAttribute();
+            Storage::delete("/products/$path");
 
-        $product->update([
-            'name' => $this->name, 
-            'cost' => $this->cost,
-            'price' => $this->price,
-            'barcode' => $this->barcode,
-            'stock' => $this->stock,
-            'alerts' => $this->alerts, 
-            'categoryid' => $this->categoryid 
-        ]);
-
-        
-        if($this->image)
-        {
-            $customFileName = uniqid() . '_.' . $this->image->extension();
-            $this->image->storeAs('public/products', $customFileName);
-            $imageTemp = $product->image;
-            $product->image = $customFileName;
-            $product->save();
-
-            if($imageTemp !=null)
-            {
-              if(file_exists('storage/products/' . $imageTemp )) {
-                unlink('storage/products/' . $imageTemp);
-              } 
-            }
+            $img_url = '';
+            $img_url = uniqid() . '_.' . $this->image->extension();
+            $this->image->storeAs('public/products', $img_url);
+            $data['image'] = $img_url;
         }
+
+        $product->update($data);
 
         $this->resetUI();
         $this->emit('product-updated', 'Producto Actulizado');
-
-       
     }
     public function resetUI()
     {
 
-        $this->name ='';
-        $this->barcode ='';
-        $this->cost ='';
-        $this->price ='';
-        $this->stock ='';
-        $this->alerts ='';
-        $this->categoryid ='Elegir';
+        $this->name = '';
+        $this->barcode = '';
+        $this->cost = '';
+        $this->price = '';
+        $this->stock = '';
+        $this->min_stock = '';
+        $this->category_id = '';
+        $this->provider_id = '';
         $this->image = null;
-        $this->search ='';
+        $this->search = '';
         $this->selected_id = 0;
-       
     }
 
-    protected $listeners = [ 'Destroy' ];
+    protected $listeners = ['Destroy'];
 
     public function Destroy(Product $product)
     {
         $imageTemp = $product->image;
         $product->delete();
 
-        if($imageTemp !=null) 
-        {
-            if(file_exists('storage/products/' . $imageTemp )) {
+
+        if ($imageTemp != null) {
+            if (file_exists('storage/products/' . $imageTemp)) {
                 unlink('storage/products/' . $imageTemp);
             }
         }
-        
+
         $this->resetUI();
         $this->emit('product-deleted', 'Producto Eliminada');
-
     }
-
 }

@@ -67,7 +67,7 @@
                                         <th class="table-th text-white text-center">TOTAL</th>
                                         <th class="table-th text-white text-center">ITEMS</th>
                                         <th class="table-th text-white text-center">ESTADO</th>
-                                        <th class="table-th text-white text-center">USUARIO</th>
+                                        <th class="table-th text-white text-center">CLIENTE</th>
                                         <th class="table-th text-white text-center">FECHA</th>
                                         <th class="table-th text-white text-center" width="50px"></th>
                                     </tr>
@@ -79,10 +79,10 @@
                                                 <h6>{{ $d->id }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <h6>{{ number_format($d->total, 2) }}</h6>
+                                                <h6>{{ number_format($d->sales, 2) }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <h6>{{ $d->items }}</h6>
+                                                <h6>{{ $d->getTotalProducts() }}</h6>
                                             </td>
                                             <td class="text-center">
                                                 <h6>{{ $d->status }}</h6>

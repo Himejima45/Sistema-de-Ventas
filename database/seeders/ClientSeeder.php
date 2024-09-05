@@ -14,37 +14,39 @@ class ClientSeeder extends Seeder
      */
     public function run()
     {
-        Client::create([
-            'name'=> 'Pablo',
-            'last_name'=> 'Diaz',
-            'document'=> '11456879',
-            'phone'=> '0416887552',
-            'address'=> 'La Victoria/La mora'
-        ]);
+        $clients = [
+            [
+                'name' => 'Pablo',
+                'last_name' => 'Diaz',
+                'document' => '11456879',
+                'phone' => '04168857552',
+                'address' => 'La Victoria/La mora'
+            ],
+            [
+                'name' => 'Aranza',
+                'last_name' => 'Perez',
+                'document' => '19486179',
+                'phone' => '04241556324',
+                'address' => 'La Victoria/Las mercedes'
+            ],
+            [
+                'name' => 'Ingrid',
+                'last_name' => 'Zamora',
+                'document' => '28996331',
+                'phone' => '04261220665',
+                'address' => 'Cagua/Centro'
+            ],
+            [
+                'name' => 'Jesus',
+                'last_name' => 'Bonaire',
+                'document' => '8444333',
+                'phone' => '04141777554',
+                'address' => 'La Victoria/La mora'
+            ]
+        ];
 
-        Client::create([
-            'name'=> 'Aranza',
-            'last_name'=> 'Perez',
-            'document'=> '19486179',
-            'phone'=> '0424556324',
-            'address'=> 'La Victoria/Las mercedes'
-        ]);
-
-        Client::create([
-            'name'=> 'Ingrid',
-            'last_name'=> 'Zamora',
-            'document'=> '28996331',
-            'phone'=> '0426122665',
-            'address'=> 'Cagua/Centro'
-        ]);
-
-        Client::create([
-            'name'=> 'Jesus',
-            'last_name'=> 'Bonaire',
-            'document'=> '8444333',
-            'phone'=> '0414777554',
-            'address'=> 'La Victoria/La mora'
-        ]);
-
+        foreach ($clients as $client) {
+            Client::create($client);
+        }
     }
 }

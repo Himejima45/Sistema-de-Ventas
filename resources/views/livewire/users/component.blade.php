@@ -44,11 +44,12 @@
                                     </td>
                                     <td class="text-center">
                                         <span
-                                            class="badge {{ $r->status == 'ACTIVE' ? 'badge-success' : 'badge-danger' }}
-                                                    text-uppercase">{{ $r->status }}</span>
+                                            class="badge {{ $r->active == 1 ? 'badge-success' : 'badge-danger' }}
+                                                    text-uppercase">{{ $r->active ? 'Activo' : 'Inactivo' }}</span>
                                     </td>
                                     <td>
-                                        <h6 class="text-center text-uppercase">{{ $r->profile }}</h6>
+                                        <h6 class="text-center text-uppercase">{{ $r->getRoleNames()[0] ?? 'Empleado' }}
+                                        </h6>
                                     </td>
 
                                     <td class="text-center">

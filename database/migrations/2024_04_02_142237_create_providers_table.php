@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDenominationsTable extends Migration
+class CreateProvidersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateDenominationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('denominations', function (Blueprint $table) {
+        Schema::create('providers', function (Blueprint $table) {
             $table->id();
-            $table->enum('type',['DOLAR','BOLIVAR','OTRO'])->default('BOLIVAR');
-            $table->string('value',255);
-            $table->string('image',100)->nullable();
+            $table->string('name', 255);
+            $table->string('address', 255);
+            $table->string('phone', 11)->unique();
+            $table->string('rif', 10)->unique();
+            $table->enum('document', ['J', 'E', 'V', 'G']);
             $table->timestamps();
-            
         });
     }
 
@@ -30,6 +31,6 @@ class CreateDenominationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('denominations');
+        Schema::dropIfExists('providers');
     }
 }

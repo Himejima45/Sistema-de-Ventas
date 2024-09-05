@@ -16,18 +16,14 @@ Que lleva el registro de usuario:
  5: Direccion 
 
 # Todo List
-1.  Arreglar campos en usuario
-    -   profile (Rol) y status (activo/inactivo?) principalmente
 2.  Usar local no online
-3.  Validar que la contraseña sea la misma que la ingresada al registrar
-    -   Añadir:
-        -   Contraseña actual, nueva contraseña y confirmar contraseña
 4.  Añadir client_id a sales
 5.  Implementar factura
 6.  Usar user en vez de client
 7.  Remover el dia extra o validar que en la db se guarde la hora correctamente (chequear tz)
 8.  Implementar factura
-9.  Usar client en vez de user ?
+10. Añadir traducción por cada regla
+11. No tiene sentido ese codigo
 
 # Notas
 -   Traducir
@@ -42,4 +38,9 @@ Que lleva el registro de usuario:
         -   Asignar
 -   Validaciones
     -   CI, tlf, correo (unicos, comparar en db)
--   Imagenes
+-   Imagenes (Guardar correctamente y traer)
+
+# WIP
+-   Limpiar codigo sin uso
+-   Renombrar sales por order
+-   Validaciones

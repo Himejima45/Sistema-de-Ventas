@@ -14,21 +14,11 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        Category::create([
-            'name'=> 'Motor',
-            'image'=> "{{ asset('assets/img/image.jpg') }}"
-        ]);
-        Category::create([
-            'name'=> 'Cadenas',
-            'image'=> "{{ asset('assets/img/image.jpg') }}"
-        ]);
-        Category::create([
-            'name'=> 'Tripas',
-            'image'=> "{{ asset('assets/img/image.jpg') }}"
-        ]);
-        Category::create([
-            'name'=> 'Electrico',
-            'image'=> "{{ asset('assets/img/image.jpg') }}"
-        ]);
+        $options = ['Motor', 'Cadenas', 'Tripas', 'Eléctrico'];
+
+        foreach ($options as $option) {
+
+            Category::create(['name' => $option]);
+        }
     }
 }

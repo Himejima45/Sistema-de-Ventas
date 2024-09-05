@@ -66,5 +66,5 @@
     }
 </style>
 
-<link href="{{ asset('plugins/flatpickr/flatpickr.material.blue.css') }}" rel="stylesheet" type="text/css">
+{{-- <link href="{{ asset('plugins/flatpickr/flatpickr.material.blue.css') }}" rel="stylesheet" type="text/css"> --}}
 @livewireStyles

@@ -46,10 +46,15 @@ class ReportsController extends Component
         }
 
         if ($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == '')) {
+            $this->data = [];
             return;
         }
 
-        // ! TODO 9
+        // * NOTA
+        /**
+         * *    Si quieren traer las ventas por los clientes dejar como está
+         * *    Caso contrario, comenten ambos $this->data y descomenten lo de abajo (mostrar por vendedor)
+         */
         if ($this->userId == 0) {
             $this->data = Sale::join('clients as c', 'c.id', 'sales.client_id')
                 ->select('sales.*', 'c.name as user')
