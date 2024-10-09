@@ -23,8 +23,21 @@ class CashoutController extends Component
     }
     public function render()
     {
+        $this->userid = 1;
+        $this->fromDate = Carbon::now()->subDays(1)->startOfDay()->format('Y-m-d');
+        $this->toDate = Carbon::now()->endOfDay()->format('Y-m-d');
+
+        $this->sales = Sale::whereBetween('created_at', [$this->fromDate  . '00:00:00', $this->toDate  . ' 23:59:59'])
+            ->where('status', 'PAID')
+            ->where('user_id', $this->userid)
+            ->get();
+
+        $this->total = $this->sales ? $this->sales->sum('total') : 0;
+        $this->items = $this->sales ? $this->sales->sum('items') : 0;
         return view('livewire.cashout.component', [
-            'users' => User::orderBY('name', 'asc')->get()
+            'users' => User::orderBY('name', 'asc')->get(),
+            'total' => $this->total,
+            'items' => $this->sales
         ])->extends('layouts.theme.app')
             ->section('content');
     }

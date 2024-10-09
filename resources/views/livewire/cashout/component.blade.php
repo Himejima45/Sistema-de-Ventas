@@ -26,7 +26,8 @@
                     <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <label>Fecha Inicial</label>
-                            <input type="date" wire:model.lazy="fromDate" class="form-control flatpickr">
+                            <input type="date" wire:model.lazy="fromDate"
+                                max="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" class="form-control flatpickr">
                             @error('fromDate')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -36,7 +37,8 @@
                     <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <label>Fecha Final</label>
-                            <input type="date" wire:model.lazy="toDate" class="form-control flatpickr">
+                            <input type="date" wire:model.lazy="toDate"
+                                max="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" class="form-control flatpickr">
                             @error('toDate')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -95,7 +97,8 @@
                                             <h6>{{ $row->getTotalProducts() }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6>{{ $row->created_at }}</h6>
+                                            <h6>{{ \Carbon\Carbon::parse($row->created_at)->format('H:m:s d-M-Y') }}
+                                            </h6>
                                         </td>
                                         <td class="text-center">
                                             <button wire:click.prevent="viewDetails({{ $row }})"
