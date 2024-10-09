@@ -5,11 +5,9 @@ namespace App\Http\Livewire;
 use App\Models\Currency;
 use App\Models\SaleDetails;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
-use App\Models\Denomination;
 use Livewire\Component;
 use App\Models\Product;
 use App\Models\Sale;
-use DB;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -63,6 +61,13 @@ class PosController extends Component
         'clearPayment'
     ];
 
+    public function updateCartInfo()
+    {
+        $this->total = Cart::getTotal();
+        $this->itemsQuantity = Cart::getTotalQuantity();
+        $this->cart = Cart::getContent()->sortBy('name');
+    }
+
     public function setClient($client)
     {
         $this->client = $client;
@@ -83,7 +88,7 @@ class PosController extends Component
             $cartItem = Cart::get($product->id);
 
             if (!$cartItem) {
-                Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
+                Cart::add($product->id, $product->name, $product->price * 1.16, $cant, $product->image);
             } else {
                 if ($cartItem['quantity'] <= $product->stock) {
                     $this->increaseQty($product->id);
@@ -94,33 +99,9 @@ class PosController extends Component
             $this->total = Cart::getTotal();
             $this->emit('scan-ok', 'Producto agregado');
         }
+
+        $this->updateCartInfo();
     }
-    // public function ScanCode($barcode, $cant = 1)
-    // {
-    //     $product = Product::where('barcode', $barcode)->first();
-
-    //     if (!isset($product)) {
-    //         $this->emit('not-found', $barcode);
-    //     } else {
-
-    //         if ($this->InCart($product->id)) {
-    //             $this->increaseQty($product->id);
-    //             dd(Cart::getTotal());
-    //             return;
-    //         }
-
-    //         if ($product->stock < 1) {
-    //             $this->emit('increaseQty', $product->id);
-    //             // $this->emit('no-stock', 'Stock insuficiente :/');
-    //             return;
-    //         }
-
-    //         Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
-    //         $this->total = Cart::getTotal();
-
-    //         $this->emit('scan-ok', 'Producto agregado');
-    //     }
-    // }
 
     public function InCart($productId)
     {
@@ -154,9 +135,8 @@ class PosController extends Component
             $title = 'Producto Agregado';
         }
 
-        $this->total = Cart::getTotal();
-        $this->itemsQuantity = Cart::getTotalQuantity();
         $this->emit('scan-ok', $title);
+        $this->updateCartInfo();
         // dd($this->cart[2]);
     }
 
@@ -182,9 +162,7 @@ class PosController extends Component
         if ($quantity > 0) {
             Cart::add($product->id, $product->name, $product->price, $quantity, $product->image);
 
-            $this->total = Cart::getTotal();
-            $this->itemsQuantity = Cart::getTotalQuantity();
-
+            $this->updateCartInfo();
             $this->emit('scan-ok', $title);
         }
     }
@@ -192,10 +170,7 @@ class PosController extends Component
     public function removeItem($productId)
     {
         Cart::remove($productId);
-
-        $this->total = Cart::getTotal();
-        $this->itemsQuantity = Cart::getTotalQuantity();
-
+        $this->updateCartInfo();
         $this->emit('scan-ok', 'Producto Eliminado');
     }
 
@@ -227,25 +202,22 @@ class PosController extends Component
         $item = Cart::get($productId);
         Cart::remove($productId);
 
-        $newQty = ($item->quantity) - 1;
+        if (!is_null($item)) {
+        }
 
-        if ($newQty > 0)
+        $newQty = (!is_null($item) ? $item->quantity : 0) - 1;
+
+        if ($newQty > 0) {
             Cart::add($item->id, $item->name, $item->price, $newQty, $item->attributes[0]);
+        }
 
-        $this->total = Cart::getTotal();
-        $this->itemsQuantity = Cart::getTotalQuantity();
+        $this->updateCartInfo();
         $this->emit('scan-ok', 'Cantidad Actualizada');
     }
 
     public function clearCart()
     {
-        Cart::clear();
-        $this->efectivo = null;
-        $this->bs = null;
-        $this->change = 0;
-        $this->total = Cart::getTotal();
-        $this->itemsQuantity = Cart::getTotalQuantity();
-
+        $this->resetUI();
         $this->emit('scan-ok', 'Carrito vacio');
     }
 
@@ -344,21 +316,26 @@ class PosController extends Component
             }
 
             // DB::commit();
+            $this->resetUI();
 
-            Cart::clear();
-            $this->efectivo = null;
-            $this->bs = null;
-            $this->change = 0;
-            $this->total = Cart::getTotal();
-            $this->itemsQuantity = Cart::getTotalQuantity();
-            $this->client = 'Elegir';
-            $this->type = 'Elegir';
             $this->emit('sale-ok', 'Venta Registrada con exito');
             $this->emit('print-ticket', $sale->id);
         } catch (Exception $e) {
             // DB::rollback();
             $this->emit('sale-error', $e->getMessage());
         }
+    }
+
+    public function resetUI()
+    {
+        Cart::clear();
+        $this->efectivo = null;
+        $this->bs = null;
+        $this->change = 0;
+        $this->total = Cart::getTotal();
+        $this->itemsQuantity = Cart::getTotalQuantity();
+        $this->client = 'Elegir';
+        $this->type = 'Elegir';
     }
 
     // ! TODO 5
