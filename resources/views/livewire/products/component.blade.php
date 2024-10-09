@@ -22,6 +22,7 @@
                                 <th class="table-th text-white">DESCRIPCIÓN</th>
                                 <th class="table-th text-white text-center">CODIGO DE BARRA</th>
                                 <th class="table-th text-white text-center">CATEGORIA</th>
+                                <th class="table-th text-white text-center">GARANTÍA (DÍAS)</th>
                                 <th class="table-th text-white text-center">PRECIO</th>
                                 <th class="table-th text-white text-center">STOCK</th>
                                 <th class="table-th text-white text-center">INV.MIN</th>
@@ -41,6 +42,9 @@
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $product->category }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-center">{{ $product->warranty }}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $product->price }}</h6>

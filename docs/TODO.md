@@ -15,6 +15,22 @@ Que lleva el registro de usuario:
  4: Nro. Telefono
  5: Direccion 
 
+# TODO - Correcciones
+1. Modulo de ventas
+- Añadir IVA a los productos y al monto total
+- Arreglar que no se deba recargar para mostrar el producto en la lista
+
+3. Modulo de tasa
+- Api conversion de moneda $ paralelo - BCV, mostrar la tasa en la mañana, tarde y noche
+
+4. Modulo cierre
+- Arreglar el formato de fecha (hora - fecha)
+- Añadir salida pdf y excel
+- El cierre debe contener VentaId | Usuario | Hora y fecha
+
+5. Modulo de compras
+- Vista con tabla y formulario Proveedor | productos (cantidad) con opcion a ver el listado en un modal | monto total | metodo de pago | fecha / fechas de pago
+
 # Todo List
 2.  Usar local no online
 4.  Añadir client_id a sales

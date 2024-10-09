@@ -24,7 +24,8 @@ class ProductSeeder extends Seeder
                 'stock' => 10,
                 'min_stock' => '3',
                 'category_id' => '1',
-                'image' => 'image.png'
+                'image' => 'image.png',
+                'warranty' => 5
             ],
             [
                 'name' => 'Cadena tiempo owen',
@@ -34,7 +35,8 @@ class ProductSeeder extends Seeder
                 'stock' => 6,
                 'min_stock' => '2',
                 'category_id' => '2',
-                'image' => 'img.png'
+                'image' => 'img.png',
+                'warranty' => 5
             ],
             [
                 'name' => 'Sin espiche',
@@ -44,7 +46,8 @@ class ProductSeeder extends Seeder
                 'stock' => 5,
                 'min_stock' => '2',
                 'category_id' => '3',
-                'image' => 'img.png'
+                'image' => 'img.png',
+                'warranty' => 5
             ],
             [
                 'name' => 'Terminales',
@@ -54,7 +57,8 @@ class ProductSeeder extends Seeder
                 'stock' => 10,
                 'min_stock' => '2',
                 'category_id' => '4',
-                'image' => 'img.png'
+                'image' => 'img.png',
+                'warranty' => 5
             ]
         ];
 

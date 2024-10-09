@@ -2,7 +2,7 @@
 
 <div class="row">
 
-    <div class="col-sm-12 col-md-8">
+    <div class="col-sm-12">
         <div class="form-group">
             <label>Nombre</label>
             <input type="text" wire:model.lazy="name" class="form-control" placeholder="Ej: Caucho rin 20">
@@ -66,6 +66,16 @@
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
+            <label>Días de garantía</label>
+            <input type="number" wire:model.lazy="warranty" class="form-control" placeholder="Ej: 10">
+            @error('warranty')
+                <span class="text-danger er">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-6">
+        <div class="form-group">
             <label>Categoria</label>
             <select name="category_id" wire:model='category_id' class="form-control"
                 wire:change='setCategory($event.target.value)'>
@@ -80,7 +90,7 @@
         </div>
     </div>
 
-    <div class="col-sm-12 col-md-4">
+    <div class="col-sm-12 col-md-6">
         <div class="form-group">
             <label>Proveedor</label>
             <select wire:model='provider_id' name="provider_id" class="form-control">

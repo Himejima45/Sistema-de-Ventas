@@ -16,7 +16,7 @@ class ProductsController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $name, $barcode, $cost, $price, $stock, $min_stock, $provider_id, $category_id, $search, $image, $selected_id, $pageTitle, $componentName;
+    public $name, $barcode, $cost, $price, $stock, $min_stock, $provider_id, $category_id, $search, $image, $selected_id, $pageTitle, $componentName, $warranty;
     private $pagination = 5;
 
     public $rules = [
@@ -31,6 +31,7 @@ class ProductsController extends Component
         'cost' => ['required', 'min:1', 'max:100', 'numeric'],
         'price' => ['required', 'min:1', 'max:100', 'numeric'],
         'stock' => ['required', 'min:1', 'max:100000', 'numeric'],
+        'warranty' => ['required', 'min:1', 'max:100', 'numeric'],
         'min_stock' => ['required', 'min:1', 'max:100', 'numeric'],
         'image' => ['required', 'mimes:jpg,jpeg,png', 'max:2048', 'image', 'unique:products,image'],
         'category_id' => ['required', 'not_in:0,Elegir'],
@@ -40,7 +41,8 @@ class ProductsController extends Component
     // ! TODO 10
     public $messages = [
         'name.required' => 'El monto es requerido',
-        'name.min' => 'El monto debe ser al menos 1',
+        'name.min' => 'El nombre debe contener al menos 2 letras',
+        'provider_id.not_in' => 'Debe seleccionar un proveedor de la lista'
     ];
 
     public function paginationView()
@@ -102,7 +104,7 @@ class ProductsController extends Component
                     $validator->errors()->add('category_id', 'La categoria seleccionada no existe');
                 }
 
-                if (is_null($this->provider_id) || !Provider::find($this->provider_id)->exists()) {
+                if ($this->provider_id !== 'Elegir' && !Provider::find($this->provider_id)->exists()) {
                     $validator->errors()->add('provider_id', 'El proveedor seleccionado no existe');
                 }
             });
@@ -131,6 +133,7 @@ class ProductsController extends Component
         $this->cost = $product->cost;
         $this->price = $product->price;
         $this->stock = $product->stock;
+        $this->warranty = $product->warranty;
         $this->min_stock = $product->min_stock;
         $this->category_id = $product->category_id;
         $this->provider_id = $product->provider_id;
@@ -191,13 +194,14 @@ class ProductsController extends Component
     {
 
         $this->name = '';
+        $this->warranty = '';
         $this->barcode = '';
         $this->cost = '';
         $this->price = '';
         $this->stock = '';
         $this->min_stock = '';
-        $this->category_id = '';
-        $this->provider_id = '';
+        $this->category_id = 'Elegir';
+        $this->provider_id = 'Elegir';
         $this->image = null;
         $this->search = '';
         $this->selected_id = 0;
