@@ -49,6 +49,7 @@
                             <button wire:click.prevent="Consultar" type="button"
                                 class="btn btn-light">Consultar</button>
                             <button class="btn btn-primary" wire:click="download" type="button">Excel</button>
+                            <button class="btn btn-primary" wire:click="pdf" type="button">PDF</button>
                         @endif
 
                         @if ($total > 0)

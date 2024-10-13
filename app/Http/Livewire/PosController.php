@@ -284,6 +284,7 @@ class PosController extends Component
 
         $this->validate($rules, $messages);
 
+
         try {
             // ! TODO #4
             $sale = Sale::create([

@@ -4,7 +4,6 @@
             <!-- DETALLES -->
             <livewire:search-controller>
 
-
                 @include('livewire.pos.partials.detail')
         </div>
 
