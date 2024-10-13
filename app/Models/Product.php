@@ -16,8 +16,20 @@ class Product extends Model
   {
     return $this->belongsTo(Category::class);
   }
+
+  public function getImage()
+  {
+    $defaultImage = explode('.', $this->image)[1] === 'jpeg';
+    $src = $defaultImage
+      ? asset('/assets/products/' . $this->imagen)
+      : asset('storage/products/' . $this->imagen);
+
+    return $src;
+  }
+
   public function getImagenAttribute()
   {
-    return file_exists('storage/products/' . $this->image) ? $this->image : null;
+    $defaultImage = explode('.', $this->image)[1] === 'jpeg';
+    return file_exists($defaultImage ? public_path() . '/assets/products' : 'storage/products/' . $this->image) ? $this->image : null;
   }
 }

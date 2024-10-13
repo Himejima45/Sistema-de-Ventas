@@ -59,7 +59,7 @@
                             Cambio $: {{ number_format($change, 2) }}</h4>
                         <h3
                             class="{{ $change === 0 ? 'text-muted' : ($change >= 0 ? 'text-success' : 'text-danger') }}">
-                            Cambio Bs: {{ $change * $currency }}</h3>
+                            Cambio Bs: {{ number_format($change * $currency, 2) }}</h3>
 
                         <select name="type" id="type" class="col-12 form-control" wire:model="type"
                             wire:change='setType($event.target.value)' required>
@@ -67,6 +67,9 @@
                             <option value="PAID">Pagada</option>
                             <option value="PENDING">Pendiente</option>
                         </select>
+                        @error('type')
+                            <span class="text-danger er">{{ $message }}</span>
+                        @enderror
                         <div class="row justify-content-between mt-5">
                             <div class="col-sm-12 col-md-12 col-lg-6">
                                 @if ($total > 0)

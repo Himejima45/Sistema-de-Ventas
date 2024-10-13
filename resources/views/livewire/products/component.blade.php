@@ -57,11 +57,10 @@
                                     </td>
 
                                     <td class="text-center">
-                                        @if (!is_null($product->imagen))
+                                        @if (!is_null($product->getImage()))
                                             <span>
-                                                <img src="{{ asset('storage/products/' . $product->imagen) }}"
-                                                    alt="imagen de ejemplo" height="70" width="80"
-                                                    class="rounded">
+                                                <img src="{{ $product->getImage() }}" alt="imagen de ejemplo"
+                                                    height="70" width="80" class="rounded">
                                             </span>
                                         @else
                                             <p>Imágen pendiente...</p>

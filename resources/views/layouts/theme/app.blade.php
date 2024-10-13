@@ -47,7 +47,7 @@
             <div class="mt-5 layout-px-spacing">
                 @php
                     $currency = \App\Models\Currency::orderByDesc('created_at')->first();
-                    $date = $currency->created_at->diffForHumans();
+                    $date = is_null($currency) ? 'Error' : $currency->created_at->diffForHumans();
                 @endphp
 
                 @if (session()->has('fetch_status'))

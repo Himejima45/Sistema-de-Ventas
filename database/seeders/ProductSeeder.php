@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use Illuminate\Database\Seeder;
 use App\Models\Product;
 use App\Models\Provider;
+use Nette\Utils\Random;
 
 class ProductSeeder extends Seeder
 {
@@ -15,51 +17,74 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
+        $categories = Category::count();
         $products = [
             [
-                'name' => 'Kit empacadura Gn-125',
-                'cost' => 2,
-                'price' => 2,
-                'barcode' => '150',
-                'stock' => 10,
-                'min_stock' => '3',
-                'category_id' => '1',
-                'image' => 'image.png',
-                'warranty' => 5
+                'name' => 'Pistón',
+                'cost' => Random::generate('2', '0-9'),
+                'price' => Random::generate('2', '0-9'),
+                'barcode' => Random::generate('3', '0-9'),
+                'stock' => Random::generate('2', '0-9'),
+                'min_stock' => Random::generate('1', '0-9'),
+                'warranty' => Random::generate('2', '0-9'),
+                'category_id' => random_int(1, $categories),
+                'image' => 'Pistón.jpeg',
             ],
             [
-                'name' => 'Cadena tiempo owen',
-                'cost' => 2,
-                'price' => 5,
-                'barcode' => '317',
-                'stock' => 6,
-                'min_stock' => '2',
-                'category_id' => '2',
-                'image' => 'img.png',
-                'warranty' => 5
+                'name' => 'Anillos',
+                'cost' => Random::generate('2', '0-9'),
+                'price' => Random::generate('2', '0-9'),
+                'barcode' => Random::generate('3', '0-9'),
+                'stock' => Random::generate('2', '0-9'),
+                'min_stock' => Random::generate('1', '0-9'),
+                'warranty' => Random::generate('2', '0-9'),
+                'category_id' => random_int(1, $categories),
+                'image' => 'Anillos.jpeg',
             ],
             [
-                'name' => 'Sin espiche',
-                'cost' => 2,
-                'price' => 2,
-                'barcode' => '96',
-                'stock' => 5,
-                'min_stock' => '2',
-                'category_id' => '3',
-                'image' => 'img.png',
-                'warranty' => 5
+                'name' => 'Bujía',
+                'cost' => Random::generate('2', '0-9'),
+                'price' => Random::generate('2', '0-9'),
+                'barcode' => Random::generate('3', '0-9'),
+                'stock' => Random::generate('2', '0-9'),
+                'min_stock' => Random::generate('1', '0-9'),
+                'warranty' => Random::generate('2', '0-9'),
+                'category_id' => random_int(1, $categories),
+                'image' => 'BujíaD8.jpeg',
             ],
             [
-                'name' => 'Terminales',
-                'cost' => 1,
-                'price' => 2,
-                'barcode' => '517',
-                'stock' => 10,
-                'min_stock' => '2',
-                'category_id' => '4',
-                'image' => 'img.png',
-                'warranty' => 5
-            ]
+                'name' => 'CDI Jaguar',
+                'cost' => Random::generate('2', '0-9'),
+                'price' => Random::generate('2', '0-9'),
+                'barcode' => Random::generate('3', '0-9'),
+                'stock' => Random::generate('2', '0-9'),
+                'min_stock' => Random::generate('1', '0-9'),
+                'warranty' => Random::generate('2', '0-9'),
+                'image' => 'CDIjaguar.jpeg',
+                'category_id' => random_int(1, $categories),
+            ],
+            [
+                'name' => 'Retrovisor Beta',
+                'cost' => Random::generate('2', '0-9'),
+                'price' => Random::generate('2', '0-9'),
+                'barcode' => Random::generate('3', '0-9'),
+                'stock' => Random::generate('2', '0-9'),
+                'min_stock' => Random::generate('1', '0-9'),
+                'warranty' => Random::generate('2', '0-9'),
+                'category_id' => random_int(1, $categories),
+                'image' => 'RetrovisorBera.jpeg',
+            ],
+            [
+                'name' => 'Socate de Faro',
+                'cost' => Random::generate('2', '0-9'),
+                'price' => Random::generate('2', '0-9'),
+                'barcode' => Random::generate('3', '0-9'),
+                'stock' => Random::generate('2', '0-9'),
+                'min_stock' => Random::generate('1', '0-9'),
+                'warranty' => Random::generate('2', '0-9'),
+                'category_id' => random_int(1, $categories),
+                'image' => 'SocateDeFaro.jpeg',
+            ],
         ];
 
         foreach ($products as $product) {

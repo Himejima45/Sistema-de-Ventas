@@ -61,7 +61,6 @@ class ProductsController extends Component
     public function render()
     {
         if (strlen($this->search) > 0)
-
             $products = Product::join('categories as c', 'c.id', 'products.category_id')
                 ->select('products.*', 'c.name as category')
                 ->where('products.name', 'like', '%' . $this->search . '%')
@@ -72,11 +71,8 @@ class ProductsController extends Component
         else
             $products = Product::join('categories as c', 'c.id', 'products.category_id')
                 ->select('products.*', 'c.name as category')
-                ->orderBy('products.name', 'asc')
+                ->orderBy('products.created_at', 'asc')
                 ->paginate($this->pagination);
-
-
-
 
         return view('livewire.products.component', [
             'data' => $products,

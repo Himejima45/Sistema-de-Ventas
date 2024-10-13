@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Client;
 use App\Models\Currency;
 use App\Models\SaleDetails;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class PosController extends Component
 {
-    public $total, $type, $barcode, $currency, $itemsQuantity, $efectivo, $change, $totalPayed, $client, $cart, $bs, $user, $currency_id;
+    public $total, $barcode, $currency, $itemsQuantity, $efectivo, $change, $totalPayed, $client, $cart, $bs, $user, $currency_id, $clients, $type;
 
     public function mount()
     {
@@ -31,6 +32,7 @@ class PosController extends Component
         $this->currency = $last_currency;
         $this->type = 'Elegir';
         $this->cart = Cart::getContent()->sortBy('name');
+        $this->clients = Client::all('id', 'name', 'document');
     }
 
     public function render()
@@ -55,11 +57,18 @@ class PosController extends Component
         'clearCart',
         'saveSale' => 'saveSale',
         'client-selected' => 'setClient',
+        'selectClient',
         'type-selected' => 'setType',
         'updateQty',
         'addPayment',
         'clearPayment'
     ];
+
+    public function selectClient($id)
+    {
+        $client = Client::find($id);
+        $this->client = $client->id;
+    }
 
     public function updateCartInfo()
     {
@@ -88,7 +97,7 @@ class PosController extends Component
             $cartItem = Cart::get($product->id);
 
             if (!$cartItem) {
-                Cart::add($product->id, $product->name, $product->price * 1.16, $cant, $product->image);
+                Cart::add($product->id, $product->name, $product->price * 1.16, $cant, [$product->getImage()]);
             } else {
                 if ($cartItem['quantity'] <= $product->stock) {
                     $this->increaseQty($product->id);
@@ -223,23 +232,31 @@ class PosController extends Component
 
     public function saveSale()
     {
-        if ($this->total <= 0) {
-            $this->emit('sale-error', 'AGREGA PRODUCTOS A LA VENTA');
-            return;
-        }
-        if ($this->efectivo <= 0) {
-            $this->emit('sale-error', 'INGRESA EL EFECTIVO');
-            return;
-        }
-        if ($this->total > $this->efectivo) {
-            $this->emit('sale-error', 'El EFECTIVO DE SER MAYOR O IGUAL AL TOTAL');
-            return;
-        }
 
-        if ($this->type !== 'PAID' && $this->type !== 'PENDING') {
-            $this->emit('sale-error', 'Debe seleccionar el estado de la venta');
-            return;
-        }
+        // if ($this->total <= 0) {
+        //     $this->emit('sale-error', 'AGREGA PRODUCTOS A LA VENTA');
+        //     return;
+        // }
+        // if ($this->efectivo <= 0) {
+        //     $this->emit('sale-error', 'INGRESA EL EFECTIVO');
+        //     return;
+        // }
+        // if ($this->total > $this->efectivo) {
+        //     $this->emit('sale-error', 'El EFECTIVO DE SER MAYOR O IGUAL AL TOTAL');
+        //     return;
+        // }
+
+        // if ($this->type !== 'PAID' && $this->type !== 'PENDING') {
+        //     $this->validateOnly('type', [
+        //         'required',
+        //         'not_in:Elegir',
+        //         'in:PAID,PENDING'
+        //     ]);
+        //     $this->emit('sale-error', 'Debe seleccionar el estado de la venta');
+        //     return;
+        // }
+
+
 
         // DB::beginTransaction();
 
@@ -272,18 +289,14 @@ class PosController extends Component
                 'not_in:Elegir',
                 'in:PAID,PENDING'
             ],
-            'client' => [
-                'required',
-                'numeric'
-            ],
             'currency_id' => [
                 'required',
                 'numeric'
-            ]
+            ],
+            'client' => ['required', 'exists:clients,id']
         ];
 
         $this->validate($rules, $messages);
-
 
         try {
             // ! TODO #4

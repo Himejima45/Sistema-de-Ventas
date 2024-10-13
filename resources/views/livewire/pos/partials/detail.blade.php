@@ -10,8 +10,8 @@
                         <table class="table table-bordered table-striped mt-1">
                             <thead class="text-white" style="background: #3b3f5c">
                                 <tr>
-                                    <th width="10%"></th>
-                                    <th width="15%" class="table-th text-left text-white">DESCRIPCION</th>
+                                    <th width="10%" class="table-th text-white">IMAGEN</th>
+                                    <th width="15%" class="table-th text-white">DESCRIPCION</th>
                                     <th class="table-th text-center text-white">PRECIO</th>
                                     <th width="13%" class="table-th text-center text-white">CANTIDAD</th>
                                     <th class="table-th text-center text-white">IMPORTE</th>
@@ -26,9 +26,8 @@
                                             @if (count($item['attributes']) > 0)
                                                 @if ($item['attributes'][0] !== 'img.png')
                                                     <span>
-                                                        <img src="{{ asset('storage/products/' . $item['attributes'][0]) }}"
-                                                            alt="imagen de producto" height="90" width="90"
-                                                            class="ronded">
+                                                        <img src="{{ $item['attributes'][0] }}" alt="imagen de producto"
+                                                            height="90" width="90" class="ronded">
                                                     </span>
                                                 @else
                                                     <p>Imágen pendiente</p>

@@ -23,6 +23,9 @@
                 </option>
             @endforeach
         </select>
+        @error('client')
+            <span class="text-danger er">{{ $message }}</span>
+        @enderror
     </div>
 </div>
 
