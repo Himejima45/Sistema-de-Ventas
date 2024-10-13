@@ -48,6 +48,7 @@
                         @if ($userid > 0 && $fromDate != null && $toDate != null)
                             <button wire:click.prevent="Consultar" type="button"
                                 class="btn btn-light">Consultar</button>
+                            <button class="btn btn-primary" wire:click="download" type="button">Excel</button>
                         @endif
 
                         @if ($total > 0)

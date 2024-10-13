@@ -2,10 +2,12 @@
 
 namespace App\Http\Livewire;
 
+use App\Exports\SalesExport;
 use Livewire\Component;
 use App\Models\User;
 use App\Models\Sale;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CashoutController extends Component
 {
@@ -23,33 +25,36 @@ class CashoutController extends Component
     }
     public function render()
     {
-        $this->userid = 1;
-        $this->fromDate = Carbon::now()->subDays(1)->startOfDay()->format('Y-m-d');
-        $this->toDate = Carbon::now()->endOfDay()->format('Y-m-d');
+        // $this->userid = 1;
+        // $this->fromDate = Carbon::now()->subDays(1)->startOfDay()->format('Y-m-d');
+        // $this->toDate = Carbon::now()->endOfDay()->format('Y-m-d');
 
-        $this->sales = Sale::whereBetween('created_at', [$this->fromDate  . '00:00:00', $this->toDate  . ' 23:59:59'])
-            ->where('status', 'PAID')
-            ->where('user_id', $this->userid)
-            ->get();
-
-        $this->total = $this->sales ? $this->sales->sum('total') : 0;
-        $this->items = $this->sales ? $this->sales->sum('items') : 0;
         return view('livewire.cashout.component', [
             'users' => User::orderBY('name', 'asc')->get(),
-            'total' => $this->total,
-            'items' => $this->sales
         ])->extends('layouts.theme.app')
             ->section('content');
+    }
+
+    public function download()
+    {
+        $fi = Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00';
+        $ff = Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59';
+
+        $this->fromDate = $fi;
+        $this->toDate = $ff;
+
+        return Excel::download(new SalesExport($this->fromDate, $this->toDate), 'ventas.xlsx');
     }
 
     public function Consultar()
     {
         // ! TODO 7
-        $fi = Carbon::parse($this->fromDate)->addDays(1)->format('Y-m-d') . ' 00:00:00';
-        $ff = Carbon::parse($this->toDate)->addDays(1)->format('Y-m-d') . ' 23:59:59';
+        $fi = Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00';
+        $ff = Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59';
 
         $this->fromDate = $fi;
         $this->toDate = $ff;
+        // dd($this->fromDate, $this->toDate);
 
         // ! TODO 6
         $this->sales = Sale::whereBetween('created_at', [$fi, $ff])
