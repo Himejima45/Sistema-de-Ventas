@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class PosController extends Component
 {
-    public $total, $barcode, $currency, $itemsQuantity, $efectivo, $change, $totalPayed, $client, $cart, $bs, $user, $currency_id, $clients, $type;
+    public $total, $barcode, $currency, $itemsQuantity, $efectivo, $change, $totalPayed, $client, $cart, $bs, $user, $currency_id, $clients, $type, $prevBs, $prevEfectivo;
 
     public function mount()
     {
@@ -185,7 +185,13 @@ class PosController extends Component
 
     public function addPayment($value, $type)
     {
-        $total_dollar = floatval($this->bs / $this->currency) + $this->efectivo;
+        if ($this->bs !== '') {
+            $this->prevBs = $this->bs;
+        }
+        if ($this->efectivo !== '') {
+            $this->prevEfectivo = $this->efectivo;
+        }
+        $total_dollar = floatval($this->prevBs / $this->currency) + $this->prevEfectivo;
         $type === 'dollar'
             ? $this->efectivo = $value
             : $this->bs = $value;
@@ -197,10 +203,10 @@ class PosController extends Component
 
     public function clearPayment($type)
     {
-        $total_dollar = floatval($this->bs / $this->currency) + $this->efectivo;
         $type === 'dollar'
-            ? $this->efectivo = null
-            : $this->bs = null;
+            ? $this->efectivo = 0
+            : $this->bs = 0;
+        $total_dollar = floatval($this->bs / $this->currency) + $this->efectivo;
         $this->change = $total_dollar > $this->total
             ? abs($this->total - $total_dollar)
             : $total_dollar - $this->total;
