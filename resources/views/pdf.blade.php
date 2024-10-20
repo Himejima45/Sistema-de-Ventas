@@ -61,11 +61,11 @@
                                         <h6>{{ $sale['items'] }}</h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6>{{ $sale['name'] }}</h6>
-                                    </td>
-                                    <td class="text-center">
                                         <h6>{{ ($sale['status'] === 'PAID' ? 'Pagado' : $sale['status'] === 'PENDING') ? 'Pendiente' : 'Cancelado' }}
                                         </h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <h6>{{ $sale['name'] }}</h6>
                                     </td>
                                     <td class="text-center">
                                         <h6>{{ $sale['date'] }}</h6>

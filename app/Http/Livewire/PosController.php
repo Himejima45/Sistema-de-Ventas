@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class PosController extends Component
 {
-    public $total, $barcode, $currency, $itemsQuantity, $efectivo, $change, $totalPayed, $client, $cart, $bs, $user, $currency_id, $clients, $type, $prevBs, $prevEfectivo;
+    public $total, $barcode, $currency, $itemsQuantity, $efectivo, $change, $totalPayed, $client, $cart, $bs, $user, $currency_id, $clients, $type, $prevBs, $prevEfectivo, $total_dollar;
 
     public function mount()
     {
@@ -191,14 +191,19 @@ class PosController extends Component
         if ($this->efectivo !== '') {
             $this->prevEfectivo = $this->efectivo;
         }
-        $total_dollar = floatval($this->prevBs / $this->currency) + $this->prevEfectivo;
+        $this->total_dollar = floatval($this->prevBs / $this->currency) + $this->prevEfectivo;
         $type === 'dollar'
             ? $this->efectivo = $value
             : $this->bs = $value;
+        // dd($total_dollar, $this->total);
 
-        $this->change = $total_dollar > $this->total
-            ? abs($this->total - $total_dollar)
-            : $total_dollar - $this->total;
+        if ($this->total_dollar === $this->total) {
+            $this->change = 0;
+        } else {
+            $this->change = $this->total_dollar > $this->total
+                ? abs($this->total - $this->total_dollar)
+                : $this->total_dollar - $this->total;
+        }
     }
 
     public function clearPayment($type)

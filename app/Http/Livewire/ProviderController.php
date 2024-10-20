@@ -51,7 +51,7 @@ class ProviderController extends Component
     public function render()
     {
         if (strlen($this->search) > 0)
-            $data = Provider::where('type', 'like', '%' . $this->search . '%')->paginate($this->pagination);
+            $data = Provider::where('name', 'like', '%' . $this->search . '%')->paginate($this->pagination);
         else
             $data = Provider::orderBy('id', 'desc')->paginate($this->pagination);
 
