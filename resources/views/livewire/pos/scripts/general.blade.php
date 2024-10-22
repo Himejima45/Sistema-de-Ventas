@@ -25,4 +25,22 @@
             }
         })
     }
+
+    function NotFound(eventName, text) {
+        swal({
+            title: 'NO ENCONTRADO',
+            text: text,
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#fff',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit(eventName, id)
+                swal.close()
+            }
+        })
+    }
 </script>

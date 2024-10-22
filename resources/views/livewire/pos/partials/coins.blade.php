@@ -82,7 +82,7 @@
                             </div>
 
                             <div class="col-sm-12 col-md-12 col-lg-6">
-                                @if ($total_dollar === $total)
+                                @if ($total_dollar >= $total && $itemsQuantity > 0)
                                     <button wire:click.prevent="saveSale" class="btn btn-primary btn-md btn-block">
                                         GUARDAR
                                         {{-- F9 --}}

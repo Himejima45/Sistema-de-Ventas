@@ -1,6 +1,14 @@
 <div>
     <div class="row layout-top-spacing">
         <div class="col-sm-12 col-md-8">
+            @if (session()->has('scan'))
+                <div class="alert alert-warning">
+                    {{ session('scan') }}
+                </div>
+                @php
+                    session()->forget('fetch_status');
+                @endphp
+            @endif
             <!-- DETALLES -->
             @include('livewire.search')
 

@@ -91,6 +91,16 @@ class PosController extends Component
     {
         $product = Product::where('barcode', $barcode)->first();
 
+        if (is_null($product)) {
+            session()->flash('scan', "No hay productos registrados con el código de barras: $barcode");
+            return null;
+        }
+
+        if ($product->stock === 0) {
+            session()->flash('scan', "El producto $product->name no tiene stock");
+            return null;
+        }
+
         if (!isset($product)) {
             $this->emit('not-found', $barcode);
         } else {
@@ -136,10 +146,10 @@ class PosController extends Component
 
             if ($cartItem->quantity + $quantity <= $product->stock) {
                 // Cart::update($productId, ['qty' => $newQuantity]);
-                Cart::add($product->id, $product->name, $product->price, $quantity, $product->image);
+                Cart::add($product->id, $product->name, $product->price, $quantity, [$product->getImage()]);
             }
         } else {
-            Cart::add($product->id, $product->name, $product->price, $quantity, $product->image);
+            Cart::add($product->id, $product->name, $product->price, $quantity, [$product->getImage()]);
 
             $title = 'Producto Agregado';
         }
@@ -151,29 +161,25 @@ class PosController extends Component
 
     public function updateQty($productId, $quantity)
     {
-        $title = '';
         $product = Product::find($productId);
         $exist = Cart::get($productId);
-        if ($exist)
-            $title = 'Cantidad Actualizada';
-        else
-            $title = 'Producto Agregado';
 
-        if ($exist) {
-            if ($product->stock < $quantity) {
-                $this->emit('no-stock', 'Stock insuficiente :/');
-                return;
-            }
+        if ($exist->quantity === $product->stock) {
+            session()->flash('scan', "El stock de $product->name es de $product->stock, no se pueden añadir más a la venta");
+            return null;
         }
 
-        // $this->removeItem($productId);
-
-        if ($quantity > 0) {
-            Cart::add($product->id, $product->name, $product->price, $quantity, $product->image);
-
-            $this->updateCartInfo();
-            $this->emit('scan-ok', $title);
+        if ($quantity + 1 > $product->stock) {
+            Cart::add($product->id, $product->name, $product->price, $product->stock);
+            return null;
+        } else {
+            Cart::update($productId, ['quantity' => [
+                'relative' => false,
+                'value' => $quantity
+            ]]);
         }
+
+        $this->updateCartInfo();
     }
 
     public function removeItem($productId)
