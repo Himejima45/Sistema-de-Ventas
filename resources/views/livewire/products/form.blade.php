@@ -123,7 +123,17 @@
             </div>
         @elseif ($image)
             <div class="mt-2">
-                <img src="{{ $image->temporaryUrl() }}" alt="Current Image" style="width: 100px; height: auto;">
+                @if (is_string($image))
+                    @php
+                        $defaultImage = explode('.', $image)[1] === 'jpeg';
+                        $image = $defaultImage
+                            ? asset('/assets/products/' . $image)
+                            : asset('storage/products/' . $image);
+                    @endphp
+                    <img src="{{ $image }}" alt="Current Image" style="width: 100px; height: auto;">
+                @else
+                    <img src="{{ $image->temporaryUrl() }}" alt="Current Image" style="width: 100px; height: auto;">
+                @endif
             </div>
         @endif
     </div>

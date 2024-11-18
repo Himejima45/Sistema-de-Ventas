@@ -21,8 +21,8 @@ class Product extends Model
   {
     $defaultImage = explode('.', $this->image)[1] === 'jpeg';
     $src = $defaultImage
-      ? asset('/assets/products/' . $this->imagen)
-      : asset('storage/products/' . $this->imagen);
+      ? asset('/assets/products/' . $this->image)
+      : asset('storage/products/' . $this->image);
 
     return $src;
   }

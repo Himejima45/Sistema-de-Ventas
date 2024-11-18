@@ -8,7 +8,6 @@ use App\Models\Provider;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use File;
 use Illuminate\Support\Facades\Storage;
 
 class ProductsController extends Component
@@ -16,7 +15,7 @@ class ProductsController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $name, $barcode, $cost, $price, $stock, $min_stock, $provider_id, $category_id, $search, $image, $selected_id, $pageTitle, $componentName, $warranty;
+    public $name, $barcode, $cost, $price, $stock, $min_stock, $provider_id, $category_id, $search, $image, $selected_id, $pageTitle, $componentName, $warranty, $selectedProduct;
     private $pagination = 5;
 
     public $rules = [
@@ -203,7 +202,14 @@ class ProductsController extends Component
         $this->selected_id = 0;
     }
 
-    protected $listeners = ['Destroy'];
+    protected $listeners = ['Destroy', 'zoom'];
+
+    public function zoom(Product $product)
+    {
+        // dd('here');
+        $this->selectedProduct = $product;
+        $this->emit('show-product-zoomed');
+    }
 
     public function Destroy(Product $product)
     {

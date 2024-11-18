@@ -7,9 +7,23 @@
                     <div class="card simple-title-task ui-sortable-handle">
                         <div class="card-body">
                             <div class="task-header">
-                                <div>
-                                    <h2>TOTAL $: {{ number_format($total, 2) }}</h2>
-                                    <h2>TOTAL Bs: {{ number_format($total * $currency, 2) }}</h2>
+                                <div class="d-flex flex-column">
+                                    <div class="d-flex justify-content-between">
+                                        <h4>SUBTOTAL:</h4>
+                                        <h4>$ {{ number_format($subtotal, 2) }}</h4>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <h4>IVA:</h4>
+                                        <h4>$ {{ number_format($iva, 2) }}</h4>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <h4>TOTAL:</h4>
+                                        <h4>$ {{ number_format($total, 2) }}</h4>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <h4>TOTAL:</h4>
+                                        <h4>Bs {{ number_format($total * $currency, 2) }}</h4>
+                                    </div>
                                     <input type="hidden" id="hiddenTotal" value="{{ $total }}">
                                 </div>
                                 <div>

@@ -13,6 +13,8 @@ class ReportsController extends Component
 
     public $componentName, $data, $details, $sumDetails, $countDetails, $reportType, $userId, $dateFrom, $dateTo, $saleId;
 
+    protected $fillable = ['getDetails'];
+
     public function mount()
     {
         $this->componentName = 'Reportes de Ventas';

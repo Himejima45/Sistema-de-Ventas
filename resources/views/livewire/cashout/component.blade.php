@@ -23,34 +23,9 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-3">
-                        <div class="form-group">
-                            <label>Fecha Inicial</label>
-                            <input type="date" wire:model.lazy="fromDate"
-                                max="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" class="form-control flatpickr">
-                            @error('fromDate')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-sm-12 col-md-3">
-                        <div class="form-group">
-                            <label>Fecha Final</label>
-                            <input type="date" wire:model.lazy="toDate"
-                                max="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" class="form-control flatpickr">
-                            @error('toDate')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-3 aling-self-center d-flex justify-content-around">
-                        @if ($userid > 0 && $fromDate != null && $toDate != null)
-                            <button wire:click.prevent="Consultar" type="button"
-                                class="btn btn-light">Consultar</button>
-                            <button class="btn btn-primary" wire:click="download" type="button">Excel</button>
-                            <button class="btn btn-primary" wire:click="pdf" type="button">PDF</button>
-                        @endif
+                    <div class="col-sm-12 aling-self-center d-flex">
+                        <button class="btn btn-primary" wire:click="download" type="button">Excel</button>
+                        <button class="btn btn-primary" wire:click="pdf" type="button">PDF</button>
 
                         @if ($total > 0)
                             <button wire:click.prevent="Print()" type="button"
@@ -103,7 +78,7 @@
                                             </h6>
                                         </td>
                                         <td class="text-center">
-                                            <button wire:click.prevent="viewDetails({{ $row }})"
+                                            <button type="button" wire:click="viewDetails({{ $row->id }})"
                                                 class="btn btn-dark btn-sm">
                                                 <i class="fas fa-list"></i>
                                             </button>
@@ -123,56 +98,56 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        flatpickr(document.getElementByClassName('flatpickr'), {
-            enableTime: false,
-            dateFormat: 'Y-m-d',
-            locale: {
-                firstDayofWeek: 1,
-                weekdays: {
-                    shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                    longhand: [
-                        "Domingo",
-                        "Lunes",
-                        "Martes",
-                        "Miércoles",
-                        "Jueves",
-                        "Viernes",
-                        "Sábado",
-                    ],
-                },
-                months: {
-                    shorthand: [
-                        "Ene",
-                        "Feb",
-                        "Mar",
-                        "Abr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Ago",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dic",
-                    ],
-                    longhand: [
-                        "Enero",
-                        "Febrero",
-                        "Marzo",
-                        "Abril",
-                        "Mayo",
-                        "Junio",
-                        "Julio",
-                        "Agosto",
-                        "Septiembre",
-                        "Octubre",
-                        "Noviembre",
-                        "Diciembre",
-                    ],
-                },
+        // flatpickr(document.getElementByClassName('flatpickr'), {
+        //     enableTime: false,
+        //     dateFormat: 'Y-m-d',
+        //     locale: {
+        //         firstDayofWeek: 1,
+        //         weekdays: {
+        //             shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+        //             longhand: [
+        //                 "Domingo",
+        //                 "Lunes",
+        //                 "Martes",
+        //                 "Miércoles",
+        //                 "Jueves",
+        //                 "Viernes",
+        //                 "Sábado",
+        //             ],
+        //         },
+        //         months: {
+        //             shorthand: [
+        //                 "Ene",
+        //                 "Feb",
+        //                 "Mar",
+        //                 "Abr",
+        //                 "May",
+        //                 "Jun",
+        //                 "Jul",
+        //                 "Ago",
+        //                 "Sep",
+        //                 "Oct",
+        //                 "Nov",
+        //                 "Dic",
+        //             ],
+        //             longhand: [
+        //                 "Enero",
+        //                 "Febrero",
+        //                 "Marzo",
+        //                 "Abril",
+        //                 "Mayo",
+        //                 "Junio",
+        //                 "Julio",
+        //                 "Agosto",
+        //                 "Septiembre",
+        //                 "Octubre",
+        //                 "Noviembre",
+        //                 "Diciembre",
+        //             ],
+        //         },
 
-            }
-        })
+        //     }
+        // })
         window.livewire.on('show-modal', Msg => {
             $('#modal-details').modal('show')
         });

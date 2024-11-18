@@ -1,4 +1,26 @@
 <div class="row sales layout-top-spacing">
+    <div wire:ignore-self id="product-zoom" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title text-white">
+                        <b>{{ $selectedProduct->name }}</b>
+                    </h5>
+                    <button class="close" data-miss="modal" type="button" aria-label="Close">
+                        <span class="text-white">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if (!is_null($selectedProduct) && !is_null($selectedProduct->getImage()))
+                        <span class="d-flex justify-content-center mx-auto">
+                            <img src="{{ $selectedProduct->getImage() }}" alt="imagen de ejemplo" height="400"
+                                width="400" class="rounded">
+                        </span>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
             <div class="widget-heading">
@@ -58,7 +80,7 @@
 
                                     <td class="text-center">
                                         @if (!is_null($product->getImage()))
-                                            <span>
+                                            <span role="button" wire:click="zoom({{ $product->id }})">
                                                 <img src="{{ $product->getImage() }}" alt="imagen de ejemplo"
                                                     height="70" width="80" class="rounded">
                                             </span>
@@ -87,12 +109,13 @@
         </div>
     </div>
     @include('livewire.products.form')
+
+
+
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-
-
         window.livewire.on('product-added', msg => {
             $('#theModal').modal('hide')
         });
@@ -111,6 +134,9 @@
         });
         window.livewire.on('hidden.bs.modal', msg => {
             $('.er').css('display', 'none')
+        });
+        window.livewire.on('show-product-zoomed', msg => {
+            $('#product-zoom').modal('show')
         });
 
     });

@@ -19,7 +19,7 @@
             @foreach ($clients as $clientRow)
                 <option value="{{ $clientRow->id }}"
                     selected="{{ is_null($client) ? false : $client === $clientRow->id }}">
-                    {{ $clientRow->document }} {{ $clientRow->name }}
+                    {{ $clientRow->document }} {{ $clientRow->name }} {{ $clientRow->last_name }}
                 </option>
             @endforeach
         </select>

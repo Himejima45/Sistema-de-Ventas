@@ -79,13 +79,14 @@
                                                 <h6>{{ $d->id }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <h6>{{ number_format($d->sales, 2) }}</h6>
+                                                <h6>{{ number_format($d->total, 2) }}</h6>
                                             </td>
                                             <td class="text-center">
                                                 <h6>{{ $d->getTotalProducts() }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <h6>{{ $d->status }}</h6>
+                                                <h6>{{ $d->status === 'PAID' ? 'Pagado' : ($d->status === 'PENDING' ? 'Pendiente' : 'Cancelado') }}
+                                                </h6>
                                             </td>
                                             <td class="text-center">
                                                 <h6>{{ $d->user }}</h6>
@@ -94,7 +95,7 @@
                                                 <h6>{{ \Carbon\Carbon::parse($d->created_at)->format('d-m-Y') }}</h6>
                                             </td>
                                             <td class="text-center" width="50px">
-                                                <button wire:click.prevent="getDetails({{ $d->id }})"
+                                                <button type="button" wire:click="getDetails({{ $d->id }})"
                                                     class="btn btn-dark btn-sm">
                                                     <i class="fas fa-list"></i>
                                                 </button>
@@ -114,56 +115,56 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        flatpickr(document.getElementsByClassName('flatpickr'), {
-            enableTime: false,
-            dateFormat: 'Y-m-d',
-            locale: {
-                firstDayofWeek: 1,
-                weekdays: {
-                    shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                    longhand: [
-                        "Domingo",
-                        "Lunes",
-                        "Martes",
-                        "Miércoles",
-                        "Jueves",
-                        "Viernes",
-                        "Sábado",
-                    ],
-                },
-                months: {
-                    shorthand: [
-                        "Ene",
-                        "Feb",
-                        "Mar",
-                        "Abr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Ago",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dic",
-                    ],
-                    longhand: [
-                        "Enero",
-                        "Febrero",
-                        "Marzo",
-                        "Abril",
-                        "Mayo",
-                        "Junio",
-                        "Julio",
-                        "Agosto",
-                        "Septiembre",
-                        "Octubre",
-                        "Noviembre",
-                        "Diciembre",
-                    ],
-                },
+        // flatpickr(document.getElementsByClassName('flatpickr'), {
+        //     enableTime: false,
+        //     dateFormat: 'Y-m-d',
+        //     locale: {
+        //         firstDayofWeek: 1,
+        //         weekdays: {
+        //             shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+        //             longhand: [
+        //                 "Domingo",
+        //                 "Lunes",
+        //                 "Martes",
+        //                 "Miércoles",
+        //                 "Jueves",
+        //                 "Viernes",
+        //                 "Sábado",
+        //             ],
+        //         },
+        //         months: {
+        //             shorthand: [
+        //                 "Ene",
+        //                 "Feb",
+        //                 "Mar",
+        //                 "Abr",
+        //                 "May",
+        //                 "Jun",
+        //                 "Jul",
+        //                 "Ago",
+        //                 "Sep",
+        //                 "Oct",
+        //                 "Nov",
+        //                 "Dic",
+        //             ],
+        //             longhand: [
+        //                 "Enero",
+        //                 "Febrero",
+        //                 "Marzo",
+        //                 "Abril",
+        //                 "Mayo",
+        //                 "Junio",
+        //                 "Julio",
+        //                 "Agosto",
+        //                 "Septiembre",
+        //                 "Octubre",
+        //                 "Noviembre",
+        //                 "Diciembre",
+        //             ],
+        //         },
 
-            }
-        })
+        //     }
+        // })
         window.livewire.on('show-modal', Msg => {
             $('#modalDetails').modal('show')
         });

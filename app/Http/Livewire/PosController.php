@@ -15,14 +15,16 @@ use Illuminate\Support\Facades\Redirect;
 
 class PosController extends Component
 {
-    public $total, $barcode, $currency, $itemsQuantity, $efectivo, $change, $totalPayed, $client, $cart, $bs, $user, $currency_id, $clients, $type, $prevBs, $prevEfectivo, $total_dollar;
+    public $subtotal, $iva, $total, $barcode, $currency, $itemsQuantity, $efectivo, $change, $totalPayed, $client, $cart, $bs, $user, $currency_id, $clients, $type, $prevBs, $prevEfectivo, $total_dollar;
 
     public function mount()
     {
         $this->user = Auth::user()->id;
         $last_currency = Currency::latest('created_at')->first();
         $this->currency_id = $last_currency->id ?? 0;
-        $this->total = Cart::getTotal();
+        $this->subtotal = Cart::getTotal();
+        $this->iva = $this->subtotal * 0.16;
+        $this->total = $this->subtotal + $this->iva;
         $this->efectivo = null;
         $this->bs = null;
         $this->change = 0;
@@ -32,7 +34,7 @@ class PosController extends Component
         $this->currency = $last_currency;
         $this->type = 'Elegir';
         $this->cart = Cart::getContent()->sortBy('name');
-        $this->clients = Client::all('id', 'name', 'document');
+        $this->clients = Client::all('id', 'name', 'last_name', 'document');
     }
 
     public function render()
@@ -72,7 +74,9 @@ class PosController extends Component
 
     public function updateCartInfo()
     {
-        $this->total = Cart::getTotal();
+        $this->subtotal = Cart::getTotal();
+        $this->iva = $this->subtotal * 0.16;
+        $this->total = $this->subtotal + $this->iva;
         $this->itemsQuantity = Cart::getTotalQuantity();
         $this->cart = Cart::getContent()->sortBy('name');
     }
@@ -107,11 +111,10 @@ class PosController extends Component
             $cartItem = Cart::get($product->id);
 
             if (!$cartItem) {
-                Cart::add($product->id, $product->name, $product->price * 1.16, $cant, [$product->getImage()]);
+                Cart::add($product->id, $product->name, $product->price, $cant, [$product->getImage()]);
             } else {
                 if ($cartItem['quantity'] <= $product->stock) {
                     $this->increaseQty($product->id);
-                    // $this->emit('increaseQty', $product->id);
                 }
             }
 
