@@ -32,4 +32,11 @@ class Product extends Model
     $defaultImage = explode('.', $this->image)[1] === 'jpeg';
     return file_exists($defaultImage ? public_path() . '/assets/products' : 'storage/products/' . $this->image) ? $this->image : null;
   }
+
+  public function purchases()
+  {
+    return $this->belongsToMany(Purchase::class, 'purchase_product')
+      ->withPivot('quantity', 'price')
+      ->withTimestamps();
+  }
 }

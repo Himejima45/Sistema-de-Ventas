@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header bg-dark">
                     <h5 class="modal-title text-white">
-                        <b>{{ $selectedProduct->name }}</b>
+                        <b>{{ $selectedProduct->name ?? '' }}</b>
                     </h5>
                     <button class="close" data-miss="modal" type="button" aria-label="Close">
                         <span class="text-white">&times;</span>
@@ -72,7 +72,9 @@
                                         <h6 class="text-center">{{ $product->price }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $product->stock }}</h6>
+                                        <h6
+                                            class="text-center font-weight-bold @if ($product->stock < $product->min_stock) text-danger @else text-success @endif">
+                                            {{ $product->stock }}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $product->min_stock }}</h6>

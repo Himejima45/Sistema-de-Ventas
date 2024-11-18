@@ -3,12 +3,8 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Livewire\WithPagination;
-use App\Models\User;
-use DB;
-
 
 class RolesController extends Component
 {
@@ -34,7 +30,6 @@ class RolesController extends Component
         else
             $roles = Role::orderBy('name', 'asc')->paginate($this->pagination);
 
-
         return view('livewire.roles.component', [
             'roles' => $roles
         ])
@@ -58,17 +53,14 @@ class RolesController extends Component
         Role::create([
             'name' => $this->roleName
         ]);
-
         $this->resetUI();
         $this->emit('role-added', 'Se registro el role con exito');
     }
 
     public function Edit(Role $role)
     {
-        //$role = Role::find($id);
         $this->selected_id = $role->id;
         $this->roleName = $role->name;
-
         $this->emit('show.modal', 'Show modal');
     }
 
@@ -111,24 +103,9 @@ class RolesController extends Component
 
     public function resetUI()
     {
-
         $this->roleName = '';
         $this->search = '';
         $this->selected_id = 0;
         $this->resetValidation();
     }
-
-
-    // /* public function AsignarRoles($rolesList)
-    // {
-    //     if($this->userSelected > 0)
-    //     {
-    //         $user = User::find($this->userSelected);
-    //         if($user) {
-    //             $user->syncRoles($rolesList);
-    //             $this->emit('msg-ok', 'Roles asignados correctamente');
-    //             $this->resetUI();
-    //         }
-    //     }
-    // } */
 }

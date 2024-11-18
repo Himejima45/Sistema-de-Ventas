@@ -1,3 +1,7 @@
+13 7
+75 26
+
+
 MODULO IA --> Catalogo = manejar 4 marcas y 4 modelos por marca;
 1 automatica y 1 sincronica .;
 haces commit y subir a github ;
