@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Livewire\ClientCartsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\AsignarController;
+use App\Http\Livewire\CartsController;
 use App\Http\Livewire\CashoutController;
+use App\Http\Livewire\CatalogController;
 use App\Http\Livewire\CategoriesController;
 use App\Http\Livewire\ProductsController;
 use App\Http\Livewire\ProviderController;
@@ -48,3 +51,6 @@ Route::get('cashout', CashoutController::class);
 Route::get('reports', ReportsController::class);
 Route::get('providers', ProviderController::class);
 Route::get('purchases', PurchaseController::class);
+Route::get('catalog', CatalogController::class);
+Route::get('historial',  ClientCartsController::class);
+Route::get('carts',  CartsController::class);

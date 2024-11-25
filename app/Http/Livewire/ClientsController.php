@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Client;
+use App\Models\User;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
@@ -48,9 +49,19 @@ class ClientsController extends Component
     public function render()
     {
         if (strlen($this->search) > 0)
-            $data = Client::where('name', 'like', '%' . $this->search . '%')->paginate($this->pagination);
+            $data = User::where('name', 'like', '%' . $this->search . '%')
+                ->with('roles')
+                ->whereHas('roles', function ($q) {
+                    $q->where('name', 'Client');
+                })
+                ->paginate($this->pagination);
         else
-            $data = Client::orderBy('id', 'desc')->paginate($this->pagination);
+            $data = User::orderBy('id', 'desc')
+                ->with('roles')
+                ->whereHas('roles', function ($q) {
+                    $q->where('name', 'Client');
+                })
+                ->paginate($this->pagination);
 
         return view('livewire.client.clientes', ['clients' => $data])
             ->extends('layouts.theme.app')
@@ -59,7 +70,7 @@ class ClientsController extends Component
 
     public function Edit($id)
     {
-        $record = Client::find($id, ['id', 'name', 'last_name', 'document', 'phone', 'address']);
+        $record = User::find($id);
         $this->name = $record->name;
         $this->last_name = $record->last_name;
         $this->document = $record->document;
@@ -73,7 +84,8 @@ class ClientsController extends Component
     public function Store()
     {
         $data = $this->validate();
-        Client::create($data);
+        User::create($data)
+            ->assignRole('Client');
 
         $this->resetUI();
         $this->emit('client-added', 'Cliente Registrado');
@@ -89,7 +101,7 @@ class ClientsController extends Component
         );
         $data = $this->validate($rules);
 
-        Client::find($this->selected_id)
+        User::find($this->selected_id)
             ->update($data);
 
         $this->resetUI();
@@ -110,7 +122,7 @@ class ClientsController extends Component
 
     protected $listeners = ['Destroy'];
 
-    public function Destroy(Client $client)
+    public function Destroy(User $client)
     {
         $client->delete();
 

@@ -9,6 +9,7 @@ use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Livewire\Component;
 use App\Models\Product;
 use App\Models\Sale;
+use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -34,7 +35,7 @@ class PosController extends Component
         $this->currency = $last_currency;
         $this->type = 'Elegir';
         $this->cart = Cart::getContent()->sortBy('name');
-        $this->clients = Client::all('id', 'name', 'last_name', 'document');
+        $this->clients = User::all('id', 'name', 'last_name', 'document');
     }
 
     public function render()
@@ -68,7 +69,7 @@ class PosController extends Component
 
     public function selectClient($id)
     {
-        $client = Client::find($id);
+        $client = User::find($id);
         $this->client = $client->id;
     }
 
@@ -313,7 +314,7 @@ class PosController extends Component
                 'required',
                 'numeric'
             ],
-            'client' => ['required', 'exists:clients,id']
+            'client' => ['required', 'exists:users,id']
         ];
 
         $this->validate($rules, $messages);
@@ -366,6 +367,8 @@ class PosController extends Component
         $this->efectivo = null;
         $this->bs = null;
         $this->change = 0;
+        $this->subtotal = 0;
+        $this->iva = 0;
         $this->total = Cart::getTotal();
         $this->itemsQuantity = Cart::getTotalQuantity();
         $this->client = 'Elegir';

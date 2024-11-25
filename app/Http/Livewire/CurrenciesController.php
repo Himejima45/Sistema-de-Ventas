@@ -3,12 +3,8 @@
 namespace App\Http\Livewire;
 
 use App\Models\Currency;
-use App\Models\Denomination;
 use Carbon\Carbon;
-use Closure;
 use Livewire\Component;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 

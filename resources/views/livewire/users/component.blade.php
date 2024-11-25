@@ -65,10 +65,12 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
 
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $r->id }}')"
-                                            class="btn btn-danger" title="Eliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
+                                        @if ($r->email !== 'admin@email.com')
+                                            <a href="javascript:void(0)" onclick="Confirm('{{ $r->id }}')"
+                                                class="btn btn-danger" title="Eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        @endif
                                     </td>
 
                                 </tr>
