@@ -73,8 +73,15 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
+                                @php
+                                    $value = round($total - $payed + $change, 2);
+                                @endphp
                                 <label>Monto a pagar</label>
-                                <input type="number" disabled value="{{ $total - $payed }}" class="form-control"
+                                <input type="number" disabled value="{{ $value }}" @class([
+                                    'form-control font-weight-bold',
+                                    'text-success' => $value < 0,
+                                    'text-danger' => $value > 0,
+                                ])
                                     placeholder="Ej: 10">
                             </div>
                         </div>
@@ -92,6 +99,21 @@
 
     <div class="widget-content">
         <div class="col mx-auto">
+            @if (!empty($error))
+                <div class="alert alert-danger d-flex justify-items-between align-items-center">
+                    <p class="mb-0">
+                        {{ $error }}
+                    </p>
+                    <div class="justify-self-end">
+                        <svg xmlns="http://www.w3.org/2000/svg" wire:click="clearMessage" style="cursor: pointer"
+                            width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
+                            <path d="M18 6 6 18" />
+                            <path d="m6 6 12 12" />
+                        </svg>
+                    </div>
+                </div>
+            @endif
             @foreach ($carts as $cart)
                 @if ($cart->products()->count() > 0)
                     <h6 class="mt-2">Solicitud - ( {{ $cart->total }}$ ) -
