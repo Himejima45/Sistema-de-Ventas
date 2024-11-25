@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Client;
 use App\Models\Currency;
 use App\Models\SaleDetails;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
@@ -13,10 +12,11 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 
 class PosController extends Component
 {
-    public $subtotal, $iva, $total, $barcode, $currency, $itemsQuantity, $efectivo, $change, $totalPayed, $client, $cart, $bs, $user, $currency_id, $clients, $type, $prevBs, $prevEfectivo, $total_dollar;
+    public $subtotal, $sale_type = 'SALE', $iva, $total, $barcode, $currency, $itemsQuantity, $efectivo, $change, $totalPayed, $client, $cart, $bs, $user, $currency_id, $clients, $type, $prevBs, $prevEfectivo, $total_dollar;
 
     public function mount()
     {
@@ -35,7 +35,9 @@ class PosController extends Component
         $this->currency = $last_currency;
         $this->type = 'Elegir';
         $this->cart = Cart::getContent()->sortBy('name');
-        $this->clients = User::all('id', 'name', 'last_name', 'document');
+        $this->clients = User::whereHas('roles', function ($query) {
+            $query->where('name', 'client');
+        })->get(['id', 'name', 'last_name', 'document']);
     }
 
     public function render()
@@ -253,34 +255,6 @@ class PosController extends Component
 
     public function saveSale()
     {
-
-        // if ($this->total <= 0) {
-        //     $this->emit('sale-error', 'AGREGA PRODUCTOS A LA VENTA');
-        //     return;
-        // }
-        // if ($this->efectivo <= 0) {
-        //     $this->emit('sale-error', 'INGRESA EL EFECTIVO');
-        //     return;
-        // }
-        // if ($this->total > $this->efectivo) {
-        //     $this->emit('sale-error', 'El EFECTIVO DE SER MAYOR O IGUAL AL TOTAL');
-        //     return;
-        // }
-
-        // if ($this->type !== 'PAID' && $this->type !== 'PENDING') {
-        //     $this->validateOnly('type', [
-        //         'required',
-        //         'not_in:Elegir',
-        //         'in:PAID,PENDING'
-        //     ]);
-        //     $this->emit('sale-error', 'Debe seleccionar el estado de la venta');
-        //     return;
-        // }
-
-
-
-        // DB::beginTransaction();
-
         $messages = [
             'total.required' => 'El monto es requerido',
             'total.min' => 'El monto debe ser al menos 1',
@@ -293,28 +267,20 @@ class PosController extends Component
                 'numeric',
             ],
             'efectivo' =>
-            $this->bs > 0 ? 'nullable' :
-                [
-                    'required',
-                    'min:1',
-                    'numeric'
-                ],
-            'bs' => $this->efectivo > 0 ? 'nullable' :
-                [
-                    'required',
-                    'min:1',
-                    'numeric'
-                ],
+            $this->bs > 0 ? 'nullable' : (Rule::when($this->sale_type === 'SALE', 'required|min:1|numeric')),
+            'bs' => $this->efectivo > 0 ? 'nullable' : (
+                Rule::when($this->sale_type === 'SALE', 'required|min:1|numeric')
+            ),
             'type' => [
-                'required',
-                'not_in:Elegir',
-                'in:PAID,PENDING'
+                'sometimes',
+                Rule::when($this->sale_type === 'SALE', 'required|not_in:Elegir|in:PAID,PENDING')
             ],
             'currency_id' => [
                 'required',
                 'numeric'
             ],
-            'client' => ['required', 'exists:users,id']
+            'client' => ['required', 'exists:users,id'],
+            'sale_type' => ['required', Rule::in(['SALE', 'BUDGET'])]
         ];
 
         $this->validate($rules, $messages);
@@ -326,9 +292,10 @@ class PosController extends Component
                 'cash' => $this->efectivo ?? 0,
                 'bs' => $this->bs ?? 0,
                 'change' => $this->change,
-                'status' => $this->type,
+                'status' => $this->sale_type === 'BUDGET' ? 'PENDING' : $this->type,
                 'client_id' => $this->client,
                 'user_id' => $this->user,
+                'type' => $this->sale_type,
                 'currency_id' => $this->currency_id
             ]);
 
@@ -343,20 +310,16 @@ class PosController extends Component
                         'sale_id' => $sale->id
                     ]);
 
-                    //update stock
                     $product = Product::find($item->id);
                     $product->stock = $product->stock - $item->quantity;
                     $product->save();
                 }
             }
 
-            // DB::commit();
             $this->resetUI();
-
             $this->emit('sale-ok', 'Venta Registrada con exito');
             $this->emit('print-ticket', $sale->id);
         } catch (Exception $e) {
-            // DB::rollback();
             $this->emit('sale-error', $e->getMessage());
         }
     }
@@ -373,6 +336,7 @@ class PosController extends Component
         $this->itemsQuantity = Cart::getTotalQuantity();
         $this->client = 'Elegir';
         $this->type = 'Elegir';
+        $this->sale_type = 'SALE';
     }
 
     // ! TODO 5

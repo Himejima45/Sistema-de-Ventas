@@ -20,6 +20,7 @@ class CreateSalesTable extends Migration
             $table->decimal('bs', 10, 2);
             $table->decimal('change', 10, 2);
             $table->enum('status', ['PAID', 'PENDING', 'CANCELED'])->default('PAID');
+            $table->enum('type', ['BUDGET', 'SALE', 'CART'])->default('SALE');
 
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');

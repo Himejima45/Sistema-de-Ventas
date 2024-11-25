@@ -55,6 +55,7 @@ class CartsController extends Component
     public function render()
     {
         $carts = Sale::with('products')
+            ->where('type', 'CART')
             ->where('status', 'PENDING')
             ->orderByDesc('created_at')
             ->paginate(20);

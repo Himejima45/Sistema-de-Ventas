@@ -3,6 +3,7 @@
 use App\Http\Livewire\ClientCartsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\AsignarController;
+use App\Http\Livewire\BudgetsController;
 use App\Http\Livewire\CartsController;
 use App\Http\Livewire\CashoutController;
 use App\Http\Livewire\CatalogController;
@@ -54,3 +55,4 @@ Route::get('purchases', PurchaseController::class);
 Route::get('catalog', CatalogController::class);
 Route::get('historial',  ClientCartsController::class);
 Route::get('carts',  CartsController::class);
+Route::get('budgets',  BudgetsController::class);

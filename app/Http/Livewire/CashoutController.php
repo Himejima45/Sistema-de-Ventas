@@ -32,7 +32,8 @@ class CashoutController extends Component
         $users = User::orderBy('name', 'asc')->get();
         $this->userid = $users[0]->id;
 
-        $this->sales = Sale::whereBetween('created_at', [$this->fromDate, $this->toDate])
+        $this->sales = Sale::where('type', 'SALE')
+            ->whereBetween('created_at', [$this->fromDate, $this->toDate])
             ->where('status', 'PAID')
             ->where('user_id', $this->userid)
             ->get();

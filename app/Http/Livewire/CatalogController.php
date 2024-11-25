@@ -96,6 +96,7 @@ class CatalogController extends Component
             'bs' => 0,
             'change' => 0,
             'status' => 'PENDING',
+            'type' => 'CART',
             'client_id' => auth()->id(),
             'user_id' => $admin_id,
             'currency_id' => Currency::latest()->first()->id

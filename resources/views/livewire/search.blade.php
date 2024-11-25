@@ -12,6 +12,17 @@
     </div>
 
     <div class="col-lg-4 col-md-4 col-sm-12">
+        <select name="sale_type" id="sale_type" class="form-control" wire:model="sale_type">
+            <option value="null">Seleccionar</option>
+            <option value="SALE">Venta</option>
+            <option value="BUDGET">Presupuesto</option>
+        </select>
+        @error('sale_type')
+            <span class="text-danger er">{{ $message }}</span>
+        @enderror
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12">
         <select name="client" id="client" class="form-control" wire:model="client"
             wire:change='selectClient($event.target.value)'>
             <option value="">Seleccionar</option>

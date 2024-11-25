@@ -58,7 +58,7 @@ class ReportsController extends Component
          * *    Caso contrario, comenten ambos $this->data y descomenten lo de abajo (mostrar por vendedor)
          */
         if ($this->userId == 0) {
-            $this->data = Sale::join('clients as c', 'c.id', 'sales.client_id')
+            $this->data = Sale::join('users as c', 'c.id', 'sales.client_id')
                 ->select('sales.*', 'c.name as user')
                 ->whereBetween('sales.created_at', [$from, $to])
                 ->get();
@@ -67,7 +67,7 @@ class ReportsController extends Component
             //     ->whereBetween('sales.created_at', [$from, $to])
             //     ->get();
         } else {
-            $this->data = Sale::join('clients as c', 'c.id', 'sales.client_id')
+            $this->data = Sale::join('users as c', 'c.id', 'sales.client_id')
                 ->select('sales.*', 'c.name as user')
                 ->whereBetween('sales.created_at', [$from, $to])
                 ->where('client_id', $this->userId)
