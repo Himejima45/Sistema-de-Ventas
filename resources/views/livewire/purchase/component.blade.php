@@ -37,6 +37,7 @@
                         <thead class="text-white" style="background: #3B3F5C;">
                             <tr>
                                 <th class="table-th text-white">FECHA</th>
+                                <th class="table-th text-white">PROVEEDOR</th>
                                 <th class="table-th text-white">COSTE</th>
                                 <th class="table-th text-white">PAGADO</th>
                                 <th class="table-th text-white">ESTADO</th>
@@ -54,6 +55,9 @@
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $item->cost }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-center">{{ $item->provider ?? '-' }}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $item->payed }}</h6>

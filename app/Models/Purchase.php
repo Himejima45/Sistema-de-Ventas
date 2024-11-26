@@ -9,7 +9,7 @@ class Purchase extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['cost', 'payed', 'status', 'payment_type'];
+    protected $fillable = ['cost', 'payed', 'provider', 'status', 'payment_type'];
 
     public function products()
     {

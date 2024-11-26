@@ -112,9 +112,9 @@
                 <div class="modal-body">
 
                     @php
-                        $total_to_pay = $cash > 0 ? round($total + $change - $cash - $bs / $currency, 2) : 0;
-                        $total_to_pay_bs =
-                            $bs > 0 ? round(round($total + $change - $cash - $bs / $currency, 2) * $currency, 2) : 0;
+                        $bs_to_usd = $bs > 0 ? round($bs / $currency, 2) : 0;
+                        $total_to_pay = round($total + $change - $cash - $bs_to_usd, 2);
+                        $total_to_pay_bs = round(round($total + $change - $cash - $bs_to_usd, 2) * $currency, 2);
                     @endphp
                     <div class="row">
                         <div class="col-6">
@@ -134,15 +134,23 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label>Total a pagar $</label>
-                                <input type="number" disabled value="{{ $total_to_pay }}" class="form-control"
-                                    placeholder="Ej: 10">
+                                <input type="number" disabled value="{{ $total_to_pay }}" placeholder="Ej: 10"
+                                    @class([
+                                        'form-control',
+                                        'text-success' => $total_to_pay < 0,
+                                        'text-danger' => $total_to_pay > 0,
+                                    ])>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label>Total a pagar Bs</label>
-                                <input type="number" disabled value="{{ $total_to_pay_bs }}" class="form-control"
-                                    placeholder="Ej: 10">
+                                <input type="number" disabled value="{{ $total_to_pay_bs }}" placeholder="Ej: 10"
+                                    @class([
+                                        'form-control',
+                                        'text-success' => $total_to_pay_bs < 0,
+                                        'text-danger' => $total_to_pay_bs > 0,
+                                    ])>
                             </div>
                         </div>
                         <div class="col-6">

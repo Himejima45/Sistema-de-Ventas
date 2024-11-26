@@ -3,16 +3,16 @@
 namespace App\Http\Livewire;
 
 use App\Models\Product;
+use App\Models\Provider;
 use App\Models\Purchase;
 use Livewire\Component;
-use Illuminate\Support\Facades\Validator;
 
 class PurchaseController extends Component
 {
-    public $pageTitle, $componentName, $products = [], $productsList = [], $selectedProducts = [];
-    public $cost, $payed, $status, $payment_type;
-    public $editingPurchaseId; // To hold the ID of the purchase being edited
-    public $startDate, $endDate; // Properties for date filtering
+    public $pageTitle, $componentName, $providers = [], $products = [], $productsList = [], $selectedProducts = [];
+    public $cost, $payed, $status, $payment_type, $provider;
+    public $editingPurchaseId;
+    public $startDate, $endDate;
 
     private $pagination = 5;
 
@@ -35,7 +35,6 @@ class PurchaseController extends Component
     public function removeProduct($index)
     {
         unset($this->products[$index]);
-        // Re-index the array to maintain sequential keys
         $this->products = array_values($this->products);
     }
 
@@ -43,13 +42,13 @@ class PurchaseController extends Component
         'cost' => ['required', 'numeric', 'min:0'],
         'payed' => ['required', 'numeric', 'min:0'],
         'status' => ['required', 'string'],
+        'provider' => ['required', 'string', 'exists:providers,id'],
         'payment_type' => ['required', 'string'],
         'products.*.name' => ['required', 'exists:products,id'],
         'products.*.quantity' => ['required', 'integer', 'min:1'],
         'products.*.price' => ['required', 'numeric', 'min:0'],
     ];
 
-    // Custom messages for validation
     public $messages = [
         'cost.required' => 'El costo es requerido.',
         'cost.numeric' => 'El costo debe ser un número.',
@@ -58,6 +57,9 @@ class PurchaseController extends Component
         'payed.numeric' => 'El monto pagado debe ser un número.',
         'payed.min' => 'El monto pagado debe ser al menos 0.',
         'status.required' => 'El estado es requerido.',
+        'provider.required' => 'El proveedor es requerido.',
+        'provider.string' => 'El proveedor debe ser un texto.',
+        'provider.exists' => 'El proveedor seleccionado no existe.',
         'payment_type.required' => 'El tipo de pago es requerido.',
         'products.*.name.required' => 'El nombre del producto es requerido.',
         'products.*.name.exists' => 'El producto seleccionado no existe.',
@@ -70,20 +72,17 @@ class PurchaseController extends Component
 
     public function Store()
     {
-        // Validate input data
         $this->validate();
 
-        // Create a new purchase
         $purchase = Purchase::create([
             'cost' => $this->cost,
             'payed' => $this->payed,
             'status' => $this->status,
+            'provider' => $this->provider,
             'payment_type' => $this->payment_type,
         ]);
 
-        // Attach products to the purchase and update their quantities
         foreach ($this->products as $productData) {
-            // Find the product
             $product = Product::find($productData['name']);
 
             if ($product) {
@@ -97,15 +96,12 @@ class PurchaseController extends Component
             }
         }
 
-        // Reset UI after saving
         $this->resetUI();
-
         session()->flash('message', 'Compra guardada exitosamente.');
     }
 
     public function editPurchase($purchaseId)
     {
-        // Load the purchase details into properties
         if ($purchase = Purchase::find($purchaseId)) {
             $this->editingPurchaseId = $purchaseId;
             $this->payed = $purchase->payed;
@@ -117,9 +113,7 @@ class PurchaseController extends Component
 
     public function showProducts($purchaseId)
     {
-        // Load the purchase and its products
         if ($purchase = Purchase::with('products')->find($purchaseId)) {
-            // Prepare selected products data
             $this->selectedProducts = $purchase->products->map(function ($product) {
                 return [
                     'name' => $product->name,
@@ -128,7 +122,6 @@ class PurchaseController extends Component
                 ];
             })->toArray();
 
-            // Emit event to show modal
             $this->emit('show-products');
         }
     }
@@ -144,18 +137,14 @@ class PurchaseController extends Component
             ]);
 
             session()->flash('message', 'Compra actualizada exitosamente.');
-
-            // Reset UI after updating
             $this->resetUI();
         }
 
-        // Hide edit modal
         $this->emit('hide-edit');
     }
 
     public function searchByDate()
     {
-        // Validate date inputs
         if ($this->startDate && !$this->endDate) {
             session()->flash('error', "Por favor seleccione una fecha de fin.");
             return;
@@ -167,7 +156,6 @@ class PurchaseController extends Component
         }
 
         if ($this->startDate && $this->endDate) {
-            // Fetch purchases between selected dates
             return Purchase::whereBetween('created_at', [
                 $this->startDate . " 00:00:00",
                 $this->endDate . " 23:59:59"
@@ -180,23 +168,22 @@ class PurchaseController extends Component
 
     public function resetUI()
     {
-        // Reset all fields
         $this->cost = '';
         $this->payed = '';
         $this->status = '';
+        $this->provider = '';
         $this->payment_type = '';
         $this->products = [];
         $this->selectedProducts = [];
         $this->startDate = null;
         $this->endDate = null;
-
-        // Reset editing ID
         $this->editingPurchaseId = null;
     }
 
     public function render()
     {
-        // Fetch purchases for display with optional filtering by date
+        $this->providers = Provider::all(['id', 'name', 'rif', 'document']);
+
         if ($this->startDate || $this->endDate) {
             return view('livewire.purchase.component', [
                 'purchases' => Purchase::whereBetween('created_at', [
