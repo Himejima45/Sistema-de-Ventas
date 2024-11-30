@@ -36,7 +36,8 @@
                                 <th class="table-th text-center text-white">IMPORTE</th>
                                 <th class="table-th text-center text-white">ITEMS</th>
                                 <th class="table-th text-center text-white">ESTATUS</th>
-                                <th class="table-th text-center text-white">USUARIO</th>
+                                <th class="table-th text-center text-white">EMPLEADO</th>
+                                <th class="table-th text-center text-white">CLIENTE</th>
                                 <th class="table-th text-center text-white">FECHA</th>
                             </tr>
                         </thead>
@@ -68,13 +69,16 @@
                                         <h6>{{ $sale['name'] }}</h6>
                                     </td>
                                     <td class="text-center">
+                                        <h6>{{ $sale['client'] }}</h6>
+                                    </td>
+                                    <td class="text-center">
                                         <h6>{{ $sale['date'] }}</h6>
                                     </td>
                                 </tr>
                             @endforeach
                             <tr>
                                 <td class="text-center">
-                                    <h6>TOTALES</h6>
+                                    <h6>TOTAL</h6>
                                 </td>
                                 <td class="text-center">
                                     <h6>$ {{ $total }}</h6>

@@ -25,7 +25,7 @@
     <div class="col-lg-4 col-md-4 col-sm-12">
         <select name="client" id="client" class="form-control" wire:model="client"
             wire:change='selectClient($event.target.value)'>
-            <option value="">Seleccionar</option>
+            <option value="Elegir">Seleccionar</option>
 
             @foreach ($clients as $clientRow)
                 <option value="{{ $clientRow->id }}"

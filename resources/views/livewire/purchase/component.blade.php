@@ -48,7 +48,7 @@
 
                         </thead>
                         <tbody>
-                            @foreach ($purchases as $item)
+                            @foreach ($data as $item)
                                 <tr>
                                     <td>
                                         <h6 class="text-left">{{ $item->created_at->format('d-m-Y') }}</h6>
@@ -89,7 +89,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                    {{ $purchases->links() }}
+                    {{ $data->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </div>
@@ -109,6 +109,9 @@
         });
         window.livewire.on('hide-edit', msg => {
             $('#editModal').modal('hide')
+        });
+        window.livewire.on('hide-modal', msg => {
+            $('#theModal').modal('hide')
         });
     });
 </script>

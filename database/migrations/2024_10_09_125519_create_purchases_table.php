@@ -17,7 +17,7 @@ class CreatePurchasesTable extends Migration
             $table->id();
             $table->decimal('cost', 10, 2);
             $table->decimal('payed', 10, 2);
-            $table->text('provider');
+            $table->string('provider');
             $table->enum('status', ['PENDING', 'GOING', 'RECEIVED']);
             $table->enum('payment_type', ['CASH', 'TRANSFER']);
             $table->timestamps();

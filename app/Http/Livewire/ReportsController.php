@@ -2,11 +2,14 @@
 
 namespace App\Http\Livewire;
 
+use App\Exports\SalesExport;
 use Livewire\Component;
 use App\Models\User;
 use App\Models\Sale;
 use App\Models\SaleDetails;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportsController extends Component
 {
@@ -30,8 +33,14 @@ class ReportsController extends Component
     {
         $this->SalesByDate();
 
+        $employees = User::whereHas('roles', function ($query) {
+            $query->where('name', 'Employee');
+        })
+            ->orderBy('name', 'asc')
+            ->get();
+
         return view('livewire.reports.component', [
-            'users' => User::orderBy('name', 'asc')->get()
+            'users' => $employees
         ])->extends('layouts.theme.app')
             ->section('content');
     }
@@ -95,5 +104,50 @@ class ReportsController extends Component
         $this->countDetails = $this->details->sum('quantity');
         $this->saleId = $saleId;
         $this->emit('show-modal', 'details loaded');
+    }
+
+    public function excel()
+    {
+        return Excel::download(new SalesExport($this->dateFrom, $this->dateTo, $this->userId), 'Reporte de ventas.xlsx');
+    }
+
+    public function pdf()
+    {
+        // $sales = Sale::whereBetween('created_at', [$this->fromDate, $this->toDate])->with('user')
+        $sales = Sale::where(function ($query) {
+            if ($this->userId > 0) {
+                $query->where('user_id', $this->userId);
+            }
+
+            $query->whereBetween('created_at', [$this->dateFrom  . ' 00:00:00', $this->dateTo  . ' 23:59:59']);
+        })
+            ->get()
+            ->map(function ($sale) {
+                $total = 0;
+                foreach ($sale->products as $product) {
+                    $total += $product->price * $product->quantity;
+                }
+
+                return [
+                    'id' => $sale->id,
+                    'name' => $sale->user->name,
+                    'client' => $sale->client->name,
+                    'date' => $sale->created_at->format('H:i:s d-m-Y'),
+                    'total' => $total,
+                    'items' => $sale->getTotalProducts(),
+                    'status' => $sale->status
+                ];
+            });
+
+        $start = $this->dateFrom;
+        $end = $this->dateTo;
+
+        return response()->streamDownload(function () use ($sales, $start, $end) {
+            $pdf = App::make('dompdf.wrapper');
+            $start = Carbon::parse($start)->translatedFormat('D d, F Y - h:i:s a');
+            $end = Carbon::parse($end)->translatedFormat('D d, F Y - h:i:s a');
+            $pdf->loadView('pdf', compact('sales', 'start', 'end'));
+            echo $pdf->stream();
+        }, 'Reporte de ventas.pdf');
     }
 }

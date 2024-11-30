@@ -14,13 +14,18 @@ class PurchaseController extends Component
     public $editingPurchaseId;
     public $startDate, $endDate;
 
-    private $pagination = 5;
+    private $pagination = 1;
 
     protected $listeners = ['addProduct', 'removeProduct', 'editPurchase', 'showProducts'];
 
+    public function paginationView()
+    {
+        return 'vendor.livewire.bootstrap';
+    }
+
     public function mount()
     {
-        $this->pageTitle = 'Compras';
+        $this->pageTitle = 'Listado';
         $this->componentName = 'Compras';
         $this->productsList = Product::all(['id', 'barcode', 'name']);
     }
@@ -97,6 +102,7 @@ class PurchaseController extends Component
         }
 
         $this->resetUI();
+        $this->emit('hide-modal');
         session()->flash('message', 'Compra guardada exitosamente.');
     }
 
@@ -184,18 +190,17 @@ class PurchaseController extends Component
     {
         $this->providers = Provider::all(['id', 'name', 'rif', 'document']);
 
+        $data = Purchase::paginate($this->pagination);
         if ($this->startDate || $this->endDate) {
-            return view('livewire.purchase.component', [
-                'purchases' => Purchase::whereBetween('created_at', [
-                    $this->startDate . " 00:00:00",
-                    $this->endDate . " 23:59:59"
-                ])
-                    ->paginate($this->pagination),
-            ]);
+            $data = Purchase::whereBetween('created_at', [
+                $this->startDate . " 00:00:00",
+                $this->endDate . " 23:59:59"
+            ])
+                ->paginate($this->pagination);
         }
 
         return view('livewire.purchase.component', [
-            'purchases' => Purchase::paginate($this->pagination),
+            'data' => $data,
         ])
             ->extends('layouts.theme.app')
             ->section('content');

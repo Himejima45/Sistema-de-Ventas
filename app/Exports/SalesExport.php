@@ -10,34 +10,58 @@ class SalesExport implements FromCollection
 {
     protected $start;
     protected $end;
-    public function __construct(String  $start, String $end)
+    protected $user_id;
+    public function __construct(String  $start, String $end, int $user_id = 0)
     {
         $this->start = $start;
         $this->end = $end;
+        $this->user_id = $user_id;
     }
     /**
      * @return \Illuminate\Support\Collection
      */
     public function collection()
     {
-        // Define headers
-        $headers = ['Nro Venta', 'Vendedor', 'Hora', 'Fecha'];
+        $headers = $this->user_id === 0
+            ? ['Nro Venta', 'Total', 'Items', 'Estado', 'Cliente', 'Hora', 'Fecha']
+            : ['Nro Venta', 'Total', 'Items', 'Estado', 'Cliente', 'Vendedor', 'Hora', 'Fecha'];
 
-        // Fetch sales data and transform it
-        $salesData = Sale::whereBetween('created_at', [$this->start  . '00:00:00', $this->end  . ' 23:59:59'])->get()->map(function ($sale) {
-            return [
-                $sale->id,
-                $sale->user->name,
-                $sale->created_at->format('H:i:s'),
-                $sale->created_at->format('d-m-Y')
-            ];
-        });
+        $salesData = Sale::where(function ($query) {
+            if ($this->user_id > 0) {
+                $query->where('user_id', $this->user_id);
+            }
 
-        // Create a new collection with headers and data
+            $query->whereBetween('created_at', [$this->start  . ' 00:00:00', $this->end  . ' 23:59:59']);
+        })
+            ->get()
+            ->map(function ($sale) {
+                if ($this->user_id === 0) {
+                    return [
+                        $sale->id,
+                        number_format($sale->total, 2) . " $",
+                        $sale->getTotalProducts(),
+                        $sale->status === 'PAID' ? 'Pagado' : ($sale->status === 'PENDING' ? 'Pendiente' : 'Cancelado'),
+                        $sale->client->name,
+                        $sale->created_at->format('H:i:s'),
+                        $sale->created_at->format('d-m-Y')
+                    ];
+                }
+                return [
+                    $sale->id,
+                    number_format($sale->total, 2),
+                    $sale->getTotalProducts(),
+                    $sale->status === 'PAID' ? 'Pagado' : ($sale->status === 'PENDING' ? 'Pendiente' : 'Cancelado'),
+                    $sale->client->name,
+                    $sale->user->name,
+                    $sale->created_at->format('H:i:s'),
+                    $sale->created_at->format('d-m-Y')
+                ];
+            });
+
         $result = new Collection();
-        $result->push($headers); // Add headers as the first row
+        $result->push($headers);
         foreach ($salesData as $sale) {
-            $result->push($sale); // Add each sale data
+            $result->push($sale);
         }
 
         return $result;

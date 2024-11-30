@@ -10,7 +10,7 @@
                     <div class="col-sm-12 col-md-3">
                         <div class="row">
                             <div class="col-sm-12">
-                                <h6>Elige el usuario</h6>
+                                <h6>Elige el empleado</h6>
                                 <div class="form-group">
                                     <select wire:model="userId" class="form-control">
                                         <option value="0">Todos</option>
@@ -43,19 +43,19 @@
                                         placeholder="Click para elegir">
                                 </div>
                             </div>
-                            <div class="col-sm-12">
-                                <button wire:click="$refresh" class="btn btn-dark btn-block">
-                                    Consultar
-                                </button>
-
-                                <a class="btn btn-primary btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
-                                    href="{{ url('report/pdf' . '/' . $userId . '/' . $reportType . '/' . $dateFrom . '/' . $dateTo) }}"
-                                    target="_blank">Generar PDF <i class="fas fa-list"></i></a>
-
-                                <a class="btn btn-success btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
-                                    href="{{ url('report/excel' . '/' . $userId . '/' . $reportType . '/' . $dateFrom . '/' . $dateTo) }}"
-                                    target="_blank">Exportar a Excel <i class="fas fa-print"></i></a>
-                            </div>
+                            @php
+                                $condition = count($data) > 0 && !is_null($dateFrom) && !is_null($dateTo);
+                            @endphp
+                            @if ($condition)
+                                <div class="col-sm-12">
+                                    <button wire:click="pdf" class="btn btn-primary btn-block">
+                                        Generar PDF <i class="fas fa-list"></i>
+                                    </button>
+                                    <button wire:click="excel" class="btn btn-primary btn-block">
+                                        Exportar a Excel <i class="fas fa-print"></i>
+                                    </button>
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div class="col-12 col-md-9">
