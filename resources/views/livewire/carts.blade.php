@@ -96,7 +96,6 @@
         </div>
     </div>
 
-
     <div class="widget-content">
         <div class="col mx-auto">
             @if (!empty($error))
@@ -151,6 +150,12 @@
                 @endif
             @endforeach
             {{ $carts->links() }}
+
+            @if (count($carts) === 0)
+                <div class="table-responsive">
+                    <p>No hay carritos registrados actualmente</p>
+                </div>
+            @endif
         </div>
     </div>
 

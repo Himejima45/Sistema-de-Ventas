@@ -29,7 +29,11 @@ class CashoutController extends Component
     }
     public function render()
     {
-        $users = User::orderBy('name', 'asc')->get();
+        $users = User::whereHas('roles', function ($query) {
+            $query->where('name', 'Employee')
+                ->orWhere('name', 'Admin');
+        })
+            ->orderBy('name', 'asc')->get();
         $this->userid = $users[0]->id;
 
         $this->sales = Sale::where('type', 'SALE')

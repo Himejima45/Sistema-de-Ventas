@@ -34,7 +34,8 @@ class ReportsController extends Component
         $this->SalesByDate();
 
         $employees = User::whereHas('roles', function ($query) {
-            $query->where('name', 'Employee');
+            $query->where('name', 'Employee')
+                ->orWhere('name', 'Admin');
         })
             ->orderBy('name', 'asc')
             ->get();
