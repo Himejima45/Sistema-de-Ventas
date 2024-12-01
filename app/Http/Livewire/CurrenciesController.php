@@ -15,7 +15,7 @@ class CurrenciesController extends Component
     use WithPagination;
 
     public $type, $value, $search, $image, $selected_id, $pageTitle, $componentName;
-    private $pagination = 5;
+    private $pagination = 20;
 
     public $rules = [
         'value' => [

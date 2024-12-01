@@ -189,8 +189,8 @@
                     </div>
                 </div>
             @endforeach
-            {{ $products->links() }}
         </div>
+        {{ $products->links('pagination::bootstrap-4') }}
     </div>
 
 </div>

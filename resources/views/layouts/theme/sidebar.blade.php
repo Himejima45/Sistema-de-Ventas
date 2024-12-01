@@ -28,11 +28,18 @@
                                 <div class="base-icons">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid">
-                                        <rect x="3" y="3" width="7" height="7"></rect>
-                                        <rect x="14" y="3" width="7" height="7"></rect>
-                                        <rect x="14" y="14" width="7" height="7"></rect>
-                                        <rect x="3" y="14" width="7" height="7"></rect>
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-calendar-days">
+                                        <path d="M8 2v4" />
+                                        <path d="M16 2v4" />
+                                        <rect width="18" height="18" x="3" y="4" rx="2" />
+                                        <path d="M3 10h18" />
+                                        <path d="M8 14h.01" />
+                                        <path d="M12 14h.01" />
+                                        <path d="M16 14h.01" />
+                                        <path d="M8 18h.01" />
+                                        <path d="M12 18h.01" />
+                                        <path d="M16 18h.01" />
                                     </svg>
                                 </div>
                                 <span>Historial</span>
@@ -47,11 +54,10 @@
                                 <div class="base-icons">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid">
-                                        <rect x="3" y="3" width="7" height="7"></rect>
-                                        <rect x="14" y="3" width="7" height="7"></rect>
-                                        <rect x="14" y="14" width="7" height="7"></rect>
-                                        <rect x="3" y="14" width="7" height="7"></rect>
+                                        stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag">
+                                        <path
+                                            d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" />
+                                        <circle cx="7.5" cy="7.5" r=".5" fill="currentColor" />
                                     </svg>
                                 </div>
                                 <span>Categorias</span>
@@ -66,11 +72,11 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
-                                        class="feather feather-shopping-cart">
+                                        class="lucide lucide-shopping-cart">
+                                        <circle cx="8" cy="21" r="1" />
+                                        <circle cx="19" cy="21" r="1" />
                                         <path
-                                            d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z">
-                                        </path>
-                                        <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                                            d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
                                     </svg>
                                 </div>
                                 <span>Carritos</span>
@@ -84,11 +90,11 @@
                                 <div class="base-icons">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag">
-                                        <path
-                                            d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z">
-                                        </path>
-                                        <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-shopping-bag">
+                                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                                        <path d="M3 6h18" />
+                                        <path d="M16 10a4 4 0 0 1-8 0" />
                                     </svg>
                                 </div>
                                 <span>Compras</span>
@@ -102,11 +108,15 @@
                                 <div class="base-icons">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag">
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-package-search">
                                         <path
-                                            d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z">
-                                        </path>
-                                        <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                                            d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14" />
+                                        <path d="m7.5 4.27 9 5.15" />
+                                        <polyline points="3.29 7 12 12 20.71 7" />
+                                        <line x1="12" x2="12" y1="22" y2="12" />
+                                        <circle cx="18.5" cy="15.5" r="2.5" />
+                                        <path d="M20.27 17.27 22 19" />
                                     </svg>
                                 </div>
                                 <span>Productos</span>
@@ -121,11 +131,10 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
-                                        class="feather feather-shopping-cart">
-                                        <circle cx="9" cy="21" r="1"></circle>
-                                        <circle cx="20" cy="21" r="1"></circle>
-                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6">
-                                        </path>
+                                        class="lucide lucide-circle-dollar-sign">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
+                                        <path d="M12 18V6" />
                                     </svg>
                                 </div>
                                 <span>Presupuestos</span>
@@ -140,11 +149,14 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
-                                        class="feather feather-shopping-cart">
-                                        <circle cx="9" cy="21" r="1"></circle>
-                                        <circle cx="20" cy="21" r="1"></circle>
-                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6">
-                                        </path>
+                                        class="lucide lucide-shopping-basket">
+                                        <path d="m15 11-1 9" />
+                                        <path d="m19 11-4-7" />
+                                        <path d="M2 11h20" />
+                                        <path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4" />
+                                        <path d="M4.5 15.5h15" />
+                                        <path d="m5 11 4-7" />
+                                        <path d="m9 11 1 9" />
                                     </svg>
                                 </div>
                                 <span>Ventas</span>
@@ -159,10 +171,11 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
-                                        class="feather feather-user-check">
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="8.5" cy="7" r="4"></circle>
-                                        <polyline points="17 11 19 13 23 9"></polyline>
+                                        class="lucide lucide-book-user">
+                                        <path d="M15 13a3 3 0 1 0-6 0" />
+                                        <path
+                                            d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" />
+                                        <circle cx="12" cy="8" r="2" />
                                     </svg>
                                 </div>
                                 <span>Proveedores</span>
@@ -222,21 +235,6 @@
                         </a>
                     </li>
 
-                    <li class="active">
-                        <a href="" class="menu-toggle" data-active="false">
-                            <div class="base-menu">
-                                <div class="base-icons">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                </div>
-                                <span>Asignar</span>
-                            </div>
-                        </a>
-                    </li>
                     <li class="active">
                         <a href="{{ url('user') }}" class="menu-toggle" data-active="false">
                             <div class="base-menu">

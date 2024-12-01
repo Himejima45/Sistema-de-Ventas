@@ -15,7 +15,7 @@ class PermisosController extends Component
     use WithPagination;
 
     public $permissionName, $search, $selected_id, $pageTitle, $componentName;
-    private $pagination = 10;
+    private $pagination = 20;
 
     public function paginationView()
     {

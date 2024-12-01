@@ -173,6 +173,11 @@ class CatalogController extends Component
         $this->clearFilters();
     }
 
+    public function paginationView()
+    {
+        return 'vendor.livewire.bootstrap';
+    }
+
     public function render()
     {
         $products = Product::where('stock', '>', 0)

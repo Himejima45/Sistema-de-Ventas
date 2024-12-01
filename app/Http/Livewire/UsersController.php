@@ -34,7 +34,7 @@ class UsersController extends Component
         'password.min' => 'La contraseña debe tener al menos 3 caracteres',
     ];
 
-    private $pagination = 5;
+    private $pagination = 20;
 
     public function paginationView()
     {

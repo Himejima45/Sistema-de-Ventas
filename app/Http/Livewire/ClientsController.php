@@ -3,7 +3,6 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Models\Client;
 use App\Models\User;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -14,25 +13,26 @@ class ClientsController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $name, $last_name, $document, $phone, $address, $selected_id, $pageTitle, $componentName, $search;
-    private $pagination = 10;
+    public $name, $last_name, $document, $phone, $email, $address, $selected_id, $pageTitle, $componentName, $search, $password, $password_confirmation;
+    private $pagination = 20;
     public $rules = [
         'name' => ['required', 'min:2', 'max:30', 'regex:/^(?=.*[a-zA-Z])(?=\S*\s?\S*$)(?!.*\s{2,}).*$/'],
         'last_name' => 'required|min:2|max:30|alpha',
-        'document' => 'required|digits_between:6,8,|numeric|unique:clients,document',
-        'phone' => 'required|digits:11|numeric|unique:clients,phone',
+        'document' => 'required|digits_between:6,8|numeric|unique:users,document',
+        'email' => 'required|string|email|max:255|unique:users',
+        'phone' => 'required|digits:11|numeric|unique:users,phone',
+        'password' => 'required|string|min:8|confirmed',
         'address' => ['required', 'min:3', 'max:100', 'regex:/^(?=.*[a-zA-Z])(?=\S*\s?\S*$)(?!.*\s{2,}).*$/']
     ];
 
-    // ! TODO 10
-    public $messages = [
-        'name.required' => 'El Nombre es requerido',
-        'name.unique' => 'Ya existe el nombre',
-        'name.min' => 'El nombre debe tener al menos 2 caracteres',
-        'last_name.required' => 'El apellido es requerido',
-        'document.required' => 'La cedula es requerida',
-        'phone.required' => 'El numero de telefono es requerido',
-        'address.required' => 'La direccion es requerida'
+    protected $validationAttributes = [
+        'name' => 'nombre',
+        'last_name' => 'apellido',
+        'document' => 'cédula',
+        'email' => 'correo electrónico',
+        'phone' => 'teléfono',
+        'address' => 'dirección',
+        'password' => 'contraseña'
     ];
 
     public function mount()
@@ -95,8 +95,8 @@ class ClientsController extends Component
         $rules = array_merge(
             $this->rules,
             [
-                'document' => "required|digits_between:6,8|numeric|unique:clients,document,{$this->selected_id}",
-                'phone' => "required|digits:11|numeric|unique:clients,phone,{$this->selected_id}"
+                'document' => "required|digits_between:6,8|numeric|unique:users,document,{$this->selected_id}",
+                'phone' => "required|digits:11|numeric|unique:users,phone,{$this->selected_id}"
             ]
         );
         $data = $this->validate($rules);

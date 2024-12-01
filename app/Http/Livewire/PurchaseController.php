@@ -14,7 +14,7 @@ class PurchaseController extends Component
     public $editingPurchaseId;
     public $startDate, $endDate;
 
-    private $pagination = 1;
+    private $pagination = 20;
 
     protected $listeners = ['addProduct', 'removeProduct', 'editPurchase', 'showProducts'];
 

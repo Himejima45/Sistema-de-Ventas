@@ -25,6 +25,7 @@
                                 <th class="table-th text-white">CEDULA</th>
                                 <th class="table-th text-white">NRO.TELE</th>
                                 <th class="table-th text-white">DIRECCION</th>
+                                <th class="table-th text-white">CORREO</th>
                                 <th class="table-th text-white">ACCIONES</th>
                             </tr>
 
@@ -46,6 +47,9 @@
                                     </td>
                                     <td class="text-center">
                                         <h6>{{ $client->address }}</h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <h6>{{ $client->email }}</h6>
                                     </td>
 
                                     <td class="text-center">

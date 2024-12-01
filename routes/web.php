@@ -39,20 +39,21 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('asignar', AsignarController::class);
-Route::get('categories', CategoriesController::class);
-Route::get('products', ProductsController::class);
-Route::get('currencies', CurrenciesController::class);
-Route::get('pos', PosController::class);
-Route::get('clients', ClientsController::class);
-Route::get('roles', RolesController::class);
-Route::get('permisos', PermisosController::class);
-Route::get('user', UsersController::class);
-Route::get('cashout', CashoutController::class);
-Route::get('reports', ReportsController::class);
-Route::get('providers', ProviderController::class);
-Route::get('purchases', PurchaseController::class);
-Route::get('catalog', CatalogController::class);
-Route::get('historial',  ClientCartsController::class);
-Route::get('carts',  CartsController::class);
-Route::get('budgets',  BudgetsController::class);
+Route::middleware('auth')->group(function () {
+    Route::get('categories', CategoriesController::class);
+    Route::get('products', ProductsController::class);
+    Route::get('currencies', CurrenciesController::class);
+    Route::get('pos', PosController::class);
+    Route::get('clients', ClientsController::class);
+    Route::get('roles', RolesController::class);
+    Route::get('permisos', PermisosController::class);
+    Route::get('user', UsersController::class);
+    Route::get('cashout', CashoutController::class);
+    Route::get('reports', ReportsController::class);
+    Route::get('providers', ProviderController::class);
+    Route::get('purchases', PurchaseController::class);
+    Route::get('catalog', CatalogController::class);
+    Route::get('historial',  ClientCartsController::class);
+    Route::get('carts',  CartsController::class);
+    Route::get('budgets',  BudgetsController::class);
+});

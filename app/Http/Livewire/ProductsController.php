@@ -16,7 +16,7 @@ class ProductsController extends Component
     use WithPagination;
 
     public $name, $barcode, $cost, $price, $stock, $min_stock, $provider_id, $category_id, $search, $image, $selected_id, $pageTitle, $componentName, $warranty, $selectedProduct;
-    private $pagination = 5;
+    private $pagination = 20;
 
     public $rules = [
         'name' => [
@@ -36,12 +36,17 @@ class ProductsController extends Component
         'category_id' => ['required', 'not_in:0,Elegir'],
         'provider_id' => ['required', 'not_in:0,Elegir']
     ];
-
-    // ! TODO 10
-    public $messages = [
-        'name.required' => 'El monto es requerido',
-        'name.min' => 'El nombre debe contener al menos 2 letras',
-        'provider_id.not_in' => 'Debe seleccionar un proveedor de la lista'
+    protected $validationAttributes = [
+        'name' => 'nombre',
+        'barcode' => 'código de barras',
+        'cost' => 'coste de compra',
+        'price' => 'precio de venta',
+        'stock' => 'inventario',
+        'warranty' => 'garantía',
+        'min_stock' => 'inventario mínimo',
+        'image' => 'imágen',
+        'category_id' => 'categoría',
+        'provider_id' => 'proveedor',
     ];
 
     public function paginationView()
@@ -65,12 +70,12 @@ class ProductsController extends Component
                 ->where('products.name', 'like', '%' . $this->search . '%')
                 ->orWhere('products.barcode', 'like', '%' . $this->search . '%')
                 ->orWhere('c.name', 'like', '%' . $this->search . '%')
-                ->orderBy('products.name', 'asc')
+                ->orderBy('products.created_at', 'desc')
                 ->paginate($this->pagination);
         else
             $products = Product::join('categories as c', 'c.id', 'products.category_id')
                 ->select('products.*', 'c.name as category')
-                ->orderBy('products.created_at', 'asc')
+                ->orderBy('products.created_at', 'desc')
                 ->paginate($this->pagination);
 
         return view('livewire.products.component', [

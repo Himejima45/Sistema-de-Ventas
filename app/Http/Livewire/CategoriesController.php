@@ -15,7 +15,7 @@ class CategoriesController extends Component
     use WithPagination;
 
     public $name, $search, $selected_id, $pageTitle, $componentName, $customFileName;
-    private $pagination = 5;
+    private $pagination = 20;
 
     public $rules = [
         'name' => ['required', 'min:2', 'max:30', 'regex:/^(?=.*[a-zA-Z])(?=\S*\s?\S*$)(?!.*\s{2,}).*$/', 'unique:categories,name'],

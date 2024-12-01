@@ -13,7 +13,7 @@ class ProviderController extends Component
     use WithPagination;
 
     public $name, $address, $phone, $rif, $document, $search, $selected_id, $pageTitle, $componentName;
-    private $pagination = 5;
+    private $pagination = 20;
     public $rules = [
         'name' => [
             'required',
