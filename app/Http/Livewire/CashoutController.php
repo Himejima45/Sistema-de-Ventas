@@ -58,21 +58,25 @@ class CashoutController extends Component
 
     public function pdf()
     {
-        $sales = Sale::whereBetween('created_at', [$this->fromDate, $this->toDate])->with('user')->get()->map(function ($sale) {
-            $total = 0;
-            foreach ($sale->products as $product) {
-                $total += $product->price * $product->quantity;
-            }
+        $sales = Sale::whereBetween('created_at', [$this->fromDate, $this->toDate])
+            ->with('user')
+            ->get()
+            ->map(function ($sale) {
+                $total = 0;
+                foreach ($sale->products as $product) {
+                    $total += $product->price * $product->quantity;
+                }
 
-            return [
-                'id' => $sale->id,
-                'name' => $sale->user->name,
-                'date' => $sale->created_at->format('H:i:s d-m-Y'),
-                'total' => $total,
-                'items' => $sale->getTotalProducts(),
-                'status' => $sale->status
-            ];
-        });
+                return [
+                    'id' => $sale->id,
+                    'name' => $sale->user->name,
+                    'date' => $sale->created_at->format('H:i:s d-m-Y'),
+                    'total' => $total,
+                    'items' => $sale->getTotalProducts(),
+                    'status' => $sale->status,
+                    'client' => $sale->client->name
+                ];
+            });
 
         $start = $this->fromDate;
         $end = $this->toDate;
