@@ -1,7 +1,7 @@
 <div wire:ignore.self class="modal fade" id="modalDetails" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-dark">
+            <div class="modal-header" style="background: #3B3F5C">
                 <h5 class="modal-title text-white">
                     <b>Detalle de Venta # {{ $saleId }}</b>
                 </h5>
