@@ -48,12 +48,19 @@ class BudgetsController extends Component
         $this->validate();
         $record = Sale::find($this->selected_id);
         $total_payed = $this->total <= $this->cash + ($this->bs / $this->currency) - $this->change;
+
+        $new_bs = floatval($this->bs ?? 0);
+        $new_cash = floatval($this->cash ?? 0);
+        $new_total = floatval($this->total ?? 0);
+        $bs_to_usd = $new_bs > 0 ? round($new_bs / $this->currency, 2) : 0;
+        $total_to_pay = round($new_total - $new_cash - $bs_to_usd, 2);
+        round($new_total - $new_cash - $bs_to_usd, 2);
         $record->update([
             'status' => $total_payed ? 'PAID' : 'PENDING',
             'type' => 'SALE',
             'cash' => $this->cash,
             'bs' => $this->bs,
-            'change' => $this->change,
+            'change' => $total_to_pay,
         ]);
 
         $this->bs = 0;

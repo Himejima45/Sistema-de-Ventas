@@ -114,14 +114,12 @@
                     @php
                         $new_bs = floatval($bs ?? 0);
                         $new_cash = floatval($cash ?? 0);
-                        $new_change = floatval($change ?? 0);
                         $new_total = floatval($total ?? 0);
                         $bs_to_usd = $new_bs > 0 ? round($new_bs / $currency, 2) : 0;
-                        $total_to_pay = round($new_total + $new_change - $new_cash - $bs_to_usd, 2);
-                        $total_to_pay_bs = round(
-                            round($new_total + $new_change - $new_cash - $bs_to_usd, 2) * $currency,
-                            2,
-                        );
+                        $total_to_pay = round($new_total - $new_cash - $bs_to_usd, 2);
+                        $total_to_pay_bs = round(round($new_total - $new_cash - $bs_to_usd, 2) * $currency, 2);
+                        $total_change_usd = abs($total_to_pay < 0 ? $total_to_pay : 0);
+                        $total_change_bs = $total_change_usd !== 0 ? $total_change_usd * $currency : 0;
                     @endphp
                     <div class="row">
                         <div class="col-6">
@@ -141,23 +139,16 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label>Total a pagar $</label>
-                                <input type="number" disabled value="{{ $total_to_pay }}" placeholder="Ej: 10"
-                                    @class([
-                                        'form-control',
-                                        'text-success' => $total_to_pay < 0,
-                                        'text-danger' => $total_to_pay > 0,
-                                    ])>
+                                <input type="number" disabled value="{{ $total_to_pay > 0 ? $total_to_pay : 0 }}"
+                                    placeholder="Ej: 10" @class(['form-control', 'text-danger' => $total_to_pay > 0])>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label>Total a pagar Bs</label>
-                                <input type="number" disabled value="{{ $total_to_pay_bs }}" placeholder="Ej: 10"
-                                    @class([
-                                        'form-control',
-                                        'text-success' => $total_to_pay_bs < 0,
-                                        'text-danger' => $total_to_pay_bs > 0,
-                                    ])>
+                                <input type="number" disabled
+                                    value="{{ $total_to_pay_bs > 0 ? $total_to_pay_bs : 0 }}" placeholder="Ej: 10"
+                                    @class(['form-control', 'text-danger' => $total_to_pay_bs > 0])>
                             </div>
                         </div>
                         <div class="col-6">
@@ -181,10 +172,15 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label>Cambio $</label>
-                                <input type="number" wire:model="change" class="form-control" placeholder="Ej: 10">
-                                @error('change')
-                                    <span class="text-danger er">{{ $message }}</span>
-                                @enderror
+                                <input type="number" disabled value="{{ $total_change_usd }}" class="form-control"
+                                    placeholder="Ej: 10">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>Cambio bs</label>
+                                <input type="number" disabled value="{{ $total_change_bs }}" class="form-control"
+                                    placeholder="Ej: 10">
                             </div>
                         </div>
                     </div>
