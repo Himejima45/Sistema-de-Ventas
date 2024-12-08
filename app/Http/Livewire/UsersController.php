@@ -44,17 +44,27 @@ class UsersController extends Component
     public function mount()
     {
         $this->pageTitle = 'Listado';
-        $this->componentName = 'Usuarios';
+        $this->componentName = 'Empleados';
         $this->status = 'Elegir';
     }
 
     public function render()
     {
         if (strlen($this->search) > 0)
-            $data = User::where('name', 'like', '%' . $this->search . '%')
+            $data = User::whereHas('roles', function ($query) {
+                $query->where('name', 'Employee');
+            })
+                ->where('name', 'like', '%' . $this->search . '%')
+                ->where('name', '!=', 'Admin')
                 ->select('*')->orderBy('name', 'asc')->paginate($this->pagination);
         else
-            $data = User::select('*')->orderBy('name', 'asc')->paginate($this->pagination);
+            $data = User::select('*')
+                ->whereHas('roles', function ($query) {
+                    $query->where('name', 'Employee');
+                })
+                ->orderBy('name', 'asc')
+                ->where('name', '!=', 'Admin')
+                ->paginate($this->pagination);
 
         return view('livewire.users.component', [
             'data' => $data,

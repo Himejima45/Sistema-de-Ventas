@@ -11,8 +11,7 @@
                 </h4>
                 <ul class="tabs tab-pills">
                     <li>
-                        <a href="javascript:void(0)" class="tabmenu bg-dark" data-toggle="modal"
-                            data-target="#theModal">AGREGAR</a>
+                        <x-add_button />
                     </li>
                 </ul>
             </div>
@@ -27,7 +26,14 @@
                         min="{{ $startDate ?? 'undefined' }}" max="{{ now()->format('Y-m-d') }}">
                 </div>
                 <div class="col-md-2">
-                    <button wire:click.prevent="searchByDate" class="btn btn-primary">Buscar</button>
+                    <button wire:click.prevent="searchByDate" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="m21 21-4.3-4.3" />
+                        </svg>
+                        Buscar</button>
                 </div>
             </div>
 
@@ -76,14 +82,8 @@
                                             {{ count($item->products) }}</h6>
                                     </td>
                                     <td class="text-center">
-                                        <a href="javascript:void(0)" wire:click="editPurchase({{ $item->id }})"
-                                            class="btn btn-primary mtmobile" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="javascript:void(0)" wire:click="showProducts({{ $item->id }})"
-                                            class="btn btn-info mtmobile" title="Ver Productos">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
+                                        <x-edit_button wire:click="editPurchase({{ $item->id }})" />
+                                        <x-see_button wire:click="showProducts({{ $item->id }})" />
                                     </td>
                                 </tr>
                             @endforeach

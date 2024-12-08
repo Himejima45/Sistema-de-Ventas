@@ -37,7 +37,7 @@ class ProviderController extends Component
     public function mount()
     {
         $this->pageTitle = 'Listado';
-        $this->componentName = 'Tasas';
+        $this->componentName = 'Proveedores';
     }
 
 

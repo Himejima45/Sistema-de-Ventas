@@ -249,14 +249,8 @@
                                         <h6>{{ $budget->getTotalProducts() }}</h6>
                                     </td>
                                     <td class="text-center">
-                                        <button wire:click="edit({{ $budget->id }})"
-                                            class="btn btn-primary mtmobile" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button wire:click="products({{ $budget->id }})"
-                                            class="btn btn-primary mtmobile" title="Ver productos">
-                                            <i class="fas fa-tag"></i>
-                                        </button>
+                                        <x-edit_button wire:click="edit({{ $budget->id }})" />
+                                        <x-see_button wire:click="products({{ $budget->id }})" />
                                     </td>
                                 </tr>
                             @endforeach

@@ -7,8 +7,7 @@
                 </h4>
                 <ul class="tabs tab-pills">
                     <li>
-                        <a href="javascript:void(0)" class="tabmenu bg-dark" data-toggle="modal"
-                            data-target="#theModal">AGREGAR</a>
+                        <x-add_button />
                     </li>
                 </ul>
             </div>
@@ -24,13 +23,19 @@
                                 <th class="table-th text-white text-center">TELEFONO</th>
                                 <th class="table-th text-white text-center">EMAIL</th>
                                 <th class="table-th text-white text-center">ESTATUS</th>
-                                <th class="table-th text-white text-center">PERFIL</th>
                                 <th class="table-th text-white text-center">IMAGEN</th>
                                 <th class="table-th text-white text-center">ACCIONES</th>
                             </tr>
 
                         </thead>
                         <tbody>
+                            @php
+                                $translations = [
+                                    'Admin' => 'Administrador',
+                                    'Client' => 'Cliente',
+                                    'Employee' => 'Empleado',
+                                ];
+                            @endphp
                             @foreach ($data as $r)
                                 <tr>
                                     <td>
@@ -47,10 +52,6 @@
                                             class="badge {{ $r->active == 1 ? 'badge-success' : 'badge-danger' }}
                                                     text-uppercase">{{ $r->active ? 'Activo' : 'Inactivo' }}</span>
                                     </td>
-                                    <td>
-                                        <h6 class="text-center text-uppercase">{{ $r->getRoleNames()[0] ?? 'Empleado' }}
-                                        </h6>
-                                    </td>
 
                                     <td class="text-center">
                                         @if ($r->image != null)
@@ -59,17 +60,10 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-
-                                        <a href="javascript:void(0)" wire:click="Edit({{ $r->id }})"
-                                            class="btn btn-primary mtmobile" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
+                                        <x-edit_button wire:click="Edit({{ $r->id }})" />
 
                                         @if ($r->email !== 'admin@email.com')
-                                            <a href="javascript:void(0)" onclick="Confirm('{{ $r->id }}')"
-                                                class="btn btn-danger" title="Eliminar">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
+                                            <x-delete_button onclick="Confirm('{{ $r->id }}')" />
                                         @endif
                                     </td>
 
@@ -109,22 +103,23 @@
         });
 
 
-        function Confirm(id) {
-            swal({
-                title: 'CONFIRMAR',
-                text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
-                type: 'warning',
-                showCancelButton: true,
-                cancelButtonText: 'Cerrar',
-                cancelButtonColor: '#fff',
-                confirmButtonColor: '#3B3F5C',
-                confirmButtonText: 'Aceptar'
-            }).then(function(result) {
-                if (result.value) {
-                    window.livewire.emit('Destroy', $id)
-                    swal.close()
-                }
-            })
-        }
     });
+
+    function Confirm(id) {
+        swal({
+            title: 'CONFIRMAR',
+            text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#fff',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('Destroy', $id)
+                swal.close()
+            }
+        })
+    }
 </script>

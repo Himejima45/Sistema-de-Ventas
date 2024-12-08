@@ -29,8 +29,7 @@
                 </h4>
                 <ul class="tabs tab-pills">
                     <li>
-                        <a href="javascript:void(0)" class="tabmenu bg-dark" data-toggle="modal"
-                            data-target="#theModal">AGREGAR</a>
+                        <x-add_button />
                     </li>
                 </ul>
             </div>
@@ -91,15 +90,8 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-
-                                        <a href="javascript:void(0)" wire:click.prevent="Edit({{ $product->id }})"
-                                            class="btn btn-primary mtmobile" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $product->id }}')"
-                                            class="btn btn-danger mtmobile" title="Eliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
+                                        <x-edit_button wire:click.prevent="Edit({{ $product->id }})" />
+                                        <x-delete_button onclick="Confirm('{{ $product->id }}')" />
                                     </td>
                                 </tr>
                             @endforeach

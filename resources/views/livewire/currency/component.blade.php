@@ -7,8 +7,7 @@
                 </h4>
                 <ul class="tabs tab-pills">
                     <li>
-                        <a href="javascript:void(0)" class="tabmenu bg-dark" data-toggle="modal"
-                            data-target="#theModal">AGREGAR</a>
+                        <x-add_button />
                     </li>
                 </ul>
             </div>
@@ -36,16 +35,9 @@
                                         <h6>{{ $currency->created_at->format('Y-m-d') }}</h6>
                                     </td>
                                     <td class="text-center">
-
-                                        <button wire:click="Edit({{ $currency->id }})" class="btn btn-primary mtmobile"
-                                            title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button
-                                            onclick="Confirm({{ $currency->id }}, 'Eliminar', '¿Está seguro de eliminar a este cliente?')"
-                                            class="btn btn-danger mtmobile" title="Borrar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                        <x-edit_button wire:click="Edit({{ $currency->id }})" />
+                                        <x-delete_button
+                                            onclick="Confirm({{ $currency->id }}, 'Eliminar', '¿Está seguro de eliminar a este cliente?')" />
                                     </td>
                                 </tr>
                             @endforeach

@@ -7,8 +7,7 @@
                 </h4>
                 <ul class="tabs tab-pills">
                     <li>
-                        <a href="javascript:void(0)" class="tabmenu bg-dark" data-toggle="modal"
-                            data-target="#theModal">Agregar</a>
+                        <x-add_button />
                     </li>
                 </ul>
             </div>
@@ -27,7 +26,13 @@
 
                         </thead>
                         <tbody>
-
+                            @php
+                                $translations = [
+                                    'Admin' => 'Administrador',
+                                    'Client' => 'Cliente',
+                                    'Employee' => 'Empleado',
+                                ];
+                            @endphp
                             @foreach ($roles as $role)
                                 <tr>
                                     <td>
@@ -35,19 +40,12 @@
                                     </td>
                                     <td>
                                         <h6>
-
-                                            {{ $role->name }}
+                                            {{ array_key_exists($role->name, $translations) ? $translations[$role->name] : $role->name }}
                                         </h6>
                                     </td>
                                     <td class="text-center">
-                                        <a href="javascript:void(0)" wire:click="Edit({{ $role->id }})"
-                                            class="btn btn-primary mtmobile" title="Editar Registro">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="javascript:void(0)" onclick="Confirm({{ $role->id }})"
-                                            class="btn btn-danger mtmobile" title="Eliminar Registro">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
+                                        <x-edit_button wire:click="Edit({{ $role->id }})" />
+                                        <x-delete_button onclick="Confirm({{ $role->id }})" />
                                     </td>
                                 </tr>
                             @endforeach
