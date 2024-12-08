@@ -15,35 +15,44 @@ class DollarAPIFetch
         $currency = Currency::orderByDesc('created_at')->first();
         $availableHours = ["10:00:00", "15:00:00"];
         $currentDate = now()->format('d-m-Y');
-        $api = 'https://ve.dolarapi.com/v1/dolares/paralelo';
+        $api = 'https://pydolarve.org/api/v1/dollar?monitor=bcv';
 
         if (is_null($currency)) {
             $response = Http::get($api);
 
             if ($response->successful()) {
                 $data = json_decode($response->body());
+
+                $last_update = Carbon::createFromFormat('d/m/Y, h:i A', $data->last_update);
+
                 $currency = Currency::create([
-                    'value' => $data->promedio,
-                    'created_at' => Carbon::parse($data->fechaActualizacion)->setTimezone('America/Caracas'),
+                    'value' => $data->price,
+                    'last_update' => $last_update,
                 ]);
                 // session()->put('fetch_status', 'success');
             } else {
                 // session()->put('fetch_status', 'error');
             }
         } else {
-            $currencyDate = Carbon::parse($currency->created_at)->setTimezone('America/Caracas');
+            $response = Http::get($api);
+            $currencyDate = Carbon::parse($currency->last_update)
+                ->format('d-m-Y h:i a');
+            $currentDate = now()
+                ->timeZone('America/Caracas')
+                ->format('d-m-Y h:i a');
 
-            if (
-                $currencyDate->format('d-m-Y') === $currentDate &&
-                !in_array($currencyDate->format('H:i:s'), $availableHours)
-            ) {
+            if ($currentDate > $currencyDate) {
                 $response = Http::get($api);
 
                 if ($response->successful()) {
                     $data = json_decode($response->body());
-                    $currency->value = $data->promedio;
-                    $currency->created_at = Carbon::parse($data->fechaActualizacion)->setTimezone('America/Caracas');
-                    $currency->save();
+
+                    $last_update = Carbon::createFromFormat('d/m/Y, h:i A', $data->last_update);
+
+                    $currency = Currency::create([
+                        'value' => $data->price,
+                        'last_update' => $last_update,
+                    ]);
                     // session()->put('fetch_status', 'success');
                 } else {
                     // session()->put('fetch_status', 'error');

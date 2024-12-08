@@ -80,7 +80,9 @@ class CurrenciesController extends Component
             });
         })->validate();
         $data = $this->validate();
-        Currency::create($data);
+        Currency::create(array_merge($data, [
+            'last_update' => now()->format('Y-m-d H:i:s')
+        ]));
 
         $this->resetUI();
         $this->emit('currency-added', 'Denominacion Registrada');
