@@ -103,7 +103,7 @@
     <div wire:ignore.self class="modal fade" id="edit" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-header bg-dark">
+                <div class="modal-header" style="background: #3B3F5C">
                     <h5 class="modal-title text-white">
                         <b>Finalizar presupuesto</b>
                     </h5>
@@ -112,9 +112,16 @@
                 <div class="modal-body">
 
                     @php
-                        $bs_to_usd = $bs > 0 ? round($bs / $currency, 2) : 0;
-                        $total_to_pay = round($total + $change - $cash - $bs_to_usd, 2);
-                        $total_to_pay_bs = round(round($total + $change - $cash - $bs_to_usd, 2) * $currency, 2);
+                        $new_bs = intval($bs ?? 0);
+                        $new_cash = intval($cash ?? 0);
+                        $new_change = intval($change ?? 0);
+                        $new_total = intval($total ?? 0);
+                        $bs_to_usd = $new_bs > 0 ? round($new_bs / $currency, 2) : 0;
+                        $total_to_pay = round($new_total + $new_change - $new_cash - $bs_to_usd, 2);
+                        $total_to_pay_bs = round(
+                            round($new_total + $new_change - $new_cash - $bs_to_usd, 2) * $currency,
+                            2,
+                        );
                     @endphp
                     <div class="row">
                         <div class="col-6">
