@@ -39,7 +39,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'fetch.currency'])->group(function () {
     Route::get('categories', CategoriesController::class);
     Route::get('products', ProductsController::class);
     Route::get('currencies', CurrenciesController::class);
