@@ -9,14 +9,73 @@
                 <circle cx="19" cy="21" r="1" />
                 <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
             </svg>
+            {{ $total_items > 0 ? $total_items : '' }}
         </button>
-        <button wire:click="toggleFilter" class="btn btn-ghost ml-2">
+
+        <button type="button" class="btn btn-ghost dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false" data-bs-auto-close="inside">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="lucide lucide-filter">
                 <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
             </svg>
         </button>
+        <form class="dropdown-menu p-4" style="max-width: 18rem" wire:ignore>
+            <button type="button" id="clear_filters" wire:click="clearFilters" class="btn btn-danger"><svg
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-eraser">
+                    <path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21" />
+                    <path d="M22 21H7" />
+                    <path d="m5 11 9 9" />
+                </svg></button>
+            <div class="form-group">
+                <label>Categoria</label>
+                <select name="category" wire:model.lazy='category_id' class="form-control">
+                    <option value="" selected>Elegir</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}"> {{ $category->name }}</option>
+                    @endforeach
+                </select>
+                @error('categoryid')
+                    <span class="text-danger er">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label>Proveedor</label>
+                <select name="provider" wire:model.lazy='provider_id' class="form-control">
+                    <option value="" selected>Elegir</option>
+                    @foreach ($providers as $provider)
+                        <option value="{{ $provider->id }}"> {{ $provider->name }}</option>
+                    @endforeach
+                </select>
+                @error('categoryid')
+                    <span class="text-danger er">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Precio mín</label>
+                        <input type="number" wire:model="priceMin" class="form-control" placeholder="Ej: 10"
+                            max="{{ $priceMax - 1 }}">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Precio máx</label>
+                        <input type="number" wire:model="priceMax" class="form-control" placeholder="Ej: 10"
+                            min="{{ $priceMin + 1 }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Cantidad mín</label>
+                <input type="number" wire:model="quantity" class="form-control" placeholder="Ej: 10" min="1"
+                    max="1000">
+            </div>
+        </form>
+
     </div>
     @if ($showCart)
         <div id="cart-drawer" class="drawer show">
@@ -41,7 +100,8 @@
                             @endphp
                             <div class="row mb-1">
                                 <div class="col-2">
-                                    <img src="{{ $product->getImage() }}" width="40" height="40"="Product image">
+                                    <img src="{{ $product->getImage() }}" width="40"
+                                        height="40"="Product image">
                                 </div>
                                 <div class="col-6">
                                     <p class="align-self-center mb-0">
@@ -86,86 +146,6 @@
                     <div class="col">
 
                         <button wire:click="save" class="mt-5 btn btn-block btn-primary">Guardar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
-    @if ($showFilter)
-        <div id="filter-drawer" class="drawer show">
-            <div class="drawer-content">
-                <div class="mb-3 d-flex justify-content-between">
-                    <h3>Filtros</h3>
-                    <div class="d-flex">
-                        <button wire:click="clearFilters" class="btn btn-ghost">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="lucide lucide-trash-2">
-                                <path d="M3 6h18" />
-                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                                <line x1="10" x2="10" y1="11" y2="17" />
-                                <line x1="14" x2="14" y1="11" y2="17" />
-                            </svg>
-                        </button>
-                        <button wire:click="toggleFilter" class="btn btn-ghost"><svg
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="lucide lucide-x">
-                                <path d="M18 6 6 18" />
-                                <path d="m6 6 12 12" />
-                            </svg></button>
-                    </div>
-                </div>
-                <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label>Categoria</label>
-                                <select name="category" wire:model.lazy='category_id' class="form-control">
-                                    <option value="null" selected>Elegir</option>
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}"> {{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('categoryid')
-                                    <span class="text-danger er">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label>Proveedor</label>
-                                <select name="provider" wire:model.lazy='provider_id' class="form-control">
-                                    <option value="null" selected>Elegir</option>
-                                    @foreach ($providers as $provider)
-                                        <option value="{{ $provider->id }}"> {{ $provider->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('categoryid')
-                                    <span class="text-danger er">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label>Precio mín</label>
-                                        <input type="number" wire:model="priceMin" class="form-control"
-                                            placeholder="Ej: 10" max="{{ $priceMax - 1 }}">
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label>Precio máx</label>
-                                        <input type="number" wire:model="priceMax" class="form-control"
-                                            placeholder="Ej: 10" min="{{ $priceMin + 1 }}">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Cantidad mín</label>
-                                <input type="number" wire:model="quantity" class="form-control"
-                                    placeholder="Ej: 10" min="1" max="1000">
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -217,3 +197,30 @@
         right: -17px;
     }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const clearFiltersBtn = document.querySelector('#clear_filters')
+        const dropdownMenu = document.querySelector('form.dropdown-menu');
+        const dropdownMenuElements = document.querySelectorAll(
+            '.dropdown-menu, .dropdown-menu input, .dropdown-menu label, .dropdown-menu select'
+        );
+
+        document.addEventListener('click', function(e) {
+            if (!dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+
+        dropdownMenuElements.forEach(function(element) {
+            element.addEventListener('click', function(e) {
+                if (['DIV', 'FORM', 'BUTTON'].includes(e.target.tagName)) {
+                    dropdownMenu.classList.remove('show');
+                    return;
+                }
+
+                e.stopPropagation();
+            });
+        });
+    });
+</script>

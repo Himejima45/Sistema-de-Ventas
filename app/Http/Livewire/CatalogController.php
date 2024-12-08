@@ -13,7 +13,7 @@ use Livewire\Component;
 
 class CatalogController extends Component
 {
-    public $cart = [], $showCart = false, $subtotal = 0, $iva = 0, $total = 0, $filter = '', $showFilter = false;
+    public $cart = [], $showCart = false, $subtotal = 0, $iva = 0, $total = 0, $filter = '', $showFilter = false, $total_items = 0;
     public $category_id = '', $provider_id = '', $priceMin = 0, $priceMax = 0, $quantity = 0;
     public $categories = [], $providers = [];
     protected $listeners = ['addToCart', 'toggle', 'removeFromCart', 'clear', 'save', 'clearFilters', 'toggleFilter'];
@@ -74,14 +74,15 @@ class CatalogController extends Component
     {
         $this->cart = [];
         session()->put('cart', $this->cart);
+        $this->total_items = 0;
         $this->showCart = false;
         $this->emit('$refresh');
     }
 
     public function clearFilters()
     {
-        $this->category_id = null;
-        $this->provider_id = null;
+        $this->category_id = '';
+        $this->provider_id = '';
         $this->priceMin = 0;
         $this->priceMax = 0;
         $this->quantity = 0;
@@ -118,9 +119,11 @@ class CatalogController extends Component
 
     public function calculate()
     {
+        $this->total_items = 0;
         foreach ($this->cart as $key => $item) {
             $product = Product::find($key);
             $this->subtotal += $product->price * $item;
+            $this->total_items += $item;
         }
 
         $this->iva = $this->subtotal * 0.16;
