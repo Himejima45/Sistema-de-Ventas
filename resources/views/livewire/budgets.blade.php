@@ -203,7 +203,7 @@
         <div class="widget widget-chart-one">
             <div class="widget-heading">
                 <h4 class="card-title">
-                    <b>Presupuestos | Pendientes</b>
+                    <b>Cuentas por pagar</b>
                 </h4>
             </div>
 

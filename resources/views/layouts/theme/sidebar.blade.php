@@ -137,7 +137,7 @@
                                         <path d="M12 18V6" />
                                     </svg>
                                 </div>
-                                <span>Presupuestos</span>
+                                <span>Cuentas por pagar</span>
                             </div>
                         </a>
                     </li>
