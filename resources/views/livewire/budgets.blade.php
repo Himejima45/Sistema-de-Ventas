@@ -112,10 +112,10 @@
                 <div class="modal-body">
 
                     @php
-                        $new_bs = intval($bs ?? 0);
-                        $new_cash = intval($cash ?? 0);
-                        $new_change = intval($change ?? 0);
-                        $new_total = intval($total ?? 0);
+                        $new_bs = floatval($bs ?? 0);
+                        $new_cash = floatval($cash ?? 0);
+                        $new_change = floatval($change ?? 0);
+                        $new_total = floatval($total ?? 0);
                         $bs_to_usd = $new_bs > 0 ? round($new_bs / $currency, 2) : 0;
                         $total_to_pay = round($new_total + $new_change - $new_cash - $bs_to_usd, 2);
                         $total_to_pay_bs = round(
