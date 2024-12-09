@@ -5,7 +5,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="row justify-content-center mb-3" style="max-width: 100%">
-                    <img src="{{ asset('assets/img/Logo.jpeg') }}" style="height: 16rem; width: 10rem;"
+                    <img src="{{ asset('assets/img/Logo.jpeg') }}" style="height: 16rem; width: 10rem; object-fit: contain"
                         alt="Logo de la empresa">
                 </div>
                 <div class="card">
