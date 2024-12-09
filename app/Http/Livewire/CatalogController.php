@@ -120,6 +120,8 @@ class CatalogController extends Component
     public function calculate()
     {
         $this->total_items = 0;
+        $this->subtotal = 0;
+
         foreach ($this->cart as $key => $item) {
             $product = Product::find($key);
             $this->subtotal += $product->price * $item;
@@ -132,11 +134,15 @@ class CatalogController extends Component
 
     public function addToCart($productId)
     {
-        $product = Product::find($productId);
+        $product = Product::select('stock')->find($productId);
         if (!$product || $product->stock <= 0) {
+            return;
         }
 
         if (isset($this->cart[$productId])) {
+            if ($this->cart[$productId] > $product->stock) {
+                $this->cart[$productId] = $product->stock;
+            }
             $this->cart[$productId]++;
         } else {
             $this->cart[$productId] = 1;

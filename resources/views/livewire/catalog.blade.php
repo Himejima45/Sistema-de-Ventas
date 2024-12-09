@@ -107,7 +107,7 @@
                                     <p class="align-self-center mb-0">
                                         {{ $product->name }}
                                     </p>
-                                    <small>Disponible {{ $product->stock }} </small>
+                                    <small>Disponible {{ $product->stock }} | Precio {{ $product->price }}$</small>
                                 </div>
                                 <div class="col-4">
                                     <div class="row">
