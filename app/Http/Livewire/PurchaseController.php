@@ -92,7 +92,7 @@ class PurchaseController extends Component
 
             if ($product) {
                 $product->update(['price' => $productData['price']]);
-                $product->decrement('stock', (int)$productData['quantity']);
+                $product->increment('stock', (int)$productData['quantity']);
 
                 $purchase->products()->attach($product->id, [
                     'quantity' => (int)$productData['quantity'],
