@@ -4,6 +4,10 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
+                <div class="row justify-content-center mb-3" style="max-width: 100%">
+                    <img src="{{ asset('assets/img/Logo_no_bg.png') }}"
+                        style="height: 22rem; width: 16rem; object-fit: contain" alt="Logo de la empresa">
+                </div>
                 <div class="card">
                     <div class="card-header">{{ __('Registrarme') }}</div>
 
@@ -12,7 +16,8 @@
                             @csrf
 
                             <div class="row mb-3">
-                                <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Nombre') }}</label>
+                                <label for="name"
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Nombre') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="name" type="text"
