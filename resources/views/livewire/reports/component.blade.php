@@ -29,22 +29,28 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-12 mt-2">
-                                <h6>Fechas desde</h6>
-                                <div class="form-group">
-                                    <input type="date" wire:model="dateFrom" class="form-control flatpickr"
-                                        placeholder="Click para elegir">
+                            @if ($reportType === '1')
+                                <div class="col-sm-12 mt-2">
+                                    <h6>Fechas desde</h6>
+                                    <div class="form-group">
+                                        <input type="date" wire:model="dateFrom" class="form-control flatpickr"
+                                            placeholder="Click para elegir" min=""
+                                            max="{{ $dateTo ? \Carbon\Carbon::createFromFormat('Y-m-d', $dateTo)->subDay()->format('Y-m-d') : now()->format('Y-m-d') }}">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-12 mt-2">
-                                <h6>Fechas hasta</h6>
-                                <div class="form-group">
-                                    <input type="date" wire:model="dateTo" class="form-control flatpickr"
-                                        placeholder="Click para elegir">
+                                <div class="col-sm-12 mt-2">
+                                    <h6>Fechas hasta</h6>
+                                    <div class="form-group">
+                                        <input type="date" wire:model="dateTo" class="form-control flatpickr"
+                                            placeholder="Click para elegir" min="{{ $dateFrom }}"
+                                            max="{{ now()->format('Y-m-d') }}">
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                             @php
-                                $condition = count($data) > 0 && !is_null($dateFrom) && !is_null($dateTo);
+                                $condition =
+                                    count($data) > 0 &&
+                                    ((!is_null($dateFrom) && !is_null($dateTo)) || $reportType === 1);
                             @endphp
                             @if ($condition)
                                 <div class="col-sm-12">

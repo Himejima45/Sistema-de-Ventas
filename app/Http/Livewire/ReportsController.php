@@ -48,10 +48,11 @@ class ReportsController extends Component
 
     public function SalesByDate()
     {
-
-        if ($this->reportType == 0) {
-            $from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
-            $to = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59';
+        $from = null;
+        $to = null;
+        if ($this->reportType === '0') {
+            $from = now()->startOfDay();
+            $to = now()->endOfDay();
         } else {
             $from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
             $to = Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59';
@@ -138,12 +139,13 @@ class ReportsController extends Component
 
         $start = $this->dateFrom;
         $end = $this->dateTo;
+        $budget = false;
 
-        return response()->streamDownload(function () use ($sales, $start, $end) {
+        return response()->streamDownload(function () use ($sales, $start, $end, $budget) {
             $pdf = App::make('dompdf.wrapper');
             $start = Carbon::parse($start)->translatedFormat('D d, F Y - h:i:s a');
             $end = Carbon::parse($end)->translatedFormat('D d, F Y - h:i:s a');
-            $pdf->loadView('pdf', compact('sales', 'start', 'end'));
+            $pdf->loadView('pdf', compact('sales', 'start', 'end', 'budget'));
             echo $pdf->stream();
         }, 'Reporte de ventas.pdf');
     }
