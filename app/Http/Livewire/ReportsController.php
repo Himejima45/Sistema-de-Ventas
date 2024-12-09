@@ -62,31 +62,25 @@ class ReportsController extends Component
             return;
         }
 
-        // * NOTA
-        /**
-         * *    Si quieren traer las ventas por los clientes dejar como está
-         * *    Caso contrario, comenten ambos $this->data y descomenten lo de abajo (mostrar por vendedor)
-         */
         if ($this->userId == 0) {
             $this->data = Sale::join('users as c', 'c.id', 'sales.client_id')
-                ->select('sales.*', 'c.name as user')
+                ->select('sales.*')
                 ->whereBetween('sales.created_at', [$from, $to])
-                ->get();
-            // $this->data = Sale::join('users as u', 'u.id', 'sales.user_id')
-            //     ->select('sales.*', 'u.name as user')
-            //     ->whereBetween('sales.created_at', [$from, $to])
-            //     ->get();
+                ->get()
+                ->map(function ($sale, $index) {
+                    $sale['number']  = ++$index;
+                    return $sale;
+                });
         } else {
             $this->data = Sale::join('users as c', 'c.id', 'sales.client_id')
-                ->select('sales.*', 'c.name as user')
+                ->select('sales.*')
                 ->whereBetween('sales.created_at', [$from, $to])
-                ->where('client_id', $this->userId)
-                ->get();
-            // $this->data = Sale::join('users as u', 'u.id', 'sales.user_id')
-            //     ->select('sales.*', 'u.name as user')
-            //     ->whereBetween('sales.created_at', [$from, $to])
-            //     ->where('user_id', $this->userId)
-            //     ->get();
+                ->where('sales.user_id', $this->userId)
+                ->get()
+                ->map(function ($sale, $index) {
+                    $sale['number']  = ++$index;
+                    return $sale;
+                });
         }
     }
 
@@ -114,7 +108,6 @@ class ReportsController extends Component
 
     public function pdf()
     {
-        // $sales = Sale::whereBetween('created_at', [$this->fromDate, $this->toDate])->with('user')
         $sales = Sale::where(function ($query) {
             if ($this->userId > 0) {
                 $query->where('user_id', $this->userId);
@@ -123,14 +116,14 @@ class ReportsController extends Component
             $query->whereBetween('created_at', [$this->dateFrom  . ' 00:00:00', $this->dateTo  . ' 23:59:59']);
         })
             ->get()
-            ->map(function ($sale) {
+            ->map(function ($sale, $index) {
                 $total = 0;
                 foreach ($sale->products as $product) {
                     $total += $product->price * $product->quantity;
                 }
 
                 return [
-                    'id' => $sale->id,
+                    'id' => ++$index,
                     'name' => $sale->user->name,
                     'client' => $sale->client->name,
                     'date' => $sale->created_at->format('H:i:s d-m-Y'),

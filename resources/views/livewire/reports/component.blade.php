@@ -30,14 +30,14 @@
                                 </div>
                             </div>
                             <div class="col-sm-12 mt-2">
-                                <h6>fechas desde</h6>
+                                <h6>Fechas desde</h6>
                                 <div class="form-group">
                                     <input type="date" wire:model="dateFrom" class="form-control flatpickr"
                                         placeholder="Click para elegir">
                                 </div>
                             </div>
                             <div class="col-sm-12 mt-2">
-                                <h6>fechas hasta</h6>
+                                <h6>Fechas hasta</h6>
                                 <div class="form-group">
                                     <input type="date" wire:model="dateTo" class="form-control flatpickr"
                                         placeholder="Click para elegir">
@@ -67,6 +67,7 @@
                                         <th class="table-th text-white text-center">TOTAL</th>
                                         <th class="table-th text-white text-center">ITEMS</th>
                                         <th class="table-th text-white text-center">ESTADO</th>
+                                        <th class="table-th text-white text-center">EMPLEADO</th>
                                         <th class="table-th text-white text-center">CLIENTE</th>
                                         <th class="table-th text-white text-center">FECHA</th>
                                         <th class="table-th text-white text-center" width="50px"></th>
@@ -76,7 +77,7 @@
                                     @foreach ($data as $d)
                                         <tr>
                                             <td class="text-center">
-                                                <h6>{{ $d->id }}</h6>
+                                                <h6>{{ $d->number }}</h6>
                                             </td>
                                             <td class="text-center">
                                                 <h6>{{ number_format($d->total, 2) }}</h6>
@@ -89,7 +90,10 @@
                                                 </h6>
                                             </td>
                                             <td class="text-center">
-                                                <h6>{{ $d->user }}</h6>
+                                                <h6>{{ $d->user->name }}</h6>
+                                            </td>
+                                            <td class="text-center">
+                                                <h6>{{ $d->client->name }}</h6>
                                             </td>
                                             <td class="text-center">
                                                 <h6>{{ \Carbon\Carbon::parse($d->created_at)->format('d-m-Y') }}</h6>

@@ -22,9 +22,7 @@ class SalesExport implements FromCollection
      */
     public function collection()
     {
-        $headers = $this->user_id === 0
-            ? ['Nro Venta', 'Total', 'Items', 'Estado', 'Cliente', 'Hora', 'Fecha']
-            : ['Nro Venta', 'Total', 'Items', 'Estado', 'Cliente', 'Vendedor', 'Hora', 'Fecha'];
+        $headers = ['Nro Venta', 'Total', 'Items', 'Estado', 'Cliente', 'Empleado', 'Hora', 'Fecha'];
 
         $salesData = Sale::where(function ($query) {
             if ($this->user_id > 0) {
@@ -34,20 +32,9 @@ class SalesExport implements FromCollection
             $query->whereBetween('created_at', [$this->start  . ' 00:00:00', $this->end  . ' 23:59:59']);
         })
             ->get()
-            ->map(function ($sale) {
-                if ($this->user_id === 0) {
-                    return [
-                        $sale->id,
-                        number_format($sale->total, 2) . " $",
-                        $sale->getTotalProducts(),
-                        $sale->status === 'PAID' ? 'Pagado' : ($sale->status === 'PENDING' ? 'Pendiente' : 'Cancelado'),
-                        $sale->client->name,
-                        $sale->created_at->format('H:i:s'),
-                        $sale->created_at->format('d-m-Y')
-                    ];
-                }
+            ->map(function ($sale, $index) {
                 return [
-                    $sale->id,
+                    ++$index,
                     number_format($sale->total, 2),
                     $sale->getTotalProducts(),
                     $sale->status === 'PAID' ? 'Pagado' : ($sale->status === 'PENDING' ? 'Pendiente' : 'Cancelado'),

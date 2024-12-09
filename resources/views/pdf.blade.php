@@ -62,7 +62,7 @@
                                         <h6>{{ $sale['items'] }}</h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6>{{ ($sale['status'] === 'PAID' ? 'Pagado' : $sale['status'] === 'PENDING') ? 'Pendiente' : 'Cancelado' }}
+                                        <h6>{{ $sale['status'] === 'PAID' ? 'Pagado' : ($sale['status'] === 'PENDING' ? 'Pendiente' : 'Cancelado') }}
                                         </h6>
                                     </td>
                                     <td class="text-center">
