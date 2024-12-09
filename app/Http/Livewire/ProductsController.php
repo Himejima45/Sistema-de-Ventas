@@ -100,7 +100,7 @@ class ProductsController extends Component
     {
         $this->withValidator(function ($validator) {
             $validator->after(function ($validator) {
-                if (is_null($this->category_id) || !Category::find($this->category_id)->exists()) {
+                if ($this->category_id !== 'Elegir' && !Category::find($this->category_id)->exists()) {
                     $validator->errors()->add('category_id', 'La categoria seleccionada no existe');
                 }
 

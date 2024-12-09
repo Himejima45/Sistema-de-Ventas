@@ -47,7 +47,7 @@
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Stock</label>
-            <input type="number" wire:model.lazy="stock" class="form-control" placeholder="Ej: 10">
+            <input type="number" wire:model.lazy="stock" min="1" class="form-control" placeholder="Ej: 10">
             @error('stock')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror
@@ -84,7 +84,7 @@
                     <option value="{{ $category->id }}"> {{ $category->name }}</option>
                 @endforeach
             </select>
-            @error('categoryid')
+            @error('category_id')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror
         </div>
