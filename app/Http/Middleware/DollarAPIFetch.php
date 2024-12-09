@@ -12,6 +12,10 @@ class DollarAPIFetch
 {
     public function handle(Request $request, Closure $next)
     {
+        if (!$this->isConnected()) {
+            return $next($request);
+        }
+
         $currency = Currency::orderByDesc('created_at')->first();
         $availableHours = ["10:00:00", "15:00:00"];
         $currentDate = now()->format('d-m-Y');
@@ -61,5 +65,10 @@ class DollarAPIFetch
         }
 
         return $next($request);
+    }
+
+    private function isConnected()
+    {
+        return checkdnsrr("www.google.com", "A");
     }
 }
