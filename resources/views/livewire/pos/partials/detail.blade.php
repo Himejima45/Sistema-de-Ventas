@@ -39,7 +39,6 @@
                                         </td>
                                         <td class="text-center">${{ number_format($item['price'], 2) }}</td>
                                         <td>
-                                            <!-- ARREGLAR AQUI -->
                                             <input type="number" wire:model.live="cart.{{ $item['id'] }}.quantity"
                                                 wire:change="updateQty({{ $item['id'] }}, $event.target.value)"
                                                 style="font-size: 1rem!important" class="form-control text-center"

@@ -75,6 +75,34 @@ class PosController extends Component
         $this->client = $client->id;
     }
 
+    public function updatedCart($value, $id)
+    {
+        $id = explode('.', $id)[0];
+        $product = Product::select('stock')->find($id);
+
+        if ($product && $product->stock < $value) {
+            if (is_array($this->cart)) {
+                $this->cart[$id]['quantity'] = $product->stock;
+            } else {
+                $this->cart = $this->cart->toArray();
+                $this->cart[$id]['quantity'] = $product->stock;
+            }
+
+            Cart::update($id, ['quantity' => $product->stock]);
+        } else {
+            if (is_array($this->cart)) {
+                $this->cart[$id]['quantity'] = $value;
+            } else {
+                $this->cart = $this->cart->toArray();
+                $this->cart[$id]['quantity'] = $value;
+            }
+
+            Cart::update($id, ['quantity' => $value]);
+        }
+    }
+
+
+
     public function updateCartInfo()
     {
         $this->subtotal = Cart::getTotal();
@@ -103,7 +131,7 @@ class PosController extends Component
             return null;
         }
 
-        if ($product->stock === 0) {
+        if ($product->stock <= 0) {
             session()->flash('scan', "El producto $product->name no tiene stock");
             return null;
         }
@@ -286,6 +314,16 @@ class PosController extends Component
         $this->validate($rules, $messages);
 
         try {
+            $items = Cart::getContent();
+            foreach ($items as $item) {
+                $product = Product::select(['stock', 'name'])->find($item->id);
+                if ($item->quantity > $product->stock) {
+                    $rest = $item->quantity - $product->stock;
+                    $this->emit('error-modal', "El producto $product->name no cuenta con suficiente inventario para proceder con la venta (En inventario: $product->stock, solicitud: $item->quantity, faltante: $rest)");
+                    return;
+                }
+            }
+
             // ! TODO #4
             $sale = Sale::create([
                 'total' => $this->total,
@@ -301,7 +339,7 @@ class PosController extends Component
 
 
             if ($sale) {
-                $items = Cart::getContent();
+
                 foreach ($items as $item) {
                     SaleDetails::create([
                         'price' => $item->price,

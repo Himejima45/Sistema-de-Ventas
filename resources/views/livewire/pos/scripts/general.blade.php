@@ -1,12 +1,9 @@
 <script>
-    $('.tblscroll').nicescroll({
-        cursorcolor: "#515365",
-        cursorwidth: "30px",
-        background: "rgba(20,20,20,0.3)",
-        cursorborder: "0px",
-        cursorborderradius: 3
-    })
-
+    document.addEventListener('DOMContentLoaded', function() {
+        window.livewire.on('error-modal', msg => {
+            ErrorModal(msg)
+        });
+    });
 
     function Confirm(id, eventName, text) {
         swal({
@@ -41,6 +38,16 @@
                 window.livewire.emit(eventName, id)
                 swal.close()
             }
+        })
+    }
+
+    function ErrorModal(text) {
+        swal({
+            title: 'HUBO UN ERROR',
+            text: text,
+            type: 'warning',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
         })
     }
 </script>

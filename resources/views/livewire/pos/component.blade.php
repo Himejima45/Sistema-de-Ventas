@@ -39,4 +39,4 @@
 @include('livewire.pos.scripts.shortcurts')
 {{-- @include('livewire.pos.scripts.events') --}}
 @include('livewire.pos.scripts.general')
-@include('livewire.pos.scripts.scan')
+{{-- @include('livewire.pos.scripts.scan') --}}
