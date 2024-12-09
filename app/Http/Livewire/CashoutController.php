@@ -36,14 +36,19 @@ class CashoutController extends Component
             ->orderBy('name', 'asc')->get();
         $this->userid = $users[0]->id;
 
+        $this->total = 0;
+        $this->items = 0;
         $this->sales = Sale::where('type', 'SALE')
             ->whereBetween('created_at', [$this->fromDate, $this->toDate])
             ->where('status', 'PAID')
             ->where('user_id', $this->userid)
-            ->get();
-
-        $this->total = $this->sales ? $this->sales->sum('total') : 0;
-        $this->items = $this->sales ? $this->sales->sum('items') : 0;
+            ->get()
+            ->map(function ($sale, $index) {
+                $sale['number']  = ++$index;
+                $this->items += $sale->getTotalProducts();
+                $this->total += $sale->total;
+                return $sale;
+            });
 
         return view('livewire.cashout.component', [
             'users' => $users,
@@ -53,25 +58,21 @@ class CashoutController extends Component
 
     public function download()
     {
-        return Excel::download(new SalesExport($this->fromDate, $this->toDate), 'ventas.xlsx');
+        return Excel::download(new SalesExport($this->fromDate, $this->toDate), 'Reporte de ventas.xlsx');
     }
 
     public function pdf()
     {
         $sales = Sale::whereBetween('created_at', [$this->fromDate, $this->toDate])
             ->with('user')
+            ->where('type', 'SALE')
             ->get()
-            ->map(function ($sale) {
-                $total = 0;
-                foreach ($sale->products as $product) {
-                    $total += $product->price * $product->quantity;
-                }
-
+            ->map(function ($sale, $index) {
                 return [
-                    'id' => $sale->id,
+                    'id' => ++$index,
                     'name' => $sale->user->name,
                     'date' => $sale->created_at->format('H:i:s d-m-Y'),
-                    'total' => $total,
+                    'total' => $sale->total,
                     'items' => $sale->getTotalProducts(),
                     'status' => $sale->status,
                     'client' => $sale->client->name
@@ -87,7 +88,7 @@ class CashoutController extends Component
             $end = Carbon::parse($end)->translatedFormat('D d, F Y - h:i:s a');
             $pdf->loadView('pdf', compact('sales', 'start', 'end'));
             echo $pdf->stream();
-        }, 'test.pdf');
+        }, 'Reporte de ventas.pdf');
     }
 
     // ! TODO 11
@@ -96,6 +97,7 @@ class CashoutController extends Component
         $this->details = Sale::join('sale_details as d', 'd.sale_id', 'sales.id')
             ->join('products as p', 'p.id', 'd.product_id')
             ->select('d.sale_id', 'p.name as product', 'd.quantity', 'd.price')
+            ->where('type', 'SALE')
             ->where('sales.id', $sale->id)
             ->get();
 

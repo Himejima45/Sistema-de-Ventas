@@ -65,6 +65,7 @@ class ReportsController extends Component
         if ($this->userId == 0) {
             $this->data = Sale::join('users as c', 'c.id', 'sales.client_id')
                 ->select('sales.*')
+                ->where('type', 'SALE')
                 ->whereBetween('sales.created_at', [$from, $to])
                 ->get()
                 ->map(function ($sale, $index) {
@@ -75,6 +76,7 @@ class ReportsController extends Component
             $this->data = Sale::join('users as c', 'c.id', 'sales.client_id')
                 ->select('sales.*')
                 ->whereBetween('sales.created_at', [$from, $to])
+                ->where('type', 'SALE')
                 ->where('sales.user_id', $this->userId)
                 ->get()
                 ->map(function ($sale, $index) {
@@ -115,6 +117,7 @@ class ReportsController extends Component
 
             $query->whereBetween('created_at', [$this->dateFrom  . ' 00:00:00', $this->dateTo  . ' 23:59:59']);
         })
+            ->where('type', 'SALE')
             ->get()
             ->map(function ($sale, $index) {
                 $total = 0;

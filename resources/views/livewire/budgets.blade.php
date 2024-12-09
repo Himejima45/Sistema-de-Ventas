@@ -207,6 +207,10 @@
 
             <div class="widget-content">
                 <div class="table-responsive">
+                    <div class="row ml-0">
+                        <button class="btn btn-primary" wire:click="download" type="button">Excel</button>
+                        <button class="btn btn-primary" wire:click="pdf" type="button">PDF</button>
+                    </div>
                     <table class="table table-bordered table-striped mt-1">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>

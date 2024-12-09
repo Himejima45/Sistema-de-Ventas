@@ -27,7 +27,11 @@
                     </p>
                 </div>
                 <h1 class="text-center">SISTEMA DE VENTAS</h1>
-                <h6>Reportes de ventas ({{ $start }} al {{ $end }})</h6>
+                @if ($budget)
+                    <h6>Reportes de cuentas por cobrar ({{ $start }} al {{ $end }})</h6>
+                @else
+                    <h6>Reportes de ventas ({{ $start }} al {{ $end }})</h6>
+                @endif
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped mt-1">
                         <thead class="text-white" style="background: #3b3f5c">
@@ -35,7 +39,9 @@
                                 <th class="table-th text-center text-white">FOLIO</th>
                                 <th class="table-th text-center text-white">IMPORTE</th>
                                 <th class="table-th text-center text-white">ITEMS</th>
-                                <th class="table-th text-center text-white">ESTATUS</th>
+                                @if (!$budget)
+                                    <th class="table-th text-center text-white">ESTATUS</th>
+                                @endif
                                 <th class="table-th text-center text-white">EMPLEADO</th>
                                 <th class="table-th text-center text-white">CLIENTE</th>
                                 <th class="table-th text-center text-white">FECHA</th>
@@ -61,10 +67,12 @@
                                     <td class="text-center">
                                         <h6>{{ $sale['items'] }}</h6>
                                     </td>
-                                    <td class="text-center">
-                                        <h6>{{ $sale['status'] === 'PAID' ? 'Pagado' : ($sale['status'] === 'PENDING' ? 'Pendiente' : 'Cancelado') }}
-                                        </h6>
-                                    </td>
+                                    @if (!$budget)
+                                        <td class="text-center">
+                                            <h6>{{ $sale['status'] === 'PAID' ? 'Pagado' : ($sale['status'] === 'PENDING' ? 'Pendiente' : 'Cancelado') }}
+                                            </h6>
+                                        </td>
+                                    @endif
                                     <td class="text-center">
                                         <h6>{{ $sale['name'] }}</h6>
                                     </td>

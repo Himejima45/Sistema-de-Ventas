@@ -27,10 +27,10 @@
                         <button class="btn btn-primary" wire:click="download" type="button">Excel</button>
                         <button class="btn btn-primary" wire:click="pdf" type="button">PDF</button>
 
-                        @if ($total > 0)
+                        {{-- @if ($total > 0)
                             <button wire:click.prevent="Print()" type="button"
                                 class="btn btn-secondary">Imprimir</button>
-                        @endif
+                        @endif --}}
                     </div>
 
                 </div>
@@ -65,7 +65,7 @@
                                 @foreach ($sales as $row)
                                     <tr>
                                         <td class="text-center">
-                                            <h6>{{ $row->id }}</h6>
+                                            <h6>{{ $row->number }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <h6>{{ number_format($row->total, 2) }}</h6>

@@ -2,14 +2,18 @@
 
 namespace App\Http\Livewire;
 
+use App\Exports\SalesExport;
 use App\Models\Currency;
 use App\Models\Sale;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BudgetsController extends Component
 {
-    public $search = '', $selected_id = 0, $products = [], $total = 0, $iva = 0, $subtotal = 0, $cash = 0, $bs = 0, $change = 0, $currency = 0;
-    protected $listeners = ['products', 'edit', 'update'];
+    public $search = '', $selected_id = 0, $products = [], $total = 0, $iva = 0, $subtotal = 0, $cash = 0, $bs = 0, $change = 0, $currency = 0, $fromDate, $toDate;
+    protected $listeners = ['products', 'edit', 'update', 'pdf', 'download'];
 
     public $messages = [
         'bs.required' => 'Debe colocar un monto',
@@ -92,8 +96,46 @@ class BudgetsController extends Component
         $this->total = $this->subtotal + $this->iva;
     }
 
+    public function download()
+    {
+        return Excel::download(new SalesExport($this->fromDate, $this->toDate, 0, true), 'Reporte de cuentas por cobrar.xlsx');
+    }
+
+    public function pdf()
+    {
+        $sales = Sale::whereBetween('created_at', [$this->fromDate, $this->toDate])
+            ->with('user')
+            ->where('type', 'BUDGET')
+            ->get()
+            ->map(function ($sale, $index) {
+                return [
+                    'id' => ++$index,
+                    'name' => $sale->user->name,
+                    'date' => $sale->created_at->format('H:i:s d-m-Y'),
+                    'total' => $sale->total,
+                    'items' => $sale->getTotalProducts(),
+                    'client' => $sale->client->name
+                ];
+            });
+
+        $start = $this->fromDate;
+        $end = $this->toDate;
+        $budget = true;
+
+        return response()->streamDownload(function () use ($sales, $start, $end, $budget) {
+            $pdf = App::make('dompdf.wrapper');
+            $start = Carbon::parse($start)->translatedFormat('D d, F Y - h:i:s a');
+            $end = Carbon::parse($end)->translatedFormat('D d, F Y - h:i:s a');
+            $pdf->loadView('pdf', compact('sales', 'start', 'end', 'budget'));
+            echo $pdf->stream();
+        }, 'Reporte de cuentas por cobrar.pdf');
+    }
+
     public function render()
     {
+        $this->fromDate = now()->startOfDay();
+        $this->toDate = now()->endOfDay();
+
         $budgets = Sale::where('type', 'BUDGET')
             ->whereHas('client', function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%');
