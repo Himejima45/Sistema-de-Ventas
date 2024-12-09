@@ -34,7 +34,6 @@ class CashoutController extends Component
                 ->orWhere('name', 'Admin');
         })
             ->orderBy('name', 'asc')->get();
-        $this->userid = $users[0]->id;
 
         $this->total = 0;
         $this->items = 0;
@@ -66,6 +65,7 @@ class CashoutController extends Component
         $sales = Sale::whereBetween('created_at', [$this->fromDate, $this->toDate])
             ->with('user')
             ->where('type', 'SALE')
+            ->where('user_id', $this->userid)
             ->get()
             ->map(function ($sale, $index) {
                 return [
@@ -81,12 +81,13 @@ class CashoutController extends Component
 
         $start = $this->fromDate;
         $end = $this->toDate;
+        $budget = false;
 
-        return response()->streamDownload(function () use ($sales, $start, $end) {
+        return response()->streamDownload(function () use ($sales, $start, $end, $budget) {
             $pdf = App::make('dompdf.wrapper');
             $start = Carbon::parse($start)->translatedFormat('D d, F Y - h:i:s a');
             $end = Carbon::parse($end)->translatedFormat('D d, F Y - h:i:s a');
-            $pdf->loadView('pdf', compact('sales', 'start', 'end'));
+            $pdf->loadView('pdf', compact('sales', 'start', 'end', 'budget'));
             echo $pdf->stream();
         }, 'Reporte de ventas.pdf');
     }
@@ -101,7 +102,6 @@ class CashoutController extends Component
             ->where('sales.id', $sale->id)
             ->get();
 
-        // dd($this->sales);
         $this->emit('show-modal', 'open modal');
     }
 }

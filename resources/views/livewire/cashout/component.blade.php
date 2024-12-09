@@ -23,16 +23,12 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 aling-self-center d-flex">
-                        <button class="btn btn-primary" wire:click="download" type="button">Excel</button>
-                        <button class="btn btn-primary" wire:click="pdf" type="button">PDF</button>
-
-                        {{-- @if ($total > 0)
-                            <button wire:click.prevent="Print()" type="button"
-                                class="btn btn-secondary">Imprimir</button>
-                        @endif --}}
-                    </div>
-
+                    @if (count($sales) > 0)
+                        <div class="col-sm-12 aling-self-center d-flex">
+                            <button class="btn btn-primary" wire:click="download" type="button">Excel</button>
+                            <button class="btn btn-primary" wire:click="pdf" type="button">PDF</button>
+                        </div>
+                    @endif
                 </div>
             </div>
             <div class="row mt-5">
@@ -98,56 +94,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // flatpickr(document.getElementByClassName('flatpickr'), {
-        //     enableTime: false,
-        //     dateFormat: 'Y-m-d',
-        //     locale: {
-        //         firstDayofWeek: 1,
-        //         weekdays: {
-        //             shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-        //             longhand: [
-        //                 "Domingo",
-        //                 "Lunes",
-        //                 "Martes",
-        //                 "Miércoles",
-        //                 "Jueves",
-        //                 "Viernes",
-        //                 "Sábado",
-        //             ],
-        //         },
-        //         months: {
-        //             shorthand: [
-        //                 "Ene",
-        //                 "Feb",
-        //                 "Mar",
-        //                 "Abr",
-        //                 "May",
-        //                 "Jun",
-        //                 "Jul",
-        //                 "Ago",
-        //                 "Sep",
-        //                 "Oct",
-        //                 "Nov",
-        //                 "Dic",
-        //             ],
-        //             longhand: [
-        //                 "Enero",
-        //                 "Febrero",
-        //                 "Marzo",
-        //                 "Abril",
-        //                 "Mayo",
-        //                 "Junio",
-        //                 "Julio",
-        //                 "Agosto",
-        //                 "Septiembre",
-        //                 "Octubre",
-        //                 "Noviembre",
-        //                 "Diciembre",
-        //             ],
-        //         },
-
-        //     }
-        // })
         window.livewire.on('show-modal', Msg => {
             $('#modal-details').modal('show')
         });
