@@ -12,7 +12,7 @@
                         <div class="form-group">
                             <label>Usuario</label>
                             <select wire:model="userid" class="form-control">
-                                <option value="0" selected disabled>Elegir</option>
+                                <option value="0" selected>Todos</option>
                                 @foreach ($users as $u)
                                     <option value="{{ $u->id }}">{{ $u->name }}</option>
                                 @endforeach

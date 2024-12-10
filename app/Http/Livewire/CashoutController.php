@@ -40,7 +40,9 @@ class CashoutController extends Component
         $this->sales = Sale::where('type', 'SALE')
             ->whereBetween('created_at', [$this->fromDate, $this->toDate])
             ->where('status', 'PAID')
-            ->where('user_id', $this->userid)
+            ->when($this->userid > 0, function ($query) {
+                $query->where('user_id', $this->userid);
+            })
             ->get()
             ->map(function ($sale, $index) {
                 $sale['number']  = ++$index;
@@ -57,7 +59,7 @@ class CashoutController extends Component
 
     public function download()
     {
-        return Excel::download(new SalesExport($this->fromDate, $this->toDate), 'Reporte de ventas.xlsx');
+        return Excel::download(new SalesExport($this->fromDate, $this->toDate, $this->userid), 'Reporte de ventas.xlsx');
     }
 
     public function pdf()
@@ -65,7 +67,9 @@ class CashoutController extends Component
         $sales = Sale::whereBetween('created_at', [$this->fromDate, $this->toDate])
             ->with('user')
             ->where('type', 'SALE')
-            ->where('user_id', $this->userid)
+            ->when($this->userid > 0, function ($query) {
+                $query->where('user_id', $this->userid);
+            })
             ->get()
             ->map(function ($sale, $index) {
                 return [
