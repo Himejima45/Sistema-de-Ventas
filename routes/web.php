@@ -14,6 +14,7 @@ use App\Http\Livewire\ProviderController;
 use App\Http\Livewire\PosController;
 use App\Http\Livewire\ClientsController;
 use App\Http\Livewire\CurrenciesController;
+use App\Http\Livewire\LogController;
 use App\Http\Livewire\RolesController;
 use App\Http\Livewire\PermisosController;
 use App\Http\Livewire\PurchaseController;
@@ -58,4 +59,5 @@ Route::middleware(['auth', 'fetch.currency'])->group(function () {
     Route::get('carts',  CartsController::class);
     Route::get('budgets',  BudgetsController::class);
     Route::get('backups',  BackupController::class);
+    Route::get('logs',  LogController::class);
 });

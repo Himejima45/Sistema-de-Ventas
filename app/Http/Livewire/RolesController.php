@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Binnacle;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 use Livewire\WithPagination;
@@ -50,9 +51,18 @@ class RolesController extends Component
 
         $this->validate($rules, $messages);
 
-        Role::create([
+        $model = Role::create([
             'name' => $this->roleName
         ]);
+
+        Binnacle::create([
+            'module' => 'Rol',
+            'user' => auth()->user()->full_name,
+            'rol' => auth()->user()->getRoleNames()[0],
+            'action' => "Registro creado con el id: $model->id",
+            'status' => 'successfull',
+        ]);
+
         $this->resetUI();
         $this->emit('role-added', 'Se registro el role con exito');
     }
@@ -81,6 +91,14 @@ class RolesController extends Component
         $role->name = $this->roleName;
         $role->save();
 
+        Binnacle::create([
+            'module' => 'Rol',
+            'user' => auth()->user()->full_name,
+            'rol' => auth()->user()->getRoleNames()[0],
+            'action' => "Registro actualizado con el id: $role->id",
+            'status' => 'successfull',
+        ]);
+
         $this->resetUI();
         $this->emit('role-updated', 'Se actualizó el rol con exito');
     }
@@ -96,6 +114,15 @@ class RolesController extends Component
         }
 
         Role::find($id)->delete();
+
+        Binnacle::create([
+            'module' => 'Rol',
+            'user' => auth()->user()->full_name,
+            'rol' => auth()->user()->getRoleNames()[0],
+            'action' => "Registro actualizado con el id: $id",
+            'status' => 'successfull',
+        ]);
+
         $this->resetUI();
         $this->emit('role-deleted', 'Se elimino con exito');
     }
