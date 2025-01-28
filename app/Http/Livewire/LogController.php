@@ -7,13 +7,18 @@ use Livewire\Component;
 
 class LogController extends Component
 {
-    public $pagination = 20;
     public $pageTitle, $componentName;
+    private $pagination = 20;
 
     public function mount()
     {
         $this->pageTitle = 'Listado';
         $this->componentName = 'Bitácora';
+    }
+
+    public function paginationView()
+    {
+        return 'vendor.livewire.bootstrap';
     }
 
     public function render()

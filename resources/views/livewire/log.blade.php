@@ -12,10 +12,10 @@
                     <table class="table table-bordered table-striped mt-1">
                         <thead class="text-white" style="background: #3B3F5C;">
                             <tr>
-                                <th class="table-th text-white">MÓDULO</th>
+                                <th class="table-th text-white text-center">ACCIÓN</th>
+                                <th class="table-th text-white text-center">MÓDULO</th>
                                 <th class="table-th text-white text-center">USUARIO</th>
                                 <th class="table-th text-white text-center">ROL</th>
-                                <th class="table-th text-white text-center">ACCIÓN</th>
                                 <th class="table-th text-white text-center">ESTADO</th>
                                 <th class="table-th text-white text-center">FECHA</th>
                             </tr>
@@ -41,10 +41,32 @@
                                     'Client' => 'Clientes',
                                     'Employee' => 'Empleados',
                                     'Rol' => 'Roles',
+                                    'Sistema' => 'Sistema',
+                                    'categories' => 'Categorías',
+                                    'logs' => 'Bitácora',
+                                    'products' => 'Productos',
+                                    'currencies' => 'Tasas',
+                                    'pos' => 'Ventas',
+                                    'clients' => 'Clientes',
+                                    'roles' => 'Roles',
+                                    'permisos' => 'Permisos',
+                                    'user' => 'Empleados',
+                                    'cashout' => 'Caja',
+                                    'reports' => 'Reportes',
+                                    'providers' => 'Proveedores',
+                                    'purchases' => 'Compras',
+                                    'catalog' => 'Catálogo',
+                                    'historial' => 'Carritos del usuario',
+                                    'carts' => 'Carritos',
+                                    'budgets' => 'Presupuestos',
+                                    'backups' => 'Respaldos',
                                 ];
                             @endphp
                             @foreach ($data as $row)
                                 <tr>
+                                    <td>
+                                        <h6>{{ $row->action }}</h6>
+                                    </td>
                                     <td>
                                         <h6>{{ $models[$row->module] }}</h6>
                                     </td>
@@ -53,9 +75,6 @@
                                     </td>
                                     <td>
                                         <h6>{{ $row->rol }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6>{{ $row->action }}</h6>
                                     </td>
                                     <td>
                                         <h6 @class([
