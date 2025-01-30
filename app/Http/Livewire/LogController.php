@@ -5,10 +5,12 @@ namespace App\Http\Livewire;
 use App\Models\Binnacle;
 use App\Models\User;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Spatie\Permission\Models\Role;
 
 class LogController extends Component
 {
+    use WithPagination;
     public $pageTitle, $componentName;
     private $pagination = 20;
     public $state, $role, $user, $module, $date;
