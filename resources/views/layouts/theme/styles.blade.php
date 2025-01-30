@@ -77,6 +77,22 @@
         -moz-appearance: textfield;
         /* Firefox */
     }
+
+    #sidebar-search-input {
+        width: 100%;
+        padding: 16px;
+        border: none;
+        border-bottom: 2px solid #ccc;
+        background-color: #191e3a;
+        color: #e0e6ed;
+        font-size: 0.9rem;
+        box-sizing: border-box;
+    }
+
+    #sidebar-search-input::placeholder {
+        color: #e0e6ed;
+        font-weight: bolder;
+    }
 </style>
 
 {{-- <link href="{{ asset('plugins/flatpickr/flatpickr.material.blue.css') }}" rel="stylesheet" type="text/css"> --}}
