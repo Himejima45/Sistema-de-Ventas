@@ -17,6 +17,14 @@ class LogViewAccess
     public function handle($request, Closure $next)
     {
         $key = 'last_view_access_' . $request->path() . '_date_' . now()->format('d-m-Y');
+        $previous_url = explode('/', url()->previous());
+        $request_came_from_login = end($previous_url) === 'login';
+        $current_path = explode('/', $request->path());
+        $logout_request = end($current_path) === 'logout';
+
+        $action_message = $logout_request
+            ? 'Cerró sesión'
+            : ($request_came_from_login ? 'Inició sesión' : 'Ingreso en la vista');
 
         if (!session()->has($key)) {
             Binnacle::create([
@@ -25,7 +33,7 @@ class LogViewAccess
                 'rol' => auth()->user()?->getRoleNames() !== null
                     ? auth()->user()?->getRoleNames()[0] ?? 'Sistema'
                     : 'Sistema',
-                'action' => "Ingreso en la vista",
+                'action' => $action_message,
                 'status' => 'successfull',
             ]);
 

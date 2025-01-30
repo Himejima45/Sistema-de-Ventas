@@ -64,6 +64,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'fetch.currency' => \App\Http\Middleware\DollarAPIFetch::class,
-        'logger' => \App\Http\Middleware\LogViewAccess::class
+        'logger' => \App\Http\Middleware\LogViewAccess::class,
     ];
 }

@@ -2,7 +2,6 @@
 
 use App\Http\Livewire\ClientCartsController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Livewire\AsignarController;
 use App\Http\Livewire\BackupController;
 use App\Http\Livewire\BudgetsController;
 use App\Http\Livewire\CartsController;
@@ -37,11 +36,12 @@ Route::get('/', function () {
     return redirect('/home');
 });
 
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::middleware('logger')->group(function () {
+    Auth::routes();
+});
 
 Route::middleware(['auth', 'fetch.currency', 'logger'])->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('categories', CategoriesController::class);
     Route::get('products', ProductsController::class);
     Route::get('currencies', CurrenciesController::class);

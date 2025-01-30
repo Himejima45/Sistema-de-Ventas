@@ -12,6 +12,7 @@
                     <table class="table table-bordered table-striped mt-1">
                         <thead class="text-white" style="background: #3B3F5C;">
                             <tr>
+                                <th class="table-th text-white text-center">ID</th>
                                 <th class="table-th text-white text-center">ACCIÓN</th>
                                 <th class="table-th text-white text-center">MÓDULO</th>
                                 <th class="table-th text-white text-center">USUARIO</th>
@@ -60,10 +61,16 @@
                                     'carts' => 'Carritos',
                                     'budgets' => 'Presupuestos',
                                     'backups' => 'Respaldos',
+                                    'logout' => 'Cierre de sesión',
+                                    'home' => 'Inicio',
+                                    'login' => 'Inicio de sesión',
                                 ];
                             @endphp
                             @foreach ($data as $row)
                                 <tr>
+                                    <td>
+                                        <h6>{{ $row->id }}</h6>
+                                    </td>
                                     <td>
                                         <h6>{{ $row->action }}</h6>
                                     </td>

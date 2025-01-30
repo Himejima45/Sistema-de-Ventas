@@ -23,7 +23,7 @@ class LogController extends Component
 
     public function render()
     {
-        $data = Binnacle::paginate($this->pagination);
+        $data = Binnacle::latest()->paginate($this->pagination);
 
         return view('livewire.log', ['data' => $data])
             ->extends('layouts.theme.app')
