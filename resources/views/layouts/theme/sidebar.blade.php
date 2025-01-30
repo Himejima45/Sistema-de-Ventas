@@ -22,10 +22,12 @@
                             item.style.display = 'none';
                     });
 
+                    // Reset the scroll of the ul component
+                    document.querySelector('.menu-categories').scrollTop = 0;
                 });
             </script>
 
-            <ul class="menu-categories">
+            <ul class="menu-categories" style="padding-bottom: 2.4rem">
                 @if (auth()->user()->hasRole('Client'))
                     <li class="active">
                         <a href="{{ url('catalog') }}" class="menu-toggle" data-active="true">
