@@ -22,7 +22,6 @@
                             item.style.display = 'none';
                     });
 
-                    // Reset the scroll of the ul component
                     document.querySelector('.menu-categories').scrollTop = 0;
                 });
             </script>

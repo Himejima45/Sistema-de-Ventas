@@ -87,6 +87,7 @@
         color: #e0e6ed;
         font-size: 0.9rem;
         box-sizing: border-box;
+        font-weight: bolder;
     }
 
     #sidebar-search-input::placeholder {
