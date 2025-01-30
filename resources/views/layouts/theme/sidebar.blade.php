@@ -1,7 +1,29 @@
 @if (auth()->user() !== null)
     <div class="sidebar-wrapper sidebar-theme">
-
         <nav id="compactSidebar">
+            <div class="base-menu">
+                <input type="text" id="sidebar-search-input" placeholder="Buscar enlace...">
+            </div>
+
+            <script>
+                document.getElementById('sidebar-search-input').addEventListener('keyup', function() {
+                    const removeAccents = str =>
+                        str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+                    const filter = this.value.toLowerCase();
+                    const normalizedFilter = removeAccents(filter);
+                    const items = document.querySelectorAll('.menu-categories li');
+
+                    items.forEach(function(item) {
+                        const text = item.textContent.toLowerCase();
+                        const normalizedText = removeAccents(text);
+                        normalizedText.includes(normalizedFilter) ?
+                            item.style.display = '' :
+                            item.style.display = 'none';
+                    });
+
+                });
+            </script>
 
             <ul class="menu-categories">
                 @if (auth()->user()->hasRole('Client'))
