@@ -116,7 +116,7 @@ class UsersController extends Component
 
 
         $this->resetUI();
-        $this->emit('user-added', 'Usuario Registrado');
+        $this->emit('record-created', 'Usuario Registrado');
     }
 
     public function Update()
@@ -139,31 +139,13 @@ class UsersController extends Component
             'password' => bcrypt($this->password)
         ]);
 
-        // if ($this->image) {
-        //     $customFileName = uniqid() . '_.' . $this->image->extension();
-        //     $this->image->storeAs('public/users', $customFileName);
-        //     $imageTemp = $user->image;
-
-        //     $user->image = $customFileName;
-        //     $user->save();
-
-
-        //     if ($imageTemp != null) {
-        //         if (file_exists('storage/users/' . $imageTemp)) {
-        //             unlink('storage/users/' . $imageTemp);
-        //         }
-        //     }
-        // }
-
-
-
         $this->resetUI();
-        $this->emit('user-updated', 'Usuario Actualizado');
+        $this->emit('record-updated', 'Usuario Actualizado');
     }
 
-    protected $listeners = ['Destroy', 'resetUI'];
+    protected $listeners = ['Destroy' => 'delete', 'resetUI'];
 
-    public function Destroy(User $user)
+    public function delete(User $user)
     {
         if ($user) {
             $sales = Sale::Where('user_id', $user->id)->count();
@@ -172,7 +154,6 @@ class UsersController extends Component
             } else {
                 $user->delete();
                 $this->resetUI();
-                $this->emit('user-deleted', 'Usuario eliminado');
             }
         }
     }

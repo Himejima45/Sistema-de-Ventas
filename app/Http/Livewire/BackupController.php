@@ -16,6 +16,10 @@ class BackupController extends Component
     use WithPagination;
     public $pageTitle, $componentName;
 
+    protected $listeners = [
+        'Destroy' => 'delete'
+    ];
+
     public function get_size($size)
     {
         $units = [
@@ -49,6 +53,7 @@ class BackupController extends Component
     public function save()
     {
         Artisan::call('backup:run --only-db');
+        $this->emit('record-created', 'Respaldo creado con éxito');
     }
 
     public function delete($record)

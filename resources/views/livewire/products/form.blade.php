@@ -140,17 +140,3 @@
 
 </div>
 @include('common.modalFooter')
-
-
-{{-- <script>
-    const img = document.getElementById('img_container')
-    const file_input = document.getElementById('image')
-
-    file_input.onchange = (e) => {
-        const file = file_input.files[0]
-        if (file) {
-            img.src = URL.createObjectURL(file)
-            console.log(file)
-        }
-    }
-</script> --}}

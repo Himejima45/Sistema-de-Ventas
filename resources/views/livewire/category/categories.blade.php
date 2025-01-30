@@ -34,7 +34,7 @@
                                         <x-edit_button wire:click="Edit({{ $category->id }})" />
                                         @if ($category->products->count() < 1)
                                             <x-delete_button
-                                                onclick="Confirm({{ $category->id }}, {{ count($category->products) }})" />
+                                                onclick="Confirm({{ $category->id }}, {{ count($category->products) }}, 'NO SE PUEDE ELIMINAR LA CATEGORIA PORQUE TIENES PRODUCTOS RELACIONADOS')" />
                                         @endif
                                     </td>
                                 </tr>
@@ -60,7 +60,6 @@
         window.livewire.on('category-added', msg => {
             $('#theModal').modal('hide')
             Success('Registrado', "Se ha registrado los datos de la categoría")
-
         });
         window.livewire.on('category-updated', msg => {
             $('#theModal').modal('hide')
@@ -68,49 +67,7 @@
         });
         window.livewire.on('category-deleted', msg => {
             $('#theModal').modal('hide')
-            Deleted()
+            Confirm()
         });
     });
-
-    function Confirm(id, products) {
-        if (products > 0) {
-            swal('NO SE PUEDE ELIMINAR LA CATEGORIA PORQUE TIENES PRODUCTOS RELACIONADOS')
-            return;
-        }
-        swal({
-            title: 'CONFIRMAR',
-            text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
-            type: 'warning',
-            showCancelButton: true,
-            cancelButtonText: 'Cerrar',
-            cancelButtonColor: '#fff',
-            confirmButtonColor: '#3B3F5C',
-            confirmButtonText: 'Aceptar'
-        }).then(function(result) {
-            if (result.value) {
-                window.livewire.emit('Destroy', id)
-                swal.close()
-            }
-        })
-    }
-
-    function Deleted() {
-        swal({
-            icon: "warning",
-            type: "warning",
-            title: "Eliminado",
-            text: "Se ha eliminado al cliente seleccionado",
-            showConfirmButton: false
-        })
-    }
-
-    function Success(title, message) {
-        swal({
-            icon: "success",
-            type: "success",
-            title,
-            text: message,
-            showConfirmButton: false,
-        })
-    }
 </script>

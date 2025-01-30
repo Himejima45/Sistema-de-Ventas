@@ -103,7 +103,7 @@ class PurchaseController extends Component
 
         $this->resetUI();
         $this->emit('hide-modal');
-        session()->flash('message', 'Compra guardada exitosamente.');
+        $this->emit('record-created', 'Compra guardada exitosamente');
     }
 
     public function editPurchase($purchaseId)
@@ -132,9 +132,13 @@ class PurchaseController extends Component
         }
     }
 
-    public function updatePurchase()
+    public function Update()
     {
-        $this->validate();
+        $rules = [
+            'payed' => ['required', 'numeric', 'min:0'],
+            'status' => ['required', 'string']
+        ];
+        $this->validate($rules);
 
         if ($this->editingPurchaseId) {
             Purchase::where('id', $this->editingPurchaseId)->update([
@@ -144,9 +148,9 @@ class PurchaseController extends Component
 
             session()->flash('message', 'Compra actualizada exitosamente.');
             $this->resetUI();
+            $this->emit('hide-edit');
+            $this->emit('record-updated', 'Compra actualizada exitosamente');
         }
-
-        $this->emit('hide-edit');
     }
 
     public function searchByDate()

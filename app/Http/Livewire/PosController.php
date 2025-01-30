@@ -355,7 +355,7 @@ class PosController extends Component
             }
 
             $this->resetUI();
-            $this->emit('sale-ok', 'Venta Registrada con exito');
+            $this->emit('record-created', 'Venta Registrada con exito');
             $this->emit('print-ticket', $sale->id);
         } catch (Exception $e) {
             $this->emit('sale-error', $e->getMessage());

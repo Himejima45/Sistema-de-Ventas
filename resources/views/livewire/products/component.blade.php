@@ -110,16 +110,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        window.livewire.on('product-added', msg => {
-            $('#theModal').modal('hide')
-        });
-        window.livewire.on('product-updated', msg => {
-            $('#theModal').modal('hide')
-        });
-        window.livewire.on('product-deleted', msg => {
-            //noty
-        });
-
         window.livewire.on('modal-show', msg => {
             $('#theModal').modal('show')
         });
@@ -134,22 +124,4 @@
         });
 
     });
-
-    function Confirm(id) {
-        swal({
-            title: 'CONFIRMAR',
-            text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
-            type: 'warning',
-            showCancelButton: true,
-            cancelButtonText: 'Cerrar',
-            cancelButtonColor: '#fff',
-            confirmButtonColor: '#3B3F5C',
-            confirmButtonText: 'Aceptar'
-        }).then(function(result) {
-            if (result.value) {
-                window.livewire.emit('Destroy', id)
-                swal.close()
-            }
-        })
-    }
 </script>

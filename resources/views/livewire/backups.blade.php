@@ -58,7 +58,7 @@
                                                     d="M4.393 15.269A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.436 8.284" />
                                             </svg>
                                         </button>
-
+                                        <x-delete_button onclick="Confirm('{{ $backup['key'] }}')" />
                                     </td>
                                 </tr>
                             @endforeach
@@ -70,29 +70,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        window.livewire.on('role-added', msg => {
-            $('#theModal').modal('hide')
-        });
-    });
-
-    function Confirm(id) {
-        swal({
-            title: 'CONFIRMAR',
-            text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
-            type: 'warning',
-            showCancelButton: true,
-            cancelButtonText: 'Cerrar',
-            cancelButtonColor: '#fff',
-            confirmButtonColor: '#3B3F5C',
-            confirmButtonText: 'Aceptar'
-        }).then(function(result) {
-            if (result.value) {
-                window.livewire.emit('Destroy', id)
-                swal.close()
-            }
-        })
-    }
-</script>

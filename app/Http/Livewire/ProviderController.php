@@ -30,8 +30,25 @@ class ProviderController extends Component
 
     // ! TODO 10
     public $messages = [
-        'name.required' => 'El monto es requerido',
-        'name.min' => 'El monto debe ser al menos 1',
+        'name.required' => 'El nombre es requerido',
+        'name.min' => 'El nombre debe tener al menos 2 caracteres',
+        'name.max' => 'El nombre no puede tener más de 40 caracteres',
+        'name.regex' => 'El nombre no puede contener caracteres especiales o espacios consecutivos',
+        'name.unique' => 'El nombre ya está registrado',
+        'phone.required' => 'El teléfono es requerido',
+        'phone.numeric' => 'El teléfono debe ser numérico',
+        'phone.digits' => 'El teléfono debe tener 11 dígitos',
+        'phone.unique' => 'El teléfono ya está registrado',
+        'address.required' => 'La dirección es requerida',
+        'address.min' => 'La dirección debe tener al menos 2 caracteres',
+        'address.max' => 'La dirección no puede tener más de 100 caracteres',
+        'address.regex' => 'La dirección no puede contener caracteres especiales o espacios consecutivos',
+        'rif.required' => 'El RIF es requerido',
+        'rif.numeric' => 'El RIF debe ser numérico',
+        'rif.digits' => 'El RIF debe tener 10 dígitos',
+        'rif.unique' => 'El RIF ya está registrado',
+        'document.required' => 'El documento es requerido',
+        'document.in' => 'El documento debe ser uno de los siguientes valores: J, V, G, E'
     ];
 
     public function mount()
@@ -124,13 +141,12 @@ class ProviderController extends Component
         $this->document = 'V';
     }
     protected $listeners = [
-        'Destroy'
+        'Destroy' => 'delete'
     ];
 
-    public function Destroy(Provider $provider)
+    public function delete(Provider $provider)
     {
         $provider->delete();
         $this->resetUI();
-        $this->emit('provider-deleted', 'Denominacion Eliminada');
     }
 }

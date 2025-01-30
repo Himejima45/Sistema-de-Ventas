@@ -95,13 +95,12 @@ class CategoriesController extends Component
         $this->resetValidation();
     }
     protected $listeners = [
-        'Destroy'
+        'Destroy' => 'delete'
     ];
 
-    public function Destroy(Category $category)
+    public function delete(Category $category)
     {
         $category->delete();
         $this->resetUI();
-        $this->emit('category-deleted', 'Categoria Eliminada');
     }
 }

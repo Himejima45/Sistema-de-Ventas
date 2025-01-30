@@ -38,4 +38,67 @@
     }
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        window.livewire.on('record-created', msg => {
+            Success('Registrado', msg)
+            $('#theModal').modal('hide')
+        });
+        window.livewire.on('record-updated', msg => {
+            Success('Actualizado', msg)
+            $('#theModal').modal('hide')
+        });
+        window.livewire.on('record-deleted', msg => {
+            Deleted()
+            $('#theModal').modal('hide')
+        });
+    });
+
+    function Confirm(id, itemsLength = 0, itemsMessage = '') {
+        if (itemsLength > 0) {
+            swal(itemsMessage)
+            return;
+        }
+
+        swal({
+            title: 'CONFIRMAR',
+            text: "¿ESTÁ SEGURO QUE DESEA BORRAR EL REGISTRO?",
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#fff',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('Destroy', id)
+                swal.close()
+                Deleted('Eliminado', 'Se ha eliminado el registro')
+            }
+        })
+    }
+
+    function Deleted(title, message) {
+        swal({
+            icon: "warning",
+            type: "warning",
+            title,
+            text: message,
+            showConfirmButton: false
+        })
+    }
+
+    function Success(title, message) {
+        swal({
+            icon: "success",
+            type: "success",
+            title,
+            text: message,
+            showConfirmButton: false,
+        })
+    }
+</script>
+
+
+
 @livewireScripts

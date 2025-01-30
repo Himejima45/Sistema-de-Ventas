@@ -122,7 +122,7 @@ class ProductsController extends Component
         Product::create($data);
 
         $this->resetUI();
-        $this->emit('product-added', 'Producto Registrado');
+        $this->emit('record-created', 'Producto Registrado');
     }
 
     public function Edit(Product $product)
@@ -188,7 +188,7 @@ class ProductsController extends Component
         $product->update($data);
 
         $this->resetUI();
-        $this->emit('product-updated', 'Producto Actulizado');
+        $this->emit('record-updated', 'Producto Actulizado');
     }
     public function resetUI()
     {
@@ -207,16 +207,15 @@ class ProductsController extends Component
         $this->selected_id = 0;
     }
 
-    protected $listeners = ['Destroy', 'zoom'];
+    protected $listeners = ['Destroy' => 'delete', 'zoom'];
 
     public function zoom(Product $product)
     {
-        // dd('here');
         $this->selectedProduct = $product;
         $this->emit('show-product-zoomed');
     }
 
-    public function Destroy(Product $product)
+    public function delete(Product $product)
     {
         $imageTemp = $product->image;
         $product->delete();
@@ -229,6 +228,5 @@ class ProductsController extends Component
         }
 
         $this->resetUI();
-        $this->emit('product-deleted', 'Producto Eliminada');
     }
 }

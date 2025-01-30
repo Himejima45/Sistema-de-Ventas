@@ -64,7 +64,7 @@ class RolesController extends Component
         ]);
 
         $this->resetUI();
-        $this->emit('role-added', 'Se registro el role con exito');
+        $this->emit('record-created', 'Se registro el role con exito');
     }
 
     public function Edit(Role $role)
@@ -100,12 +100,12 @@ class RolesController extends Component
         ]);
 
         $this->resetUI();
-        $this->emit('role-updated', 'Se actualizó el rol con exito');
+        $this->emit('record-updated', 'Se actualizó el rol con exito');
     }
 
-    protected $listeners = ['Destroy', 'Edit'];
+    protected $listeners = ['Destroy' => 'delete', 'Edit'];
 
-    public function Destroy($id)
+    public function delete($id)
     {
         $permissionsCount = Role::find($id)->permissions->count();
         if ($permissionsCount > 0) {
@@ -124,7 +124,6 @@ class RolesController extends Component
         ]);
 
         $this->resetUI();
-        $this->emit('role-deleted', 'Se elimino con exito');
     }
 
 

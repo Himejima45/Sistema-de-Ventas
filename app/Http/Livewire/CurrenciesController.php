@@ -85,7 +85,7 @@ class CurrenciesController extends Component
         ]));
 
         $this->resetUI();
-        $this->emit('currency-added', 'Denominacion Registrada');
+        $this->emit('record-added', 'Tasa Registrada');
     }
 
     public function Update()
@@ -95,7 +95,7 @@ class CurrenciesController extends Component
             ->update($data);
 
         $this->resetUI();
-        $this->emit('currency-updated', 'Denominacion Actualizada');
+        $this->emit('record-updated', 'Tasa Actualizada');
     }
 
     public function resetUI()
@@ -107,13 +107,12 @@ class CurrenciesController extends Component
         $this->selected_id = 0;
     }
     protected $listeners = [
-        'Destroy'
+        'Destroy' => 'delete'
     ];
 
-    public function Destroy(Currency $currency)
+    public function delete(Currency $currency)
     {
         $currency->delete();
         $this->resetUI();
-        $this->emit('currency-deleted', 'Denominacion Eliminada');
     }
 }

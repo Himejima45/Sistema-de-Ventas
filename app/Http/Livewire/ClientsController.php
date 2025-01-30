@@ -88,7 +88,7 @@ class ClientsController extends Component
             ->assignRole('Client');
 
         $this->resetUI();
-        $this->emit('client-added', 'Cliente Registrado');
+        $this->emit('record-added', 'Cliente Registrado');
     }
     public function Update()
     {
@@ -105,7 +105,7 @@ class ClientsController extends Component
             ->update($data);
 
         $this->resetUI();
-        $this->emit('client-updated', 'Cliente Actualizada');
+        $this->emit('record-updated', 'Cliente Actualizada');
     }
 
     public function resetUI()
@@ -120,13 +120,12 @@ class ClientsController extends Component
         $this->selected_id = 0;
     }
 
-    protected $listeners = ['Destroy'];
+    protected $listeners = ['Destroy' => 'delete'];
 
-    public function Destroy(User $client)
+    public function delete(User $client)
     {
         $client->delete();
 
         $this->resetUI();
-        $this->emit('client-deleted', 'Cliente Eliminado');
     }
 }

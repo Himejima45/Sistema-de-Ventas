@@ -44,8 +44,10 @@
                                     </td>
                                     <td class="text-center">
                                         <x-edit_button wire:click="Edit({{ $provider->id }})" />
-                                        <x-delete_button
-                                            onclick="Confirm({{ $provider->id }}, 'Eliminar', '¿Está seguro de eliminar a este cliente?')" />
+                                        @if (!$provider->getHasProductsAttribute())
+                                            <x-delete_button
+                                                onclick="Confirm({{ $provider->id }}, 'Eliminar', '¿Está seguro de eliminar a este cliente?')" />
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
