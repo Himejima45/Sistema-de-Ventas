@@ -97,6 +97,26 @@
             showConfirmButton: false,
         })
     }
+
+    function Info(title, message) {
+        swal({
+            icon: "info",
+            type: "info",
+            title,
+            text: message,
+            showConfirmButton: false,
+        })
+    }
+    
+    function Warning(title, message) {
+        swal({
+            icon: "warning",
+            type: "warning",
+            title,
+            text: message,
+            showConfirmButton: false,
+        })
+    }
 </script>
 
 

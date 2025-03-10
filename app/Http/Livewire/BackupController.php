@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use Carbon\Carbon;
+use DB;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Artisan;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithPagination;
+use ZipArchive;
 
 class BackupController extends Component
 {
@@ -84,6 +86,52 @@ class BackupController extends Component
             ]);
         } else {
             return 'El respaldo que intenta descargar no existe, pruebe creando una copia de seguridad u otro respaldo';
+        }
+    }
+
+    public function upload($record)
+    {
+        $file_name = $record;
+        $disk = Storage::disk('backups');
+
+        if (!$disk->exists($file_name)) {
+            $this->emit('upload-error');
+        }
+
+        $this->emit('upload-action');
+
+        $zip = new ZipArchive;
+        $sqlContent = '';
+
+        if ($zip->open($disk->path($file_name)) === TRUE) {
+            $zip->extractTo(storage_path('app'));
+
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+
+                if (pathinfo($filename, PATHINFO_EXTENSION) === 'sql') {
+                    $sqlContent = $zip->getFromIndex($i);
+                    break;
+                }
+            }
+
+            $zip->close();
+        } else {
+            $this->emit('upload-error');
+        }
+
+        if (!empty($sqlContent)) {
+            try {
+                DB::unprepared($sqlContent);
+                $this->emit('upload-success');
+
+                return 'Base de datos actualizada correctamente.';
+            } catch (\Exception $e) {
+                \Log::error('Error al ejecutar el SQL: ' . $e->getMessage());
+                $this->emit('upload-error');
+            }
+        } else {
+            $this->emit('upload-error');
         }
     }
 

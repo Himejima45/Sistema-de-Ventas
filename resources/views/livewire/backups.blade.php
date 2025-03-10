@@ -59,6 +59,10 @@
                                             </svg>
                                         </button>
                                         <x-delete_button onclick="Confirm('{{ $backup['key'] }}')" />
+                                        <button wire:click="upload('{{ $backup['key'] }}')"
+                                            class="btn btn-secondary mtmobile" title="Cargar">
+                                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 6-4-4-4 4"/><path d="M12 2v8"/><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6 18h.01"/><path d="M10 18h.01"/></svg>
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -70,3 +74,17 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        window.livewire.on('upload-action', msg => {
+            Info('Cargando respaldo', "Se va a cargar el respaldo de la base de datos, este proceso puede demorar unos minutos")
+        });
+        window.livewire.on('upload-success', msg => {
+            Success('Respaldo exitoso', "Se ha cargado el respaldo de la base de datos exitosamente")
+        });
+        window.livewire.on('upload-error', msg => {
+            Warning('Ocurrió un error', "El respaldo que intenta cargar no pudo ser procesado o no fue encontrado, intente de nuevo más tarde o seleccione otro respaldo")
+        });
+    });
+</script>
