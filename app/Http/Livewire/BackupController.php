@@ -54,8 +54,40 @@ class BackupController extends Component
 
     public function save()
     {
-        Artisan::call('backup:run --only-db');
-        $this->emit('record-created', 'Respaldo creado con éxito');
+        $db = config('database.connections.mysql');
+        $filename = date('Y-m-d-H-i-s') . '.sql';
+        $app_name = config('app.name');
+
+        $mysqldump = php_uname('s') === 'Linux'
+            ? '/usr/bin/mysqldump'
+            : 'C:/xampp/mysql/bin/mysqldump.exe';
+
+        $command = sprintf(
+            '"%s" --user=%s --password=%s --host=%s %s > %s',
+            $mysqldump,
+            escapeshellarg($db['username']),
+            escapeshellarg($db['password']),
+            escapeshellarg($db['host']),
+            escapeshellarg($db['database']),
+            escapeshellarg(storage_path('app/public/' . $app_name . '/' . $filename))
+        );
+
+        Storage::disk('local')->makeDirectory('backups');
+
+        try {
+            $returnVar = null;
+            $output = null;
+            exec($command, $output, $returnVar);
+
+            if ($returnVar !== 0) {
+                $this->emit('upload-error');
+                throw new \Exception('Backup failed with error code: ' . $returnVar);
+            }
+
+            $this->emit('record-created', 'Respaldo creado con éxito');
+        } catch (\Exception $e) {
+            $this->emit('upload-error');
+        }
     }
 
     public function delete($record)
@@ -95,43 +127,42 @@ class BackupController extends Component
         $disk = Storage::disk('backups');
 
         if (!$disk->exists($file_name)) {
-            $this->emit('upload-error');
+            $this->emit('upload-error', "No se encontró el archivo a cargar");
         }
 
         $this->emit('upload-action');
-
-        $zip = new ZipArchive;
+        $extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
         $sqlContent = '';
 
-        if ($zip->open($disk->path($file_name)) === TRUE) {
-            $zip->extractTo(storage_path('app'));
-
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                $filename = $zip->getNameIndex($i);
-
-                if (pathinfo($filename, PATHINFO_EXTENSION) === 'sql') {
-                    $sqlContent = $zip->getFromIndex($i);
-                    break;
+        try {
+            if ($extension === 'zip') {
+                $zip = new ZipArchive;
+                if ($zip->open($disk->path($file_name)) === TRUE) {
+                    for ($i = 0; $i < $zip->numFiles; $i++) {
+                        $filename = $zip->getNameIndex($i);
+                        if (strtolower(pathinfo($filename, PATHINFO_EXTENSION)) === 'sql') {
+                            $sqlContent = $zip->getFromIndex($i);
+                            break;
+                        }
+                    }
+                    $zip->close();
                 }
+            } elseif ($extension === 'sql') {
+                $sqlContent = $disk->get($file_name);
+            } else {
+                $this->emit('upload-error', 'Formato inválido, intente con otro archivo');
             }
 
-            $zip->close();
-        } else {
-            $this->emit('upload-error');
-        }
-
-        if (!empty($sqlContent)) {
-            try {
-                DB::unprepared($sqlContent);
-                $this->emit('upload-success');
-
-                return 'Base de datos actualizada correctamente.';
-            } catch (\Exception $e) {
-                \Log::error('Error al ejecutar el SQL: ' . $e->getMessage());
-                $this->emit('upload-error');
+            if (empty($sqlContent)) {
+                $this->emit('upload-error', 'No se encontró un archivo sql válido para cargar los datos');
             }
-        } else {
-            $this->emit('upload-error');
+
+            DB::unprepared($sqlContent);
+
+            $this->emit('upload-success');
+
+        } catch (\Exception $e) {
+            $this->emit('upload-error', 'No se pudo cargar el respaldo en la base de datos, intente de nuevo o seleccione otro archivo');
         }
     }
 

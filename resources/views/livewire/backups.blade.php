@@ -84,7 +84,7 @@
             Success('Respaldo exitoso', "Se ha cargado el respaldo de la base de datos exitosamente")
         });
         window.livewire.on('upload-error', msg => {
-            Warning('Ocurrió un error', "El respaldo que intenta cargar no pudo ser procesado o no fue encontrado, intente de nuevo más tarde o seleccione otro respaldo")
+            Warning('Ocurrió un error', msg)
         });
     });
 </script>
