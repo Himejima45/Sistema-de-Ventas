@@ -16,4 +16,9 @@ class Purchase extends BaseModel
             ->withPivot('quantity', 'price')
             ->withTimestamps();
     }
+
+    public function provider_model()
+    {
+        return $this->hasOne(Provider::class, 'id', 'provider');
+    }
 }

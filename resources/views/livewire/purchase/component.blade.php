@@ -60,10 +60,10 @@
                                         <h6 class="text-left">{{ $item->created_at->format('d-m-Y') }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $item->cost }}</h6>
+                                        <h6 class="text-center">{{ $item->provider_model->name ?? '-' }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $item->provider ?? '-' }}</h6>
+                                        <h6 class="text-center">{{ $item->cost }}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $item->payed }}</h6>
