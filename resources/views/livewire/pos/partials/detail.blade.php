@@ -54,7 +54,7 @@
                                             <div class="row">
 
                                                 <button
-                                                    onclick="Confirm('{{ $item['id'] }}', 'removeItem', 'CONFIRMAR ELIMINAR EL PRODUCTO?')"
+                                                    onclick="DeleteItem('{{ $item['id'] }}', 'removeItem', 'CONFIRMAR ELIMINAR EL PRODUCTO?')"
                                                     class="btn btn-danger mbmobile">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>

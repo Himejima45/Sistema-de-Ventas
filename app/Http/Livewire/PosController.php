@@ -207,10 +207,12 @@ class PosController extends Component
             Cart::add($product->id, $product->name, $product->price, $product->stock);
             return null;
         } else {
-            Cart::update($productId, ['quantity' => [
-                'relative' => false,
-                'value' => $quantity
-            ]]);
+            Cart::update($productId, [
+                'quantity' => [
+                    'relative' => false,
+                    'value' => $quantity
+                ]
+            ]);
         }
 
         $this->updateCartInfo();
@@ -295,7 +297,7 @@ class PosController extends Component
                 'numeric',
             ],
             'efectivo' =>
-            $this->bs > 0 ? 'nullable' : (Rule::when($this->sale_type === 'SALE', 'required|min:1|numeric')),
+                $this->bs > 0 ? 'nullable' : (Rule::when($this->sale_type === 'SALE', 'required|min:1|numeric')),
             'bs' => $this->efectivo > 0 ? 'nullable' : (
                 Rule::when($this->sale_type === 'SALE', 'required|min:1|numeric')
             ),

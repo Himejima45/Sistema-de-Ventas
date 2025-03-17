@@ -79,6 +79,7 @@ class ClientsController extends Component
         $this->selected_id = $record->id;
 
         $this->emit('show-modal', 'show modal!');
+        $this->emit('modal-show', 'show modal!');
     }
 
     public function Store()

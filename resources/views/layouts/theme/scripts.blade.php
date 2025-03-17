@@ -80,7 +80,6 @@
 
     function Deleted(title, message) {
         swal({
-            icon: "warning",
             type: "warning",
             title,
             text: message,
@@ -90,7 +89,6 @@
 
     function Success(title, message) {
         swal({
-            icon: "success",
             type: "success",
             title,
             text: message,
@@ -100,7 +98,6 @@
 
     function Info(title, message) {
         swal({
-            icon: "info",
             type: "info",
             title,
             text: message,
@@ -110,7 +107,6 @@
     
     function Warning(title, message) {
         swal({
-            icon: "warning",
             type: "warning",
             title,
             text: message,

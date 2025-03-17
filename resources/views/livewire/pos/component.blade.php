@@ -36,6 +36,28 @@
 <script src="{{ asset('plugins/keypress/keypress.js') }}"></script>
 <script src="{{ asset('plugins/onscan.js/onscan.js') }}"></script>
 
+<script>
+    function DeleteItem(id) {
+        swal({
+            title: 'CONFIRMAR',
+            text: "¿ESTÁ SEGURO QUE DESEA BORRAR EL REGISTRO?",
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#fff',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            console.log('here')
+            if (result.value) {
+                window.livewire.emit('removeItem', id)
+                swal.close()
+                Deleted('Eliminado', 'Se ha eliminado el registro')
+            }
+        })
+    }
+</script>
+
 @include('livewire.pos.scripts.shortcurts')
 {{-- @include('livewire.pos.scripts.events') --}}
 @include('livewire.pos.scripts.general')

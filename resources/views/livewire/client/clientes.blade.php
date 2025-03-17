@@ -66,4 +66,12 @@
         </div>
     </div>
     @include('livewire.client.form')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.livewire.on('modal-show', msg => {
+                $('#theModal').modal('show')
+            });
+        });
+    </script>
 </div>
