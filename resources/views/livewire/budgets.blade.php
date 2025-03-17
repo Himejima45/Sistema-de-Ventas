@@ -45,7 +45,6 @@
                                         <td>
                                             <h6>{{ number_format($product->price * $product->quantity, 2) }}</h6>
                                         </td>
-
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -220,6 +219,7 @@
                                 <th class="table-th text-white">CAMBIO</th>
                                 <th class="table-th text-white">ESTADO</th>
                                 <th class="table-th text-white">PRODUCTOS</th>
+                                <th class="table-th text-white">FECHA</th>
                                 <th class="table-th text-white">ACCIONES</th>
                             </tr>
 
@@ -252,6 +252,9 @@
                                     <td>
                                         <h6>{{ $budget->getTotalProducts() }}</h6>
                                     </td>
+                                    <td>
+                                            <h6 class="text-left">{{ $budget->created_at->format('d-m-Y') }}</h6>
+                                        </td>
                                     <td class="text-center">
                                         <x-edit_button wire:click="edit({{ $budget->id }})" />
                                         <x-see_button wire:click="products({{ $budget->id }})" />
