@@ -40,6 +40,7 @@
         'logout' => 'Cierre de sesión',
         'home' => 'Inicio',
         'login' => 'Inicio de sesión',
+        'register' => 'Registro'
     ];
     $rol_translations = [
         'Admin' => 'Administrador',

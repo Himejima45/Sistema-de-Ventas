@@ -17,6 +17,15 @@ class ClientSeeder extends Seeder
     {
         $clients = [
             [
+                'name' => 'Cliente Genérico',
+                'last_name' => '',
+                'document' => '999999999',
+                'phone' => '00000000000',
+                'address' => 'No aplica',
+                'password' => Hash::make('cliente'),
+                'email' => 'cliente@email.com'
+            ],
+            [
                 'name' => 'Pablo',
                 'last_name' => 'Diaz',
                 'document' => '11456879',

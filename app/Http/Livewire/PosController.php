@@ -124,7 +124,9 @@ class PosController extends Component
 
     public function ScanCode($barcode, $cant = 1)
     {
-        $product = Product::where('barcode', $barcode)->first();
+        $product = Product::where('barcode', $barcode)
+            ->orWhere('name', 'like', "%$barcode%")
+            ->first();
 
         if (is_null($product)) {
             session()->flash('scan', "No hay productos registrados con el código de barras: $barcode");
