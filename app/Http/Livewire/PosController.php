@@ -331,8 +331,8 @@ class PosController extends Component
             // ! TODO #4
             $sale = Sale::create([
                 'total' => $this->total,
-                'cash' => $this->efectivo ?? 0,
-                'bs' => $this->bs ?? 0,
+                'cash' => $this->efectivo == '' ? 0 : $this->efectivo ?? 0,
+                'bs' => $this->bs == '' ? 0 : $this->bs ?? 0,
                 'change' => $this->change,
                 'status' => $this->sale_type === 'BUDGET' ? 'PENDING' : $this->type,
                 'client_id' => $this->client,
