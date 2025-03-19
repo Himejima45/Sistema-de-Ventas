@@ -89,7 +89,7 @@ class ClientsController extends Component
             ->assignRole('Client');
 
         $this->resetUI();
-        $this->emit('record-added', 'Cliente Registrado');
+        $this->emit('record-created', 'Cliente Registrado');
     }
     public function Update()
     {
