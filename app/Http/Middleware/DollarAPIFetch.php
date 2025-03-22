@@ -21,26 +21,19 @@ class DollarAPIFetch
         $currency = Currency::orderByDesc('created_at')->first();
         $api = 'https://pydolarve.org/api/v1/dollar?monitor=bcv';
 
-        // Fetch currency data if not available or outdated
         if (is_null($currency) || $this->isCurrencyOutdated($currency)) {
             $response = $this->fetchCurrencyData($api);
 
             if ($response) {
-                // Process successful response
                 $data = json_decode($response->body());
                 $last_update = Carbon::createFromFormat('d/m/Y, h:i A', $data->last_update);
 
-                Currency::updateOrCreate(
-                    ['id' => optional($currency)->id], // Update existing or create new
-                    [
-                        'value' => $data->price,
-                        'last_update' => $last_update,
-                    ]
-                );
-                // session()->put('fetch_status', 'success');
+                Currency::create([
+                    'value' => $data->price,
+                    'last_update' => $last_update,
+                ]);
             } else {
                 Log::error('Failed to fetch currency data from API.');
-                // session()->put('fetch_status', 'error');
             }
         }
 
@@ -54,15 +47,14 @@ class DollarAPIFetch
 
     private function isCurrencyOutdated($currency)
     {
-        $currencyDate = Carbon::parse($currency->last_update)->format('d-m-Y h:i a');
-        $currentDate = now()->timeZone('America/Caracas')->format('d-m-Y h:i a');
-        return $currentDate > $currencyDate;
+        return Carbon::parse($currency->last_update)
+            ->lt(now()->timeZone('America/Caracas'));
     }
 
     private function fetchCurrencyData($api)
     {
         try {
-            $response = Http::timeout(5)->get($api); // Set a timeout for the request
+            $response = Http::timeout(5)->get($api);
             if ($response->successful()) {
                 return $response;
             }
@@ -70,6 +62,6 @@ class DollarAPIFetch
             Log::error('cURL error: ' . $e->getMessage());
         }
 
-        return null; // Return null if the request fails
+        return null;
     }
 }
