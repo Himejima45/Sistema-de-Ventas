@@ -1,4 +1,22 @@
-@if (auth()->user() !== null)
+@php
+    $user = auth()->user();
+    switch ($user->getRoleNames()[0]) {
+        case 'Admin':
+            $user_role = 'Admin';
+            break;
+        case 'Client':
+            $user_role = 'Cliente';
+            break;
+        case 'Employee':
+            $user_role = 'Empleado';
+            break;
+        default:
+            $user_role = 'Unknown';
+            break;
+    }
+@endphp
+
+@if ($user !== null)
     <div class="header-container fixed-top">
         <header class="header navbar navbar-expand-sm">
             <ul class="navbar-item flex-row">
@@ -27,35 +45,44 @@
 
             </ul>
 
-
+            <li class="navbar-item flex-row navbar-dropdown pt-2" title="Ayuda">
+                <a target="_blank" href="https://www.youtube.com/playlist?list=PLZcHK-bOWfdbRMw_bgWm6dxvjKLPet8na">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-circle-help-icon lucide-circle-help">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                        <path d="M12 17h.01" />
+                    </svg>
+                </a>
+            </li>
             <ul class="navbar-item flex-row navbar-dropdown ">
 
                 <li class="nav-item dropdown user-profile-dropdown  order-lg-0 order-1">
                     <a href="javascript:void(0);" class="nav-link dropdown-toggle user" id="userProfileDropdown"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-user">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-user">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
                     </a>
-                    <div class="dropdown-menu position-absolute animated fadeInUp"
-                        aria-labelledby="userProfileDropdown">
+                    <div class="dropdown-menu position-absolute animated fadeInUp" aria-labelledby="userProfileDropdown">
                         <div class="user-profile-section">
                             <div class="media mx-auto">
                                 <img src="assets/users/profile_4.png" class="img-fluid mr-2" alt="avatar">
                                 <div class="media-body">
-                                    <h5>Juan Diaz</h5>
-                                    <p>ADMIN</p>
+                                    <h5>{{ $user->full_name }}</h5>
+                                    <p>{{ $user_role }}</p>
                                 </div>
                             </div>
                         </div>
                         <div class="dropdown-item">
                             <a href="user_profile.html">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-user">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-user">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg> <span>Mi Perfil</span>
@@ -65,9 +92,9 @@
                             <a href="{{ route('logout') }}"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
 
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-log-out">
                                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                                     <polyline points="16 17 21 12 16 7"></polyline>
                                     <line x1="21" y1="12" x2="9" y2="12"></line>
