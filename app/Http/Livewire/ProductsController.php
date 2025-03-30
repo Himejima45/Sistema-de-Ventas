@@ -23,7 +23,7 @@ class ProductsController extends Component
             'required',
             'min:2',
             'max:120',
-            'regex:/^(?=.*[a-zA-Z])(?=\S*\s?\S*$)(?!.*\s{2,}).*$/',
+            'regex:/^[A-Za-z]+(?: [A-Za-z]+)*$/',
             'unique:products,name'
         ],
         'barcode' => ['required', 'numeric', 'digits_between:3,20', 'unique:products,barcode'],
@@ -150,7 +150,7 @@ class ProductsController extends Component
                     'required',
                     'min:2',
                     'max:120',
-                    'regex:/^(?=.*[a-zA-Z])(?=\S*\s?\S*$)(?!.*\s{2,}).*$/',
+                    'regex:/^[A-Za-z]+(?: [A-Za-z]+)*$/',
                     "unique:products,name,{$this->selected_id}"
                 ],
                 'barcode' => [

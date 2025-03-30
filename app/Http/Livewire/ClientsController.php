@@ -16,13 +16,13 @@ class ClientsController extends Component
     public $name, $last_name, $document, $phone, $email, $address, $selected_id, $pageTitle, $componentName, $search, $password, $password_confirmation;
     private $pagination = 20;
     public $rules = [
-        'name' => ['required', 'min:2', 'max:30', 'regex:/^(?=.*[a-zA-Z])(?=\S*\s?\S*$)(?!.*\s{2,}).*$/'],
+        'name' => ['required', 'min:2', 'max:30', 'regex:/^[A-Za-z]+(?: [A-Za-z]+)*$/'],
         'last_name' => 'required|min:2|max:30|alpha',
         'document' => 'required|digits_between:6,8|numeric|unique:users,document',
         'email' => 'required|string|email|max:255|unique:users',
         'phone' => 'required|digits:11|numeric|unique:users,phone',
         'password' => 'required|string|min:8|confirmed',
-        'address' => ['required', 'min:3', 'max:100', 'regex:/^(?=.*[a-zA-Z])(?=\S*\s?\S*$)(?!.*\s{2,}).*$/']
+        'address' => ['required', 'min:3', 'max:100', 'regex:/^[A-Za-z]+(?: [A-Za-z]+)*$/']
     ];
 
     protected $validationAttributes = [

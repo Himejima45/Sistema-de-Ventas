@@ -18,7 +18,8 @@
                                 <option value="" selected>Elegir</option>
                                 @foreach ($providers as $provider)
                                     <option value="{{ $provider->id }}">
-                                        {{ "{$provider->name} {$provider->document}-{$provider->rif}" }}</option>
+                                        {{ "{$provider->name} {$provider->document}-{$provider->rif}" }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('provider')
@@ -31,7 +32,7 @@
                         <div class="form-group">
                             <label>Costo</label>
                             <input type="text" data-type="currency" wire:model.lazy="cost" class="form-control"
-                                placeholder="Ej: 57.33">
+                                step="0.01" placeholder="Ej: 57.33">
                             @error('cost')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
@@ -42,7 +43,7 @@
                         <div class="form-group">
                             <label>Pagado</label>
                             <input type="text" data-type="currency" wire:model.lazy="payed" class="form-control"
-                                placeholder="Ej: 13.00">
+                                placeholder="Ej: 13.00" step="0.01">
                             @error('payed')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
@@ -116,9 +117,8 @@
 
                                     <div class='col-md-3'>
                                         <label>Precio unitario</label>
-                                        <input type='number' data-type='currency'
-                                            wire:model.lazy='products.{{ $index }}.price' class='form-control'
-                                            placeholder='Ej: 7.00' />
+                                        <input type='number' data-type='currency' wire:model.lazy='products.{{ $index }}.price'
+                                            class='form-control' placeholder='Ej: 7.00' step="0.01" />
                                         @error("products.$index.price")
                                             <span class='text-danger er'>{{ $message }}</span>
                                         @enderror
@@ -140,8 +140,7 @@
                 <div class="modal-footer">
                     <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn"
                         data-dismiss="modal">CERRAR</button>
-                    <button type="button" wire:click.prevent="Store()"
-                        class="btn btn-dark close-modal">GUARDAR</button>
+                    <button type="button" wire:click.prevent="Store()" class="btn btn-dark close-modal">GUARDAR</button>
                 </div>
             </div>
         </div>

@@ -17,7 +17,7 @@ class CategoriesController extends Component
     private $pagination = 20;
 
     public $rules = [
-        'name' => ['required', 'min:2', 'max:30', 'regex:/^(?=.*[a-zA-Z])(?=\S*\s?\S*$)(?!.*\s{2,}).*$/', 'unique:categories,name'],
+        'name' => ['required', 'min:2', 'max:30', 'regex:/^[A-Za-z]+(?: [A-Za-z]+)*$/', 'unique:categories,name'],
     ];
 
     // ! TODO 10
@@ -75,7 +75,7 @@ class CategoriesController extends Component
     public function Update()
     {
         $rules = [
-            'name' => "required|min:2|max:30|regex:/^(?=.*[a-zA-Z])(?=\S*\s?\S*$)(?!.*\s{2,}).*$/|unique:categories,name,{$this->selected_id}",
+            'name' => "required|min:2|max:30|regex:/^[A-Za-z]+(?: [A-Za-z]+)*$/|unique:categories,name,{$this->selected_id}",
         ];
 
         $data = $this->validate($rules);

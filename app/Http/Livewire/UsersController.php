@@ -18,10 +18,15 @@ class UsersController extends Component
     public $name, $phone, $status, $image, $password, $search, $email, $selected_id, $pageTitle, $componentName, $fileLoaded, $profile;
 
     public $rules = [
-        'name' => ['required', 'min:2', 'max:30', 'regex:/^(?=.*[a-zA-Z])(?=\S*\s?\S*$)(?!.*\s{2,}).*$/'],
+        'name' => ['required', 'min:2', 'max:30', 'regex:/^[A-Za-z]+(?: [A-Za-z]+)*$/'],
         'email' => ['required', 'email', 'unique:users,email'],
-        'password' => ['required', 'min:3', 'max:12', 'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x]).*$/
-'],
+        'password' => [
+            'required',
+            'min:3',
+            'max:12',
+            'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x]).*$/
+'
+        ],
         'phone' => ['required', 'digits:11', 'unique:users,phone', 'numeric']
     ];
     public $messages = [

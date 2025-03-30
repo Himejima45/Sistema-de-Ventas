@@ -1,19 +1,5 @@
 @php
     $user = auth()->user();
-    switch ($user->getRoleNames()[0]) {
-        case 'Admin':
-            $user_role = 'Admin';
-            break;
-        case 'Client':
-            $user_role = 'Cliente';
-            break;
-        case 'Employee':
-            $user_role = 'Empleado';
-            break;
-        default:
-            $user_role = 'Unknown';
-            break;
-    }
 @endphp
 
 @if ($user !== null)
@@ -74,7 +60,6 @@
                                 <img src="assets/users/profile_4.png" class="img-fluid mr-2" alt="avatar">
                                 <div class="media-body">
                                     <h5>{{ $user->full_name }}</h5>
-                                    <p>{{ $user_role }}</p>
                                 </div>
                             </div>
                         </div>

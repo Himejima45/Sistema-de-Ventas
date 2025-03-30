@@ -44,14 +44,14 @@ class PurchaseController extends Component
     }
 
     public $rules = [
-        'cost' => ['required', 'numeric', 'min:0'],
-        'payed' => ['required', 'numeric', 'min:0'],
+        'cost' => ['required', 'numeric', 'min:0.00'],
+        'payed' => ['required', 'numeric', 'min:0.00'],
         'status' => ['required', 'string'],
         'provider' => ['required', 'string', 'exists:providers,id'],
         'payment_type' => ['required', 'string'],
         'products.*.name' => ['required', 'exists:products,id'],
         'products.*.quantity' => ['required', 'integer', 'min:1'],
-        'products.*.price' => ['required', 'numeric', 'min:0'],
+        'products.*.price' => ['required', 'numeric', 'min:0.00'],
     ];
 
     public $messages = [
@@ -92,11 +92,11 @@ class PurchaseController extends Component
 
             if ($product) {
                 $product->update(['price' => $productData['price']]);
-                $product->increment('stock', (int)$productData['quantity']);
+                $product->increment('stock', (int) $productData['quantity']);
 
                 $purchase->products()->attach($product->id, [
-                    'quantity' => (int)$productData['quantity'],
-                    'price' => (float)$productData['price'],
+                    'quantity' => (int) $productData['quantity'],
+                    'price' => (float) $productData['price'],
                 ]);
             }
         }
