@@ -106,13 +106,4 @@ class CurrenciesController extends Component
         $this->search = '';
         $this->selected_id = 0;
     }
-    protected $listeners = [
-        'Destroy' => 'delete'
-    ];
-
-    public function delete(Currency $currency)
-    {
-        $currency->delete();
-        $this->resetUI();
-    }
 }

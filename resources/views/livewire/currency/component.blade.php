@@ -12,8 +12,6 @@
                 </ul>
             </div>
 
-            @include('common.searchbox')
-
             <div class="widget-content">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped mt-1">
@@ -36,8 +34,6 @@
                                     </td>
                                     <td class="text-center">
                                         <x-edit_button wire:click="Edit({{ $currency->id }})" />
-                                        <x-delete_button
-                                            onclick="Confirm({{ $currency->id }}, 'Eliminar', '¿Está seguro de eliminar a este cliente?')" />
                                     </td>
                                 </tr>
                             @endforeach
@@ -52,7 +48,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         window.livewire.on('hide-modal', msg => {
             $('#theModal').modal('hide')
         });
@@ -73,7 +69,7 @@
         });
     });
 
-    function Confirm(id) {
+    function Confirm (id) {
         swal({
             title: 'CONFIRMAR',
             text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
@@ -83,15 +79,16 @@
             cancelButtonColor: '#fff',
             confirmButtonColor: '#3B3F5C',
             confirmButtonText: 'Aceptar'
-        }).then(function(result) {
-            if (result.value) {
+        }).then(function (result) {
+            if (result.value)
+            {
                 window.livewire.emit('Destroy', id)
                 swal.close()
             }
         })
     }
 
-    function Deleted() {
+    function Deleted () {
         swal({
             icon: "warning",
             type: "warning",
@@ -101,7 +98,7 @@
         })
     }
 
-    function Success(title, message) {
+    function Success (title, message) {
         swal({
             icon: "success",
             type: "success",
