@@ -4,21 +4,33 @@ namespace App\Http\Livewire;
 
 use App\Models\Sale;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class CartsController extends Component
 {
+    use WithPagination;
+
     public $showModal = false, $selected_id = 0, $details = [], $payed = 0, $change = 0, $error = '';
     protected $listeners = ['edit', 'clearMessage'];
+
+    private $pagination = 20;
 
     public function clearMessage()
     {
         $this->error = '';
     }
 
+    public function paginationView()
+    {
+        return 'vendor.livewire.bootstrap';
+    }
+
     public function edit(Sale $record)
     {
         $this->selected_id = $record->id;
         $this->details = $record->products;
+        $this->payed = $record->cash;
+        $this->change = $record->change;
         $this->emit('open');
     }
 
@@ -34,10 +46,22 @@ class CartsController extends Component
             }
         }
 
+        if ($this->payed === 0 || $this->payed == '') {
+            $this->emit('record-warning', 'El monto pagado no puede ser menor a 0 o al total del pedido');
+            return;
+        }
+
+        if (floatval($record->cash) === 0.0 && floatval($record->bs) === 0.0 && floatval($this->payed) > 0.0) {
+            $record->update([
+'user_id' => auth()->id()
+            ]);
+        }
+
         $record->update([
-            'status' => 'PAID',
+            'status' => $this->payed - $this->change >= $record->total ? 'PAID' : 'PENDING',
             'cash' => $this->payed,
             'change' => $this->change,
+            
         ]);
 
         foreach ($record->products as $detail) {
@@ -50,6 +74,7 @@ class CartsController extends Component
         $this->change = 0;
         $this->error = '';
         $this->emit('close');
+        $this->emit('record-created', 'Se ha pagado el pedido exitosamente');
     }
 
     public function render()

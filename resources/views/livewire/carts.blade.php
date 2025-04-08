@@ -74,7 +74,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 @php
-                                    $value = round($total - $payed + $change, 2);
+                                    $value = round(floatval($total ?? 0) - floatval($payed ?? 0) + floatval($change ?? 0), 2);
                                 @endphp
                                 <label>Monto a pagar</label>
                                 <input type="number" disabled value="{{ $value }}" @class([

@@ -18,7 +18,7 @@ class CartController extends Component
     {
         $this->cart[$productId] = isset($this->cart[$productId]) ? $this->cart[$productId] + 1 : 1;
         Session::put('cart', $this->cart);
-        $this->emit('cartUpdated');
+        $this->emit('record-updated', 'El carrito ha sido actualizado exitosamente');
     }
 
     public function render()

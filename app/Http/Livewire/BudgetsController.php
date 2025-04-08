@@ -61,7 +61,7 @@ class BudgetsController extends Component
         round($new_total - $new_cash - $bs_to_usd, 2);
         $record->update([
             'status' => $total_payed ? 'PAID' : 'PENDING',
-            'type' => 'SALE',
+            'type' => $total_payed ? 'SALE' : 'BUDGET',
             'cash' => $this->cash,
             'bs' => $this->bs,
             'change' => $total_to_pay,
@@ -71,6 +71,7 @@ class BudgetsController extends Component
         $this->cash = 0;
         $this->change = 0;
         $this->emit('close-modal');
+        $this->emit('record-updated', $total_payed ? 'El pedido ha sido pagado exitosamente' : 'El pedido ha sido actualizado exitosamente');
     }
 
     public function products(Sale $record)

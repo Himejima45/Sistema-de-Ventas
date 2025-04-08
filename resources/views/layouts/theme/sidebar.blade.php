@@ -2,11 +2,11 @@
     <div class="sidebar-wrapper sidebar-theme">
         <nav id="compactSidebar">
             <div class="base-menu">
-                <input type="text" id="sidebar-search-input" placeholder="Buscar enlace...">
+                <input type="search" id="sidebar-search-input" placeholder="Buscar enlace...">
             </div>
 
             <script>
-                document.getElementById('sidebar-search-input').addEventListener('keyup', function () {
+                document.getElementById('sidebar-search-input').addEventListener('input', function () {
                     const removeAccents = str =>
                         str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
@@ -24,7 +24,7 @@
                     });
 
                     document.querySelector('.menu-categories').scrollTop = 0;
-                });
+                })
             </script>
 
             <ul class="menu-categories" style="padding-bottom: 2.4rem">

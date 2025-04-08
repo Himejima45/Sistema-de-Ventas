@@ -6,7 +6,7 @@
                 <div class="card simple-title-task ui-sortable-handle">
                     <div class="card-body">
                         @if ($sale_type === 'SALE')
-                            <div class="input-group input-group-md mb-3">
+                            <div class="input-group input-group-md">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text input-gp hideonsm"
                                         style="background: #3b3f5c; color:white">$
@@ -17,13 +17,17 @@
                                     class="form-control text-center" value="{{ $efectivo }}"
                                     wire:keyup="addPayment($event.target.value, 'dollar')">
 
-                                <div class="input-group-append" wire:click="clearPayment('dollar')">
-                                    <span class="input-group-text" style="background: #3b3f5c; color:white">
-                                        <i class="fas fa-backspace fa-2x"></i>
-                                    </span>
+                                    
+                                    <div class="input-group-append" wire:click="clearPayment('dollar')">
+                                        <span class="input-group-text" style="background: #3b3f5c; color:white">
+                                            <i class="fas fa-backspace fa-2x"></i>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="input-group input-group-md mb-3">
+                                @error('efectivo')
+                            <span class="text-danger er mb-3">{{ $message }}</span>
+                        @enderror
+                            <div class="input-group input-group-md">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text input-gp hideonsm"
                                         style="background: #3b3f5c; color:white">Bs
@@ -33,12 +37,16 @@
                                     class="form-control text-center" value="{{ $bs }}"
                                     wire:keyup="addPayment($event.target.value, 'bs')">
 
-                                <div class="input-group-append" wire:click="clearPayment('bs')">
-                                    <span class="input-group-text" style="background: #3b3f5c; color:white">
-                                        <i class="fas fa-backspace fa-2x"></i>
-                                    </span>
+                                    
+                                    <div class="input-group-append" wire:click="clearPayment('bs')">
+                                        <span class="input-group-text" style="background: #3b3f5c; color:white">
+                                            <i class="fas fa-backspace fa-2x"></i>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
+                                @error('bs')
+                            <span class="text-danger er mb-3">{{ $message }}</span>
+                        @enderror
 
                             <h4
                                 class="{{ $change === 0 ? 'text-muted' : ($change >= 0 ? 'text-success' : 'text-danger') }}">

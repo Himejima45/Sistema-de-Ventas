@@ -82,6 +82,7 @@
             <div class="drawer-content">
                 <div class="mb-3 d-flex justify-content-between">
                     <h3>Mi Carrito</h3>
+                    @if (count($cart) > 0)
                     <button wire:click="clear" class="btn btn-danger"><svg xmlns="http://www.w3.org/2000/svg"
                             width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -91,6 +92,7 @@
                             <path d="M22 21H7" />
                             <path d="m5 11 9 9" />
                         </svg></button>
+                        @endif
                 </div>
                 @if (count($cart) > 0)
                     <div class="container">
@@ -143,10 +145,13 @@
 
                         <button wire:click="toggle" class="mt-5 btn btn-block btn-secondary">Cerrar</button>
                     </div>
+                    @if (count($cart) > 0)
+                        
                     <div class="col">
 
                         <button wire:click="save" class="mt-5 btn btn-block btn-primary">Guardar</button>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>

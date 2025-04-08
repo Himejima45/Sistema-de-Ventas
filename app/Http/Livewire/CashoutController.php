@@ -13,7 +13,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class CashoutController extends Component
 {
 
-    public $fromDate, $toDate, $userid, $total, $items, $sales, $details, $modal;
+    public $fromDate, $toDate, $userid, $total, $items, $sales = [], $details, $modal;
 
     protected $listeners = ['viewDetails'];
 
@@ -37,19 +37,33 @@ class CashoutController extends Component
 
         $this->total = 0;
         $this->items = 0;
-        $this->sales = Sale::where('type', 'SALE')
-            ->whereBetween('created_at', [$this->fromDate, $this->toDate])
+        $paginator = Sale::whereBetween('updated_at', [$this->fromDate, $this->toDate])
             ->where('status', 'PAID')
             ->when($this->userid > 0, function ($query) {
                 $query->where('user_id', $this->userid);
             })
-            ->get()
-            ->map(function ($sale, $index) {
-                $sale['number']  = ++$index;
-                $this->items += $sale->getTotalProducts();
-                $this->total += $sale->total;
-                return $sale;
-            });
+            ->orderBy('updated_at', 'desc')
+            ->paginate(20);
+
+            $this->sales = [
+                'data' => $paginator->getCollection()
+                ->transform(function ($sale, $index) use ($paginator) {
+                    $arr['number'] = $index + 1 + (($paginator->currentPage() - 1) * $paginator->perPage());
+                    $arr['items'] = $sale->getTotalProducts();
+                    $arr['user'] = $sale->user->name;
+                    $arr['client'] = $sale->client->name;
+                    $arr['total'] = $sale->total;
+                    $arr['status'] = $sale->status;
+                    $arr['id'] = $sale->id;
+                    $arr['updated_at'] = $sale->updated_at;
+                    $arr['type'] = $sale->type;
+                    $this->items += $sale->getTotalProducts();
+                    $this->total += $sale->total;
+                    return $arr;
+                })->toArray(),
+                'links' => $paginator->links('pagination::bootstrap-4')->render()
+            ];
+
 
         return view('livewire.cashout.component', [
             'users' => $users,
@@ -64,20 +78,22 @@ class CashoutController extends Component
 
     public function pdf()
     {
-        $sales = Sale::whereBetween('created_at', [$this->fromDate, $this->toDate])
+        $sales = Sale::whereBetween('updated_at', [$this->fromDate, $this->toDate])
             ->with('user')
-            ->where('type', 'SALE')
+            ->where('status', 'PAID')
             ->when($this->userid > 0, function ($query) {
                 $query->where('user_id', $this->userid);
             })
+            ->orderBy('updated_at', 'desc')
             ->get()
             ->map(function ($sale, $index) {
                 return [
                     'id' => ++$index,
                     'name' => $sale->user->name,
-                    'date' => $sale->created_at->format('H:i:s d-m-Y'),
+                    'date' => $sale->updated_at->format('h:i:s d-m-Y a'),
                     'total' => $sale->total,
                     'items' => $sale->getTotalProducts(),
+                    'type' => $sale->type,
                     'status' => $sale->status,
                     'client' => $sale->client->name
                 ];
@@ -102,7 +118,6 @@ class CashoutController extends Component
         $this->details = Sale::join('sale_details as d', 'd.sale_id', 'sales.id')
             ->join('products as p', 'p.id', 'd.product_id')
             ->select('d.sale_id', 'p.name as product', 'd.quantity', 'd.price')
-            ->where('type', 'SALE')
             ->where('sales.id', $sale->id)
             ->get();
 

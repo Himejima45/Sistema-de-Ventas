@@ -266,9 +266,6 @@ class PosController extends Component
         $item = Cart::get($productId);
         Cart::remove($productId);
 
-        if (!is_null($item)) {
-        }
-
         $newQty = (!is_null($item) ? $item->quantity : 0) - 1;
 
         if ($newQty > 0) {
@@ -290,6 +287,23 @@ class PosController extends Component
         $messages = [
             'total.required' => 'El monto es requerido',
             'total.min' => 'El monto debe ser al menos 1',
+            'total.numeric' => 'El monto debe ser un número',
+            'efectivo.required' => 'El monto es requerido',
+            'efectivo.min' => 'El monto debe ser un numero',
+            'efectivo.numeric' => 'El monto debe ser un número',
+            'bs.required' => 'El monto es requerido',
+            'bs.min' => 'El monto debe ser al menos 1',
+            'bs.numeric' => 'El monto debe ser un número',
+            'type.required' => 'El tipo es requerido',
+            'type.in' => 'La opción seleccionada, debe ser pagada o pendiente',
+            'type.not_in' => 'La opción seleccionada, no es valida',
+            'currency_id.required' => 'La tasa es requerido',
+            'currency_id.min' => 'La tasa debe ser al menos 1',
+            'currency_id.numeric' => 'La tasa debe ser un número',
+            'client.required' => 'El cliente es requerido',
+            'client.exists' => 'Debe estar registrado',
+            'sale_type.required' => 'El tipo de venta es requerido',
+            'sale_type.in' => 'El tipo de venta debe ser "Presupuesto" o "Venta"',
         ];
 
         $rules = [
@@ -298,11 +312,12 @@ class PosController extends Component
                 'min:1',
                 'numeric',
             ],
-            'efectivo' =>
+            'efectivo' => [
                 $this->bs > 0 ? 'nullable' : (Rule::when($this->sale_type === 'SALE', 'required|min:1|numeric')),
-            'bs' => $this->efectivo > 0 ? 'nullable' : (
-                Rule::when($this->sale_type === 'SALE', 'required|min:1|numeric')
-            ),
+            ],
+            'bs' => [
+                $this->efectivo > 0 ? 'nullable' : (Rule::when($this->sale_type === 'SALE', 'required|min:1|numeric')),
+            ],
             'type' => [
                 'sometimes',
                 Rule::when($this->sale_type === 'SALE', 'required|not_in:Elegir|in:PAID,PENDING')

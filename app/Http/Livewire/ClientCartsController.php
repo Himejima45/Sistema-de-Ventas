@@ -12,6 +12,7 @@ class ClientCartsController extends Component
     public function delete(Sale $record)
     {
         $record->delete();
+        $this->emit('record-deleted', 'Se ha cancelado la órden');
     }
 
     public function render()

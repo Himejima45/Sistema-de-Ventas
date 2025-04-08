@@ -71,6 +71,7 @@ class BackupController extends Component
             escapeshellarg(storage_path('app/public/' . $app_name . '/' . $filename))
         );
 
+        
         Storage::disk('local')->makeDirectory('backups');
 
         try {
@@ -80,7 +81,6 @@ class BackupController extends Component
 
             if ($returnVar !== 0) {
                 $this->emit('upload-error');
-                throw new \Exception('Backup failed with error code: ' . $returnVar);
             }
 
             $this->emit('record-created', 'Respaldo creado con éxito');

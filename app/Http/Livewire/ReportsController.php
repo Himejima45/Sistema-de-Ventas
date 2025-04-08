@@ -64,27 +64,55 @@ class ReportsController extends Component
         }
 
         if ($this->userId == 0) {
-            $this->data = Sale::join('users as c', 'c.id', 'sales.client_id')
+            $paginator = Sale::join('users as c', 'c.id', 'sales.client_id')
                 ->select('sales.*')
-                ->where('type', 'SALE')
-                ->whereBetween('sales.created_at', [$from, $to])
-                ->get()
-                ->map(function ($sale, $index) {
-                    $sale['number']  = ++$index;
-                    return $sale;
-                });
+                ->where('status', 'PAID')
+                ->whereBetween('sales.updated_at', [$from, $to])
+                ->orderBy('sales.updated_at', 'desc')
+                ->paginate(20);
+            $this->data = [
+                'data' => $paginator->getCollection()
+                ->transform(function ($sale, $index) use ($paginator) {
+                    $arr['number'] = $index + 1 + (($paginator->currentPage() - 1) * $paginator->perPage());
+                    $arr['items'] = $sale->getTotalProducts();
+                    $arr['user'] = $sale->user->name;
+                    $arr['client'] = $sale->client->name;
+                    $arr['total'] = $sale->total;
+                    $arr['type'] = $sale->total;
+                    $arr['status'] = $sale->status;
+                    $arr['id'] = $sale->id;
+                    $arr['updated_at'] = $sale->updated_at;
+                    
+                    return $arr;
+                })->toArray(),
+                'links' => $paginator->links('pagination::bootstrap-4')->render()
+            ];
         } else {
-            $this->data = Sale::join('users as c', 'c.id', 'sales.client_id')
+            $paginator = Sale::join('users as c', 'c.id', 'sales.client_id')
                 ->select('sales.*')
-                ->whereBetween('sales.created_at', [$from, $to])
-                ->where('type', 'SALE')
+                ->where('status', 'PAID')
+                ->whereBetween('sales.updated_at', [$from, $to])
                 ->where('sales.user_id', $this->userId)
-                ->get()
-                ->map(function ($sale, $index) {
-                    $sale['number']  = ++$index;
-                    return $sale;
-                });
+                ->orderBy('sales.updated_at', 'desc')
+                ->paginate(20);
+            $this->data = [
+                'data' => $paginator->getCollection()
+                ->transform(function ($sale, $index) use ($paginator) {
+                    $arr['number'] = $index + 1 + (($paginator->currentPage() - 1) * $paginator->perPage());
+                    $arr['items'] = $sale->getTotalProducts();
+                    $arr['user'] = $sale->user->name;
+                    $arr['client'] = $sale->client->name;
+                    $arr['total'] = $sale->total;
+                    $arr['status'] = $sale->status;
+                    $arr['id'] = $sale->id;
+                    $arr['updated_at'] = $sale->updated_at;
+                    $arr['type'] = $sale->type;
+                    return $arr;
+                })->toArray(),
+                'links' => $paginator->links('pagination::bootstrap-4')->render()
+            ];
         }
+
     }
 
     public function getDetails($saleId)
@@ -92,6 +120,7 @@ class ReportsController extends Component
         $this->details = SaleDetails::join('products as p', 'p.id', 'sale_details.product_id')
             ->select('sale_details.id', 'sale_details.price', 'sale_details.quantity', 'p.name as product')
             ->where('sale_details.sale_id', $saleId)
+            ->orderBy('sale_details.updated_at', 'desc')
             ->get();
 
         $suma = $this->details->sum(function ($item) {
@@ -116,9 +145,10 @@ class ReportsController extends Component
                 $query->where('user_id', $this->userId);
             }
 
-            $query->whereBetween('created_at', [$this->dateFrom  . ' 00:00:00', $this->dateTo  . ' 23:59:59']);
+            $query->whereBetween('updated_at', [$this->dateFrom  . ' 00:00:00', $this->dateTo  . ' 23:59:59']);
         })
-            ->where('type', 'SALE')
+        ->orderBy('updated_at', 'desc')
+        ->where('status', 'PAID')
             ->get()
             ->map(function ($sale, $index) {
                 $total = 0;
@@ -133,6 +163,7 @@ class ReportsController extends Component
                     'date' => $sale->created_at->format('H:i:s d-m-Y'),
                     'total' => $total,
                     'items' => $sale->getTotalProducts(),
+                    'type' => $sale->type,
                     'status' => $sale->status
                 ];
             });

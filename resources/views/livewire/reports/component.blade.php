@@ -72,6 +72,7 @@
                                         <th class="table-th text-white text-center">FOLIO</th>
                                         <th class="table-th text-white text-center">TOTAL</th>
                                         <th class="table-th text-white text-center">ITEMS</th>
+                                        <th class="table-th text-white text-center">TIPO</th>
                                         <th class="table-th text-white text-center">ESTADO</th>
                                         <th class="table-th text-white text-center">EMPLEADO</th>
                                         <th class="table-th text-white text-center">CLIENTE</th>
@@ -79,33 +80,37 @@
                                         <th class="table-th text-white text-center" width="50px"></th>
                                     </tr>
                                 </thead>
+                                @if ($data && $data['data'])
                                 <tbody>
-                                    @foreach ($data as $d)
-                                        <tr>
-                                            <td class="text-center">
-                                                <h6>{{ $d->number }}</h6>
+                                    @foreach ($data['data'] as $d)
+                                    <tr>
+                                        <td class="text-center">
+                                            <h6>{{ $d['number'] }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6>{{ number_format($d['total'], 2) }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <h6>{{ number_format($d->total, 2) }}</h6>
+                                                <h6>{{ $d['items'] }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <h6>{{ $d->getTotalProducts() }}</h6>
+                                                <h6>{{ $d['type'] === 'SALE' ? 'VENTA' : 'CARRITO' }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <h6>{{ $d->status === 'PAID' ? 'Pagado' : ($d->status === 'PENDING' ? 'Pendiente' : 'Cancelado') }}
+                                                <h6>{{ $d['status'] === 'PAID' ? 'Pagado' : ($d['status'] === 'PENDING' ? 'Pendiente' : 'Cancelado') }}
                                                 </h6>
                                             </td>
                                             <td class="text-center">
-                                                <h6>{{ $d->user->name }}</h6>
+                                                <h6>{{ $d['user'] }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <h6>{{ $d->client->name }}</h6>
+                                                <h6>{{ $d['client'] }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <h6>{{ \Carbon\Carbon::parse($d->created_at)->format('d-m-Y') }}</h6>
+                                                <h6>{{ \Carbon\Carbon::parse($d['updated_at'])->translatedFormat('h:i:s d-M-Y a') }}</h6>
                                             </td>
                                             <td class="text-center" width="50px">
-                                                <button type="button" wire:click="getDetails({{ $d->id }})"
+                                                <button type="button" wire:click="getDetails({{ $d['id'] }})"
                                                     class="btn btn-dark btn-sm">
                                                     <i class="fas fa-list"></i>
                                                 </button>
@@ -113,7 +118,11 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                @endif
                             </table>
+                            @if ($data && $data['links'] !== '' && $data['links'] != null)
+                                {!! $data['links'] !!}
+                            @endif
                         </div>
                     </div>
                 </div>

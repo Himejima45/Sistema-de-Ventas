@@ -77,6 +77,7 @@ class CatalogController extends Component
         $this->total_items = 0;
         $this->showCart = false;
         $this->emit('$refresh');
+        $this->emit('record-deleted', "Se removieron todos los productos del carrito");
     }
 
     public function clearFilters()
@@ -115,6 +116,7 @@ class CatalogController extends Component
 
         $this->resetUI();
         $this->emit('$refresh');
+        $this->emit('record-created', "Se guardó el carrito exitosamente");
     }
 
     public function calculate()
@@ -152,21 +154,28 @@ class CatalogController extends Component
 
         $this->calculate();
         $this->emit('$refresh');
+
+        if ($this->cart[$productId] === 1) {
+            $this->emit('record-created', "Se añadió el producto $product->name al carrito");
+        }
     }
 
     public function removeFromCart($productId)
     {
+        $product = Product::select('stock')->find($productId);
         if (isset($this->cart[$productId])) {
             $this->cart[$productId]--;
 
             if ($this->cart[$productId] <= 0) {
                 unset($this->cart[$productId]);
+                $this->emit('record-deleted', "Se removió el producto $product->name del carrito");
             }
 
             session()->put('cart', $this->cart);
 
             $this->calculate();
             $this->emit('$refresh');
+
         }
     }
 

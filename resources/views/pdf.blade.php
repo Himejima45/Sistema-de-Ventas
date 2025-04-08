@@ -39,6 +39,7 @@
                                 <th class="table-th text-center text-white">FOLIO</th>
                                 <th class="table-th text-center text-white">IMPORTE</th>
                                 <th class="table-th text-center text-white">ITEMS</th>
+                                <th class="table-th text-center text-white">TIPO</th>
                                 @if (!$budget)
                                     <th class="table-th text-center text-white">ESTATUS</th>
                                 @endif
@@ -66,6 +67,9 @@
                                     </td>
                                     <td class="text-center">
                                         <h6>{{ $sale['items'] }}</h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <h6>{{ $sale['type'] === 'SALE' ? 'VENTA' : 'CARRITO' }}</h6>
                                     </td>
                                     @if (!$budget)
                                         <td class="text-center">

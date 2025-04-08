@@ -49,8 +49,14 @@
             $('#theModal').modal('hide')
         });
         window.livewire.on('record-deleted', msg => {
-            Deleted()
+            Deleted('Eliminado', msg)
             $('#theModal').modal('hide')
+        });
+        window.livewire.on('record-warning', msg => {
+            Warning('Cuidado', msg)
+        });
+        window.livewire.on('record-info', msg => {
+            Info('Información', msg)
         });
     });
 
