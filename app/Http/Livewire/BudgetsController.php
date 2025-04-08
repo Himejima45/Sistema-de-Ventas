@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class BudgetsController extends Component
 {
-    public $search = '', $selected_id = 0, $products = [], $total = 0, $iva = 0, $subtotal = 0, $cash = 0, $bs = 0, $change = 0, $currency = 0, $fromDate, $toDate;
+    public $search = '', $selected_id = 0, $products = [], $total = 0, $iva = 0, $subtotal = 0, $cash = 0, $bs = 0, $change = 0, $currency = 0, $fromDate, $toDate, $reportType;
     protected $listeners = ['products', 'edit', 'update', 'pdf', 'download'];
 
     public $messages = [
@@ -96,17 +96,30 @@ class BudgetsController extends Component
 
         $this->total = $this->subtotal + $this->iva;
     }
-
     public function download()
     {
+        if ($this->reportType === '0') {
+            $this->fromDate = Carbon::now()->startOfDay();
+            $this->toDate = Carbon::now()->endOfDay();
+        }
+
         return Excel::download(new SalesExport($this->fromDate, $this->toDate, 0, true), 'Reporte de cuentas por cobrar.xlsx');
     }
 
     public function pdf()
     {
-        $sales = Sale::whereBetween('created_at', [$this->fromDate, $this->toDate])
+        if ($this->reportType === '0') {
+            $this->fromDate = Carbon::now()->startOfDay();
+            $this->toDate = Carbon::now()->endOfDay();
+        }
+
+        $sales = Sale::whereBetween('updated_at', [
+            $this->fromDate,
+            $this->toDate
+        ])
             ->with('user')
             ->where('type', 'BUDGET')
+            ->orderBy('updated_at', 'desc')
             ->get()
             ->map(function ($sale, $index) {
                 return [
@@ -115,7 +128,8 @@ class BudgetsController extends Component
                     'date' => $sale->created_at->format('H:i:s d-m-Y'),
                     'total' => $sale->total,
                     'items' => $sale->getTotalProducts(),
-                    'client' => $sale->client->name
+                    'client' => $sale->client->name,
+                    'type' => $sale->type
                 ];
             });
 
@@ -134,9 +148,6 @@ class BudgetsController extends Component
 
     public function render()
     {
-        $this->fromDate = now()->startOfDay();
-        $this->toDate = now()->endOfDay();
-
         $budgets = Sale::where('type', 'BUDGET')
             ->whereHas('client', function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%');

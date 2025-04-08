@@ -145,9 +145,8 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label>Total a pagar Bs</label>
-                                <input type="number" disabled
-                                    value="{{ $total_to_pay_bs > 0 ? $total_to_pay_bs : 0 }}" placeholder="Ej: 10"
-                                    @class(['form-control', 'text-danger' => $total_to_pay_bs > 0])>
+                                <input type="number" disabled value="{{ $total_to_pay_bs > 0 ? $total_to_pay_bs : 0 }}"
+                                    placeholder="Ej: 10" @class(['form-control', 'text-danger' => $total_to_pay_bs > 0])>
                             </div>
                         </div>
                         <div class="col-6">
@@ -204,6 +203,34 @@
 
             @include('common.searchbox')
 
+            <div class="row">
+                <div class="col-4">
+                    <h6>Elige el tipo de reporte</h6>
+                    <div class="form-group">
+                        <select wire:model="reportType" class="form-control">
+                            <option value="0">Ventas del dia</option>
+                            <option value="1">Ventas por fecha</option>
+                        </select>
+                    </div>
+                </div>
+                @if ($reportType === '1')
+                    <div class="col-4">
+                        <h6>Fechas desde</h6>
+                        <div class="form-group">
+                            <input type="date" wire:model="fromDate" class="form-control flatpickr"
+                                placeholder="Click para elegir" min=""
+                                max="{{ $toDate ? \Carbon\Carbon::createFromFormat('Y-m-d', $toDate)->subDay()->format('Y-m-d') : now()->format('Y-m-d') }}">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <h6>Fechas hasta</h6>
+                        <div class="form-group">
+                            <input type="date" wire:model="toDate" class="form-control flatpickr"
+                                placeholder="Click para elegir" min="{{ $fromDate }}" max="{{ now()->format('Y-m-d') }}">
+                        </div>
+                    </div>
+                @endif
+            </div>
             <div class="widget-content">
                 <div class="table-responsive">
                     <div class="row ml-0">
@@ -226,40 +253,40 @@
                         </thead>
                         <tbody>
                             @foreach ($budgets as $budget)
-                                @php
-                                    $payed = $budget->cash > 0 ? "{$budget->cash}$" : '-';
+                                                        @php
+                                                            $payed = $budget->cash > 0 ? "{$budget->cash}$" : '-';
 
-                                    if ($payed === '-') {
-                                        $payed = $budget->bs > 0 ? "{$budget->bs}Bs" : '-';
-                                    }
-                                @endphp
-                                <tr>
-                                    <td>
-                                        <h6>{{ $budget->client->name }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6>{{ $budget->total }}$</h6>
-                                    </td>
-                                    <td>
-                                        <h6>{{ $payed }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6>{{ $budget->change > 0 ? "{$budget->change}$" : '-' }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6>{{ $statuses[$budget->status] }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6>{{ $budget->getTotalProducts() }}</h6>
-                                    </td>
-                                    <td>
-                                            <h6 class="text-left">{{ $budget->created_at->format('d-m-Y') }}</h6>
-                                        </td>
-                                    <td class="text-center">
-                                        <x-edit_button wire:click="edit({{ $budget->id }})" />
-                                        <x-see_button wire:click="products({{ $budget->id }})" />
-                                    </td>
-                                </tr>
+                                                            if ($payed === '-') {
+                                                                $payed = $budget->bs > 0 ? "{$budget->bs}Bs" : '-';
+                                                            }
+                                                        @endphp
+                                                        <tr>
+                                                            <td>
+                                                                <h6>{{ $budget->client->name }}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>{{ $budget->total }}$</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>{{ $payed }}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>{{ $budget->change > 0 ? "{$budget->change}$" : '-' }}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>{{ $statuses[$budget->status] }}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>{{ $budget->getTotalProducts() }}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6 class="text-left">{{ $budget->created_at->format('d-m-Y') }}</h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <x-edit_button wire:click="edit({{ $budget->id }})" />
+                                                                <x-see_button wire:click="products({{ $budget->id }})" />
+                                                            </td>
+                                                        </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -271,7 +298,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         window.livewire.on('show-modal', msg => {
             $('#edit').modal('show')
         });
