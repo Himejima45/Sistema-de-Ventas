@@ -12,10 +12,10 @@ class SalesExport implements FromCollection
     protected $end;
     protected $user_id;
     protected $budget;
-    public function __construct(string $start, string $end, int $user_id = 0, $budget = false)
+    public function __construct($start, $end, int $user_id = 0, $budget = false)
     {
-        $this->start = $start;
-        $this->end = $end;
+        $this->start = $start ?: now()->format('Y-m-d');
+        $this->end = $end ?: now()->format('Y-m-d');
         $this->user_id = $user_id;
         $this->budget = $budget;
     }
