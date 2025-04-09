@@ -280,7 +280,7 @@
                                                                 <h6>{{ $budget->getTotalProducts() }}</h6>
                                                             </td>
                                                             <td>
-                                                                <h6 class="text-left">{{ $budget->created_at->format('d-m-Y') }}</h6>
+                                                                <h6 class="text-left">{{ $budget->updated_at->format('d-m-Y') }}</h6>
                                                             </td>
                                                             <td class="text-center">
                                                                 <x-edit_button wire:click="edit({{ $budget->id }})" />

@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class BudgetsController extends Component
 {
-    public $search = '', $selected_id = 0, $products = [], $total = 0, $iva = 0, $subtotal = 0, $cash = 0, $bs = 0, $change = 0, $currency = 0, $fromDate, $toDate, $reportType;
+    public $search = '', $selected_id = 0, $products = [], $total = 0, $iva = 0, $subtotal = 0, $cash = 0, $bs = 0, $change = 0, $currency = 0, $fromDate, $toDate, $reportType = '0';
     protected $listeners = ['products', 'edit', 'update', 'pdf', 'download'];
 
     public $messages = [
@@ -152,6 +152,7 @@ class BudgetsController extends Component
             ->whereHas('client', function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%');
             })
+            ->orderBy('updated_at', 'desc')
             ->paginate(20);
 
         return view('livewire.budgets', [
