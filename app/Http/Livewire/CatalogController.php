@@ -14,9 +14,18 @@ use Livewire\Component;
 class CatalogController extends Component
 {
     public $cart = [], $showCart = false, $subtotal = 0, $iva = 0, $total = 0, $filter = '', $showFilter = false, $total_items = 0;
-    public $category_id = '', $provider_id = '', $priceMin = 0, $priceMax = 0, $quantity = 0;
+    public $category_id = '', $provider_id = '', $priceMin = null, $priceMax = null, $quantity = 0;
     public $categories = [], $providers = [];
-    protected $listeners = ['addToCart', 'toggle', 'removeFromCart', 'clear', 'save', 'clearFilters', 'toggleFilter'];
+    protected $listeners = [
+        'addToCart',
+        'toggle',
+        'removeFromCart',
+        'clear',
+        'save',
+        'clearFilters',
+        'toggleFilter',
+        'toggleCart' => 'toggle'
+    ];
 
     public function updatedQuantity($value)
     {
@@ -26,16 +35,8 @@ class CatalogController extends Component
     }
     public function updatedPriceMin($value)
     {
-        if ($this->priceMax === 0) {
-            $this->priceMax = $value + 1;
-        }
-
-        if ($value > $this->priceMax) {
-            $this->priceMin = $this->priceMax - 1;
-        }
-
         if ($value < 0) {
-            $this->priceMin = 1;
+            $this->priceMin = null;
         }
     }
 
@@ -46,7 +47,7 @@ class CatalogController extends Component
         }
 
         if ($value < 0) {
-            $this->priceMax = 2;
+            $this->priceMax = null;
         }
     }
 
@@ -54,18 +55,19 @@ class CatalogController extends Component
     {
         $this->cart = session()->get('cart', []);
         $this->calculate();
+        $this->showFilter = false;
     }
 
     public function toggle()
     {
-        $this->showCart = ! $this->showCart;
+        $this->showCart = !$this->showCart;
         $this->showFilter = false;
         $this->emit('$refresh');
     }
 
     public function toggleFilter()
     {
-        $this->showFilter = ! $this->showFilter;
+        $this->showFilter = !$this->showFilter;
         $this->showCart = false;
         $this->emit('$refresh');
     }
@@ -76,6 +78,7 @@ class CatalogController extends Component
         session()->put('cart', $this->cart);
         $this->total_items = 0;
         $this->showCart = false;
+        $this->emit('cartUpdated');
         $this->emit('$refresh');
         $this->emit('record-deleted', "Se removieron todos los productos del carrito");
     }
@@ -153,6 +156,7 @@ class CatalogController extends Component
         session()->put('cart', $this->cart);
 
         $this->calculate();
+        $this->emit('cartUpdated');
         $this->emit('$refresh');
 
         if ($this->cart[$productId] === 1) {
@@ -174,8 +178,8 @@ class CatalogController extends Component
             session()->put('cart', $this->cart);
 
             $this->calculate();
+            $this->emit('cartUpdated');
             $this->emit('$refresh');
-
         }
     }
 
@@ -212,6 +216,12 @@ class CatalogController extends Component
             })
             ->when($this->quantity > 0, function ($query) {
                 $query->where('stock', '>=', $this->quantity);
+            })
+            ->when($this->priceMin > 0, function ($query) {
+                $query->where('price', '>=', $this->priceMin);
+            })
+            ->when($this->priceMax > 0, function ($query) {
+                $query->where('price', '<=', $this->priceMax);
             })
             ->paginate(20);
 

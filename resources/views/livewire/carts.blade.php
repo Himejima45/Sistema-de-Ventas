@@ -114,38 +114,45 @@
                     </div>
                 </div>
             @endif
-            @foreach ($carts as $cart)
+            @foreach ($carts as $index => $cart)
                 @if ($cart->products()->count() > 0)
-                    <h6 class="mt-2">Solicitud - ( {{ $cart->total }}$ ) -
-                        {{ $cart->created_at->format('d-m-Y h:i a') }}
-                    </h6>
-                    <div class="d-flex items-justify-center align-items-center">
-                        <p class="font-weight-bold mb-0 mr-2">
-                            {{ "{$cart->client->name} {$cart->client->last_name}" }}
-                        </p>
-                        <button wire:click="edit({{ $cart->id }})" class="btn btn-ghost"><svg xmlns="http://www.w3.org/2000/svg"
-                                width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil">
-                                <path
-                                    d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
-                                <path d="m15 5 4 4" />
-                            </svg></button>
-                    </div>
-                    <div class="row">
-                        @foreach ($cart->products as $details)
-                            <div class="card m-2" style="width: 14rem;">
-                                <img class="card-img-top" height="140" src="{{ $details->product->getImage() }}"
-                                    alt="Card image cap">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ $details->product->name }}</h5>
-                                    <small class="-mt-4">{{ $details->product->price }}$</small>
-                                    <p class="card-text">
-                                        <span class="badge badge-secondary">{{ $details->product->category->name }}</span>
-                                    </p>
-                                </div>
+                    <div class="row p-0">
+                        <div class="col-10">
+                            <div class="row">
+                                @foreach ($cart->products as $details)
+                                    <div class="card m-2" style="width: 16rem">
+                                        <img class="card-img-top" height="180" width="180" src="{{ $details->product->getImage() }}"
+                                            alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-center">{{ $details->product->name }}</h5>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
-                        @endforeach
+                        </div>
+                        <div class="col-2 m-0 p-0">
+                            <h3>{{ "{$cart->client->name} {$cart->client->last_name}" }}</h3>
+                            <p style="margin-top: -0.5rem;">
+                                {{ $cart->created_at->format('d-m-Y h:i a') }}
+                            </p>
+                            <h6 class="mt-2 h6">
+                                Productos: {{ count($cart->products) }}
+                            </h6>
+                            <h6 class="mt-2 h2 text-right">${{ $cart->total }}</h6>
+                            <button wire:click="edit({{ $cart->id }})" class="btn btn-block btn-ghost">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-pencil">
+                                    <path
+                                        d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+                                    <path d="m15 5 4 4" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
+                    @if ($index < count($carts) - 1)
+                        <div class="my-4" style="border: 1px solid rgba(0, 0, 0, 0.1)"></div>
+                    @endif
                 @endif
             @endforeach
             {{ $carts->links() }}
