@@ -6,7 +6,7 @@
                     <i class="fas fa-search"></i>
                 </span>
             </div>
-            <input id="code"type="text" wire:keydown.enter.prevent="$emit('scan-code', $('#code').val())"
+            <input id="code" type="text" wire:keydown.enter.prevent="$emit('scan-code', $('#code').val())"
                 class="form-control search-form-control  ml-lg-auto" placeholder="Codigo producto...">
         </div>
     </div>
@@ -23,17 +23,17 @@
     </div>
 
     <div class="col-lg-4 col-md-4 col-sm-12">
-        <select name="client" id="client" class="form-control" wire:model="client"
+        <livewire:combobox-clients />
+        {{-- <select name="client" id="client" class="form-control" wire:model="client"
             wire:change='selectClient($event.target.value)'>
             <option value="Elegir">Seleccionar</option>
 
             @foreach ($clients as $clientRow)
-                <option value="{{ $clientRow->id }}"
-                    selected="{{ is_null($client) ? false : $client === $clientRow->id }}">
-                    {{ $clientRow->document }} {{ $clientRow->name }} {{ $clientRow->last_name }}
-                </option>
+            <option value="{{ $clientRow->id }}" selected="{{ is_null($client) ? false : $client === $clientRow->id }}">
+                {{ $clientRow->document }} {{ $clientRow->name }} {{ $clientRow->last_name }}
+            </option>
             @endforeach
-        </select>
+        </select> --}}
         @error('client')
             <span class="text-danger er">{{ $message }}</span>
         @enderror
@@ -42,7 +42,7 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         livewire.on('scan-code', action => {
             $('#code').val('')
         })

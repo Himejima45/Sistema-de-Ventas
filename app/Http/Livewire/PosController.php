@@ -31,7 +31,7 @@ class PosController extends Component
         $this->change = 0;
         $this->itemsQuantity = Cart::getTotalQuantity();
         $this->totalPayed = 0;
-        $this->client = '';
+        $this->client = User::where('document', '999999999')->first()->id ?? '';
         $this->currency = $last_currency;
         $this->type = 'Elegir';
         $this->cart = Cart::getContent()->sortBy('name');
@@ -47,7 +47,7 @@ class PosController extends Component
             : $this->currency = is_string($this->currency)
             ? $this->currency
             : $this->currency->value;
-        // $this->denominations = Denomination::all();
+
         return view('livewire.pos.component', [
             'currency' => Currency::orderBy('value', 'desc')->first(),
             'cart' => $this->cart,
@@ -66,7 +66,7 @@ class PosController extends Component
         'type-selected' => 'setType',
         'updateQty',
         'addPayment',
-        'clearPayment'
+        'clearPayment',
     ];
 
     public function selectClient($id)

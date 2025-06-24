@@ -10,6 +10,7 @@
 
 
 
+    <script src="{{ asset('assets/js/alpine.js') }}"></script>
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
     @include('layouts.theme.styles')
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
@@ -51,18 +52,18 @@
                 @endphp
 
                 @if (session()->has('fetch_status'))
-                    <div @class([
-                        'alert',
-                        'alert-danger' => session('fetch_status') === 'error',
-                        'alert-success' => session('fetch_status') !== 'error',
-                    ])>
-                        {{ session('fetch_status') === 'error'
-                            ? 'No se pudo obtener la tasa del día'
-                            : "La tasa del día ha sido registrada. Última actualización: $date" }}
-                    </div>
-                    @php
-                        session()->forget('fetch_status');
-                    @endphp
+                            <div @class([
+                                'alert',
+                                'alert-danger' => session('fetch_status') === 'error',
+                                'alert-success' => session('fetch_status') !== 'error',
+                            ])>
+                                {{ session('fetch_status') === 'error'
+                    ? 'No se pudo obtener la tasa del día'
+                    : "La tasa del día ha sido registrada. Última actualización: $date" }}
+                            </div>
+                            @php
+                                session()->forget('fetch_status');
+                            @endphp
                 @endif
 
                 @yield('content')
