@@ -13,7 +13,9 @@ class LogController extends Component
     use WithPagination;
     public $pageTitle, $componentName;
     private $pagination = 20;
-    public $state, $role, $user, $module, $date;
+    public $state, $role, $user, $module, $month, $year;
+
+    protected $listeners = ['dateChanged'];
 
     public function mount()
     {
@@ -32,7 +34,14 @@ class LogController extends Component
         $this->role = '';
         $this->user = '';
         $this->module = '';
-        $this->date = '';
+        $this->month = '';
+        $this->year = '';
+    }
+
+    public function dateChanged($data)
+    {
+        $this->month = $data['month'];
+        $this->year = $data['year'];
     }
 
     public function render()
@@ -51,8 +60,9 @@ class LogController extends Component
             if ($this->module) {
                 $q->where('module', 'like', '%' . $this->module . '%');
             }
-            if ($this->date) {
-                $q->whereDate('created_at', 'like', '%' . $this->date . '%');
+            if ($this->month && $this->month !== 'Seleccione' && $this->year) {
+                $q->whereMonth('created_at', $this->month)
+                    ->whereYear('created_at', $this->year);
             }
         });
 

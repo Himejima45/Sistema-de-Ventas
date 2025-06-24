@@ -47,6 +47,7 @@
         'Employee' => 'Empleado',
         'Client' => 'Cliente',
         'Sistema' => 'Sistema',
+        'Gerente' => 'Gerente',
     ];
 @endphp
 
@@ -109,8 +110,7 @@
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-12">
                         <div class="form-group">
-                            <label for="date">Fecha</label>
-                            <input type="date" wire:model="date" class="form-control">
+                            <livewire:month-filter />
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-12">
