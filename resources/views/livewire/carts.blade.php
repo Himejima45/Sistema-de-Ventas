@@ -1,4 +1,5 @@
 <div class="col sales layout-top-spacing gap-4">
+    <x-home_button />
 
     <div wire:ignore.self class="modal fade" id="theModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-md" role="document">
@@ -104,9 +105,9 @@
                         {{ $error }}
                     </p>
                     <div class="justify-self-end">
-                        <svg xmlns="http://www.w3.org/2000/svg" wire:click="clearMessage" style="cursor: pointer"
-                            width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
+                        <svg xmlns="http://www.w3.org/2000/svg" wire:click="clearMessage" style="cursor: pointer" width="24"
+                            height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
                             <path d="M18 6 6 18" />
                             <path d="m6 6 12 12" />
                         </svg>
@@ -122,10 +123,9 @@
                         <p class="font-weight-bold mb-0 mr-2">
                             {{ "{$cart->client->name} {$cart->client->last_name}" }}
                         </p>
-                        <button wire:click="edit({{ $cart->id }})" class="btn btn-ghost"><svg
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="lucide lucide-pencil">
+                        <button wire:click="edit({{ $cart->id }})" class="btn btn-ghost"><svg xmlns="http://www.w3.org/2000/svg"
+                                width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil">
                                 <path
                                     d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
                                 <path d="m15 5 4 4" />
@@ -140,8 +140,7 @@
                                     <h5 class="card-title">{{ $details->product->name }}</h5>
                                     <small class="-mt-4">{{ $details->product->price }}$</small>
                                     <p class="card-text">
-                                        <span
-                                            class="badge badge-secondary">{{ $details->product->category->name }}</span>
+                                        <span class="badge badge-secondary">{{ $details->product->category->name }}</span>
                                     </p>
                                 </div>
                             </div>
@@ -163,7 +162,7 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         window.livewire.on('open', msg => {
             $('#theModal').modal('show')
         });

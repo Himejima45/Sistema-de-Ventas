@@ -1,4 +1,6 @@
 <div class="row sales layouts-top-spacing">
+    <x-home_button />
+
     <div class="col-sm-12">
         <div class="widget">
             <div class="widget-heading">
@@ -81,43 +83,44 @@
                                     </tr>
                                 </thead>
                                 @if ($data && $data['data'])
-                                <tbody>
-                                    @foreach ($data['data'] as $d)
-                                    <tr>
-                                        <td class="text-center">
-                                            <h6>{{ $d['number'] }}</h6>
-                                        </td>
-                                        <td class="text-center">
-                                            <h6>{{ number_format($d['total'], 2) }}</h6>
-                                            </td>
-                                            <td class="text-center">
-                                                <h6>{{ $d['items'] }}</h6>
-                                            </td>
-                                            <td class="text-center">
-                                                <h6>{{ $d['type'] === 'SALE' ? 'VENTA' : 'CARRITO' }}</h6>
-                                            </td>
-                                            <td class="text-center">
-                                                <h6>{{ $d['status'] === 'PAID' ? 'Pagado' : ($d['status'] === 'PENDING' ? 'Pendiente' : 'Cancelado') }}
-                                                </h6>
-                                            </td>
-                                            <td class="text-center">
-                                                <h6>{{ $d['user'] }}</h6>
-                                            </td>
-                                            <td class="text-center">
-                                                <h6>{{ $d['client'] }}</h6>
-                                            </td>
-                                            <td class="text-center">
-                                                <h6>{{ \Carbon\Carbon::parse($d['updated_at'])->translatedFormat('h:i:s d-M-Y a') }}</h6>
-                                            </td>
-                                            <td class="text-center" width="50px">
-                                                <button type="button" wire:click="getDetails({{ $d['id'] }})"
-                                                    class="btn btn-dark btn-sm">
-                                                    <i class="fas fa-list"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
+                                    <tbody>
+                                        @foreach ($data['data'] as $d)
+                                            <tr>
+                                                <td class="text-center">
+                                                    <h6>{{ $d['number'] }}</h6>
+                                                </td>
+                                                <td class="text-center">
+                                                    <h6>{{ number_format($d['total'], 2) }}</h6>
+                                                </td>
+                                                <td class="text-center">
+                                                    <h6>{{ $d['items'] }}</h6>
+                                                </td>
+                                                <td class="text-center">
+                                                    <h6>{{ $d['type'] === 'SALE' ? 'VENTA' : 'CARRITO' }}</h6>
+                                                </td>
+                                                <td class="text-center">
+                                                    <h6>{{ $d['status'] === 'PAID' ? 'Pagado' : ($d['status'] === 'PENDING' ? 'Pendiente' : 'Cancelado') }}
+                                                    </h6>
+                                                </td>
+                                                <td class="text-center">
+                                                    <h6>{{ $d['user'] }}</h6>
+                                                </td>
+                                                <td class="text-center">
+                                                    <h6>{{ $d['client'] }}</h6>
+                                                </td>
+                                                <td class="text-center">
+                                                    <h6>{{ \Carbon\Carbon::parse($d['updated_at'])->translatedFormat('h:i:s d-M-Y a') }}
+                                                    </h6>
+                                                </td>
+                                                <td class="text-center" width="50px">
+                                                    <button type="button" wire:click="getDetails({{ $d['id'] }})"
+                                                        class="btn btn-dark btn-sm">
+                                                        <i class="fas fa-list"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
                                 @endif
                             </table>
                             @if ($data && $data['links'] !== '' && $data['links'] != null)
@@ -133,7 +136,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // flatpickr(document.getElementsByClassName('flatpickr'), {
         //     enableTime: false,
         //     dateFormat: 'Y-m-d',

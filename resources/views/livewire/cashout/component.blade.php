@@ -1,4 +1,6 @@
 <div class="row sales layouts-top-spcing">
+    <x-home_button />
+
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
             <div class="row">
@@ -7,25 +9,25 @@
                             Corte de Caja</b></h4>
                 </div>
                 <div class="col-sm-12 col-md-3">
-                        <div class="form-group">
-                            <label>Usuario</label>
-                            <select wire:model="userid" class="form-control">
-                                <option value="0" selected>Todos</option>
-                                @foreach ($users as $u)
-                                    <option value="{{ $u->id }}">{{ $u->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('userid')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
+                    <div class="form-group">
+                        <label>Usuario</label>
+                        <select wire:model="userid" class="form-control">
+                            <option value="0" selected>Todos</option>
+                            @foreach ($users as $u)
+                                <option value="{{ $u->id }}">{{ $u->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('userid')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
-                    @if (count($sales) > 0)
-                        <div style="margin-top:2.1rem">
-                            <button class="btn btn-primary" wire:click="download" type="button">Excel</button>
-                            <button class="btn btn-primary" wire:click="pdf" type="button">PDF</button>
-                        </div>
-                    @endif
+                </div>
+                @if (count($sales) > 0)
+                    <div style="margin-top:2.1rem">
+                        <button class="btn btn-primary" wire:click="download" type="button">Excel</button>
+                        <button class="btn btn-primary" wire:click="pdf" type="button">PDF</button>
+                    </div>
+                @endif
             </div>
 
             <div class="row mt-5">
@@ -96,7 +98,7 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         window.livewire.on('show-modal', Msg => {
             $('#modal-details').modal('show')
         });

@@ -1,4 +1,6 @@
 <div class="row sales layout-top-spacing">
+    <x-home_button />
+
     <div wire:ignore-self id="product-zoom" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">

@@ -1,4 +1,6 @@
 <div class="row sales layout-top-spacing">
+    <x-home_button />
+
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
             <div class="widget-heading">
@@ -48,9 +50,8 @@
                                         <h6 class="text-center">{{ $r->email }}</h6>
                                     </td>
                                     <td class="text-center">
-                                        <span
-                                            class="badge {{ $r->active == 1 ? 'badge-success' : 'badge-danger' }}
-                                                    text-uppercase">{{ $r->active ? 'Activo' : 'Inactivo' }}</span>
+                                        <span class="badge {{ $r->active == 1 ? 'badge-success' : 'badge-danger' }}
+                                                        text-uppercase">{{ $r->active ? 'Activo' : 'Inactivo' }}</span>
                                     </td>
 
                                     <td class="text-center">
@@ -80,7 +81,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         window.livewire.on('user-added', Msg => {
             $('#theModal').modal('hide')
             noty(Msg)
@@ -105,7 +106,7 @@
 
     });
 
-    function Confirm(id) {
+    function Confirm (id) {
         swal({
             title: 'CONFIRMAR',
             text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
@@ -115,8 +116,9 @@
             cancelButtonColor: '#fff',
             confirmButtonColor: '#3B3F5C',
             confirmButtonText: 'Aceptar'
-        }).then(function(result) {
-            if (result.value) {
+        }).then(function (result) {
+            if (result.value)
+            {
                 window.livewire.emit('Destroy', $id)
                 swal.close()
             }

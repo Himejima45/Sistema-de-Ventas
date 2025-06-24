@@ -1,4 +1,6 @@
 <div class="row sales layout-top-spacing">
+    <x-home_button />
+
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
             <div class="widget-heading">
@@ -60,7 +62,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         window.livewire.on('role-added', msg => {
             $('#theModal').modal('hide')
         });
@@ -85,7 +87,7 @@
         });
     });
 
-    function Edit(id) {
+    function Edit (id) {
         // swal({
         //     title: 'EDITAR',
         //     text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
@@ -104,7 +106,7 @@
         window.livewire.emit('Edit', id)
     }
 
-    function Confirm(id) {
+    function Confirm (id) {
         swal({
             title: 'CONFIRMAR',
             text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
@@ -114,8 +116,9 @@
             cancelButtonColor: '#fff',
             confirmButtonColor: '#3B3F5C',
             confirmButtonText: 'Aceptar'
-        }).then(function(result) {
-            if (result.value) {
+        }).then(function (result) {
+            if (result.value)
+            {
                 window.livewire.emit('Destroy', id)
                 swal.close()
             }

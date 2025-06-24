@@ -1,6 +1,14 @@
-<div>
-    <div class="row layout-top-spacing">
-        <div class="col-sm-12 col-md-8">
+<div class="row layout-top-spacing">
+    <x-home_button />
+
+    <div class="col-sm-12 col-md-8">
+        <div class="widget widget-chart-one">
+            <div class="widget-heading">
+                <h4 class="card-title">
+                    <b>{{ $componentName }} | {{ $pageTitle }}</b>
+                </h4>
+            </div>
+
             @if (session()->has('scan'))
                 <div class="alert alert-warning">
                     {{ session('scan') }}
@@ -14,30 +22,24 @@
 
             @include('livewire.pos.partials.detail')
         </div>
-
-        <div class="col-sm-12 col-md-4">
-            <!-- TOTAL -->
-            @include('livewire.pos.partials.total')
-
-
-            <!-- DENOMINACIONES -->
-            @include('livewire.pos.partials.coins')
-
-        </div>
-
-
     </div>
 
+    <div class="col-sm-12 col-md-4">
+        <!-- TOTAL -->
+        @include('livewire.pos.partials.total')
 
 
+        <!-- DENOMINACIONES -->
+        @include('livewire.pos.partials.coins')
+
+    </div>
 </div>
-
 
 <script src="{{ asset('plugins/keypress/keypress.js') }}"></script>
 <script src="{{ asset('plugins/onscan.js/onscan.js') }}"></script>
 
 <script>
-    function DeleteItem(id) {
+    function DeleteItem (id) {
         swal({
             title: 'CONFIRMAR',
             text: "¿ESTÁ SEGURO QUE DESEA BORRAR EL REGISTRO?",
@@ -47,9 +49,10 @@
             cancelButtonColor: '#fff',
             confirmButtonColor: '#3B3F5C',
             confirmButtonText: 'Aceptar'
-        }).then(function(result) {
+        }).then(function (result) {
             console.log('here')
-            if (result.value) {
+            if (result.value)
+            {
                 window.livewire.emit('removeItem', id)
                 swal.close()
                 Deleted('Eliminado', 'Se ha eliminado el registro')

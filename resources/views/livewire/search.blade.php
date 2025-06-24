@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    <div class="col-lg-4 col-md-4 col-sm-12">
+    <div class="col-lg-4 col-md-4 mb-4 col-sm-12">
         <select name="sale_type" id="sale_type" class="form-control" wire:model="sale_type">
             <option value="null">Seleccionar</option>
             <option value="SALE">Venta</option>
@@ -24,16 +24,6 @@
 
     <div class="col-lg-4 col-md-4 col-sm-12">
         <livewire:combobox-clients />
-        {{-- <select name="client" id="client" class="form-control" wire:model="client"
-            wire:change='selectClient($event.target.value)'>
-            <option value="Elegir">Seleccionar</option>
-
-            @foreach ($clients as $clientRow)
-            <option value="{{ $clientRow->id }}" selected="{{ is_null($client) ? false : $client === $clientRow->id }}">
-                {{ $clientRow->document }} {{ $clientRow->name }} {{ $clientRow->last_name }}
-            </option>
-            @endforeach
-        </select> --}}
         @error('client')
             <span class="text-danger er">{{ $message }}</span>
         @enderror

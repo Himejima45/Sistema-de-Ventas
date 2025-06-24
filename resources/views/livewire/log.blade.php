@@ -52,6 +52,8 @@
 @endphp
 
 <div class="row sales layout-top-spacing">
+    <x-home_button />
+
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
             <div class="widget-heading">

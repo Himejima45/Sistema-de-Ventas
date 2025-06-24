@@ -6,7 +6,7 @@
 
                 @if ($total > 0)
 
-                    <div class="table-responsive tblscroll" style="max-height: 650px; overflow:hidden">
+                    <div class="table-responsive tblscroll" style="max-height: 650px;">
                         <table class="table table-bordered table-striped mt-1">
                             <thead class="text-white" style="background: #3b3f5c">
                                 <tr>
@@ -26,8 +26,8 @@
                                             @if (count($item['attributes']) > 0)
                                                 @if ($item['attributes'][0] !== 'img.png')
                                                     <span>
-                                                        <img src="{{ $item['attributes'][0] }}" alt="imagen de producto"
-                                                            height="90" width="90" class="ronded">
+                                                        <img src="{{ $item['attributes'][0] }}" alt="imagen de producto" height="90"
+                                                            width="90" class="ronded">
                                                     </span>
                                                 @else
                                                     <p>Imágen pendiente</p>

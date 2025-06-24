@@ -1,4 +1,5 @@
 <div class="row sales layout-top-spacing">
+    <x-home_button />
 
     @include('livewire.purchase.edit-modal')
     @include('livewire.purchase.show-products-modal')
@@ -27,9 +28,8 @@
                 </div>
                 <div class="col-md-2">
                     <button wire:click.prevent="searchByDate" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8" />
                             <path d="m21 21-4.3-4.3" />
                         </svg>
@@ -75,11 +75,13 @@
                                     </td>
                                     <td>
                                         <h6 class="text-center">
-                                            {{ $item->payment_type === 'CASH' ? 'Efectivo' : 'Transferencia' }}</h6>
+                                            {{ $item->payment_type === 'CASH' ? 'Efectivo' : 'Transferencia' }}
+                                        </h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">
-                                            {{ count($item->products) }}</h6>
+                                            {{ count($item->products) }}
+                                        </h6>
                                     </td>
                                     <td class="text-center">
                                         <x-edit_button wire:click="editPurchase({{ $item->id }})" />
@@ -100,7 +102,7 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         window.livewire.on('show-products', msg => {
             $('#productsModal').modal('show')
         });

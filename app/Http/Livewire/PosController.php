@@ -16,7 +16,7 @@ use Illuminate\Validation\Rule;
 
 class PosController extends Component
 {
-    public $subtotal, $sale_type = 'SALE', $iva, $total, $barcode, $currency, $itemsQuantity, $efectivo, $change, $totalPayed, $client, $cart, $bs, $user, $currency_id, $clients, $type, $prevBs, $prevEfectivo, $total_dollar;
+    public $subtotal, $sale_type = 'SALE', $iva, $total, $barcode, $currency, $itemsQuantity, $efectivo, $change, $totalPayed, $client, $cart, $bs, $user, $currency_id, $clients, $type, $prevBs, $prevEfectivo, $total_dollar, $pageTitle, $componentName;
 
     public function mount()
     {
@@ -38,6 +38,8 @@ class PosController extends Component
         $this->clients = User::whereHas('roles', function ($query) {
             $query->where('name', 'client');
         })->get(['id', 'name', 'last_name', 'document']);
+        $this->pageTitle = 'Registrar';
+        $this->componentName = 'Ventas';
     }
 
     public function render()

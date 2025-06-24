@@ -1,4 +1,6 @@
 <div class="row sales layout-top-spacing">
+    <x-home_button />
+
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
             <div class="widget-heading">
@@ -68,7 +70,7 @@
     @include('livewire.client.form')
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             window.livewire.on('modal-show', msg => {
                 $('#theModal').modal('show')
             });

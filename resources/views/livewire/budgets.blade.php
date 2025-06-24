@@ -1,12 +1,13 @@
 @php
-    $statuses = [
-        'PENDING' => 'Pendiente',
-        'PAID' => 'Pagado',
-        'CANCELED' => 'Cancelado',
-    ];
+$statuses = [
+    'PENDING' => 'Pendiente',
+    'PAID' => 'Pagado',
+    'CANCELED' => 'Cancelado',
+];
 @endphp
 
 <div class="row sales layout-top-spacing">
+    <x-home_button />
 
     <div wire:ignore.self class="modal fade" id="modalDetails" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
@@ -111,14 +112,14 @@
                 <div class="modal-body">
 
                     @php
-                        $new_bs = floatval($bs ?? 0);
-                        $new_cash = floatval($cash ?? 0);
-                        $new_total = floatval($total ?? 0);
-                        $bs_to_usd = $new_bs > 0 ? round($new_bs / $currency, 2) : 0;
-                        $total_to_pay = round($new_total - $new_cash - $bs_to_usd, 2);
-                        $total_to_pay_bs = round(round($new_total - $new_cash - $bs_to_usd, 2) * $currency, 2);
-                        $total_change_usd = abs($total_to_pay < 0 ? $total_to_pay : 0);
-                        $total_change_bs = $total_change_usd !== 0 ? $total_change_usd * $currency : 0;
+$new_bs = floatval($bs ?? 0);
+$new_cash = floatval($cash ?? 0);
+$new_total = floatval($total ?? 0);
+$bs_to_usd = $new_bs > 0 ? round($new_bs / $currency, 2) : 0;
+$total_to_pay = round($new_total - $new_cash - $bs_to_usd, 2);
+$total_to_pay_bs = round(round($new_total - $new_cash - $bs_to_usd, 2) * $currency, 2);
+$total_change_usd = abs($total_to_pay < 0 ? $total_to_pay : 0);
+$total_change_bs = $total_change_usd !== 0 ? $total_change_usd * $currency : 0;
                     @endphp
                     <div class="row">
                         <div class="col-6">
@@ -254,11 +255,11 @@
                         <tbody>
                             @foreach ($budgets as $budget)
                                                         @php
-                                                            $payed = $budget->cash > 0 ? "{$budget->cash}$" : '-';
+    $payed = $budget->cash > 0 ? "{$budget->cash}$" : '-';
 
-                                                            if ($payed === '-') {
-                                                                $payed = $budget->bs > 0 ? "{$budget->bs}Bs" : '-';
-                                                            }
+    if ($payed === '-') {
+        $payed = $budget->bs > 0 ? "{$budget->bs}Bs" : '-';
+    }
                                                         @endphp
                                                         <tr>
                                                             <td>
