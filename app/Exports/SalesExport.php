@@ -5,8 +5,11 @@ namespace App\Exports;
 use App\Models\Sale;
 use Illuminate\Database\Eloquent\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithCustomStartCell;
+use Maatwebsite\Excel\Concerns\WithDrawings;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
-class SalesExport implements FromCollection
+class SalesExport implements FromCollection, WithDrawings, WithCustomStartCell
 {
     protected $start;
     protected $end;
@@ -79,5 +82,29 @@ class SalesExport implements FromCollection
         }
 
         return $result;
+    }
+
+    public function startCell(): string
+    {
+        return 'A6';
+    }
+
+    public function drawings()
+    {
+        $drawing = new Drawing();
+        $drawing->setName('Logo');
+        $drawing->setDescription('This is my logo');
+        $drawing->setPath(public_path() . '/assets/img/document_bg.png');
+        $drawing->setHeight(95);
+        $drawing->setCoordinates('A1');
+
+        $drawing1 = new Drawing();
+        $drawing1->setName('Logo');
+        $drawing1->setDescription('This is my logo');
+        $drawing1->setPath(public_path() . '/assets/img/Logo2.png');
+        $drawing1->setHeight(45);
+        $drawing1->setCoordinates('D2');
+
+        return [$drawing, $drawing1];
     }
 }

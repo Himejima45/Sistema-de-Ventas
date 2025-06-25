@@ -72,19 +72,19 @@ class ReportsController extends Component
                 ->paginate(20);
             $this->data = [
                 'data' => $paginator->getCollection()
-                ->transform(function ($sale, $index) use ($paginator) {
-                    $arr['number'] = $index + 1 + (($paginator->currentPage() - 1) * $paginator->perPage());
-                    $arr['items'] = $sale->getTotalProducts();
-                    $arr['user'] = $sale->user->name;
-                    $arr['client'] = $sale->client->name;
-                    $arr['total'] = $sale->total;
-                    $arr['type'] = $sale->total;
-                    $arr['status'] = $sale->status;
-                    $arr['id'] = $sale->id;
-                    $arr['updated_at'] = $sale->updated_at;
-                    
-                    return $arr;
-                })->toArray(),
+                    ->transform(function ($sale, $index) use ($paginator) {
+                        $arr['number'] = $index + 1 + (($paginator->currentPage() - 1) * $paginator->perPage());
+                        $arr['items'] = $sale->getTotalProducts();
+                        $arr['user'] = $sale->user->name;
+                        $arr['client'] = $sale->client->name;
+                        $arr['total'] = $sale->total;
+                        $arr['type'] = $sale->type;
+                        $arr['status'] = $sale->status;
+                        $arr['id'] = $sale->id;
+                        $arr['updated_at'] = $sale->updated_at;
+
+                        return $arr;
+                    })->toArray(),
                 'links' => $paginator->links('pagination::bootstrap-4')->render()
             ];
         } else {
@@ -97,18 +97,18 @@ class ReportsController extends Component
                 ->paginate(20);
             $this->data = [
                 'data' => $paginator->getCollection()
-                ->transform(function ($sale, $index) use ($paginator) {
-                    $arr['number'] = $index + 1 + (($paginator->currentPage() - 1) * $paginator->perPage());
-                    $arr['items'] = $sale->getTotalProducts();
-                    $arr['user'] = $sale->user->name;
-                    $arr['client'] = $sale->client->name;
-                    $arr['total'] = $sale->total;
-                    $arr['status'] = $sale->status;
-                    $arr['id'] = $sale->id;
-                    $arr['updated_at'] = $sale->updated_at;
-                    $arr['type'] = $sale->type;
-                    return $arr;
-                })->toArray(),
+                    ->transform(function ($sale, $index) use ($paginator) {
+                        $arr['number'] = $index + 1 + (($paginator->currentPage() - 1) * $paginator->perPage());
+                        $arr['items'] = $sale->getTotalProducts();
+                        $arr['user'] = $sale->user->name;
+                        $arr['client'] = $sale->client->name;
+                        $arr['total'] = $sale->total;
+                        $arr['status'] = $sale->status;
+                        $arr['id'] = $sale->id;
+                        $arr['updated_at'] = $sale->updated_at;
+                        $arr['type'] = $sale->type;
+                        return $arr;
+                    })->toArray(),
                 'links' => $paginator->links('pagination::bootstrap-4')->render()
             ];
         }
@@ -145,10 +145,10 @@ class ReportsController extends Component
                 $query->where('user_id', $this->userId);
             }
 
-            $query->whereBetween('updated_at', [$this->dateFrom  . ' 00:00:00', $this->dateTo  . ' 23:59:59']);
+            $query->whereBetween('updated_at', [$this->dateFrom . ' 00:00:00', $this->dateTo . ' 23:59:59']);
         })
-        ->orderBy('updated_at', 'desc')
-        ->where('status', 'PAID')
+            ->orderBy('updated_at', 'desc')
+            ->where('status', 'PAID')
             ->get()
             ->map(function ($sale, $index) {
                 $total = 0;

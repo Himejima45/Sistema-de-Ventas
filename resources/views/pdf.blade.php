@@ -17,21 +17,29 @@
 
         <!--  BEGIN CONTENT AREA  -->
         <div id="content" class="main-content">
-            <div class="mt-5 layout-px-spacing">
+            <div class="relative mt-5 layout-px-spacing">
+                <img src="{{ public_path() . '/assets/img/document_bg.png' }}" alt="Background"
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 14rem; z-index: -1; opacity: 0.75;">
 
                 <div class="text-center">
-                    <img src="{{ public_path() . '/assets/img/Logo2.png' }}" class="navbar-logo img-fluid"
-                        alt="logo" style="max-width: 75px;">
+                    <img src="{{ public_path() . '/assets/img/Logo2.png' }}" class="navbar-logo img-fluid" alt="logo"
+                        style="max-width: 75px;">
                     <p>
                         Moto<b style="font-size: 19px; color:#ee1b0c">Parts</b>HM</b>
                     </p>
                 </div>
                 <h1 class="text-center">SISTEMA DE VENTAS</h1>
-                @if ($budget)
-                    <h6>Reportes de cuentas por cobrar ({{ $start }} al {{ $end }})</h6>
-                @else
-                    <h6>Reportes de ventas ({{ $start }} al {{ $end }})</h6>
-                @endif
+
+                <div class="text-center mt-5">
+                    @if ($budget)
+                        <h6>Reportes de cuentas por cobrar</h6>
+                        <p>({{ $start }} al {{ $end }})</p>
+                    @else
+                        <h6>Reportes de ventas</h6>
+                        <p>({{ $start }} al {{ $end }})</p>
+                    @endif
+                </div>
+
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped mt-1">
                         <thead class="text-white" style="background: #3b3f5c">
@@ -52,12 +60,12 @@
                             @php
                                 $total = 0;
                                 $items = 0;
-                            @endphp
+                              @endphp
                             @foreach ($sales as $sale)
                                 @php
                                     $total += $sale['total'];
                                     $items += $sale['items'];
-                                @endphp
+                                  @endphp
                                 <tr>
                                     <td class="text-center">
                                         <h6>{{ $sale['id'] }}</h6>
@@ -72,10 +80,11 @@
                                         <h6>{{ $sale['type'] === 'SALE' ? 'VENTA' : 'CARRITO' }}</h6>
                                     </td>
                                     @if (!$budget)
-                                        <td class="text-center">
-                                            <h6>{{ $sale['status'] === 'PAID' ? 'Pagado' : ($sale['status'] === 'PENDING' ? 'Pendiente' : 'Cancelado') }}
-                                            </h6>
-                                        </td>
+                                                            <td class="text-center">
+                                                                <h6>{{ $sale['status'] === 'PAID' ? 'Pagado' : ($sale['status'] === 'PENDING' ? 'Pendiente' :
+                                        'Cancelado') }}
+                                                                </h6>
+                                                            </td>
                                     @endif
                                     <td class="text-center">
                                         <h6>{{ $sale['name'] }}</h6>
@@ -112,11 +121,7 @@
                     </table>
                 </div>
             </div>
-            <!--  END CONTENT AREA  -->
-
-
         </div>
-        <!-- END MAIN CONTAINER -->
 </body>
 
 </html>
