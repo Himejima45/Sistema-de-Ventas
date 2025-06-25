@@ -170,9 +170,9 @@
                                         </div>
                                     </div>
                                     <div class="row m-2 h6">
-                                        <button class="btn" wire:click="addToCart({{ $product->id }})">+</button>
+                                        <button class="btn btn-success" wire:click="addToCart({{ $product->id }})">+</button>
                                         <p class="align-self-center mx-4 mb-0">{{ $quantity }}</p>
-                                        <button class="btn" wire:click="removeFromCart({{ $product->id }})">-</button>
+                                        <button class="btn btn-danger" wire:click="removeFromCart({{ $product->id }})">-</button>
                                     </div>
                                 </div>
                             </div>
