@@ -134,11 +134,11 @@
     @if ($showCart)
         <div id="cart-drawer" class="drawer show">
             <div class="drawer-content">
-                <div class="mb-3 d-flex justify-content-between">
+                <div class="drawer-header">
                     <h3>Mi Carrito</h3>
                     @if (count($cart) > 0)
-                        <button title="Limpiar" wire:click="clear" class="btn btn-danger">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        <button title="Limpiar" wire:click="clear" class="btn btn-sm btn-danger">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                 class="lucide lucide-eraser">
                                 <path
@@ -146,72 +146,61 @@
                                 <path d="M22 21H7" />
                                 <path d="m5 11 9 9" />
                             </svg>
+                            <span class="d-none d-sm-inline">Limpiar</span>
                         </button>
                     @endif
                 </div>
+
                 @if (count($cart) > 0)
-                    <div class="container">
+                    <div class="drawer-body">
                         @foreach ($cart as $productId => $quantity)
                             @php
                                 $product = \App\Models\Product::find($productId);
                             @endphp
-                            <div class="row mb-2">
-                                <div class="col-4 p-0">
-                                    <img src="{{ $product->getImage() }}" width="150" height="150" alt="Product image">
+                            <div class="cart-item">
+                                <div class="cart-item-image">
+                                    <img src="{{ $product->getImage() }}" alt="{{ $product->name }}">
                                 </div>
-                                <div class="col-8">
-                                    <div class="row m-2">
-                                        <div class="col p-0">
-                                            <p class="h5 mb-0">
-                                                {{ $product->name }}
-                                            </p>
-                                            <p>Disponible {{ $product->stock }}</p>
-                                            <p class="h4">Precio {{ $product->price }}$</p>
-                                        </div>
-                                    </div>
-                                    <div class="row m-2 h6">
-                                        <button class="btn btn-success" wire:click="addToCart({{ $product->id }})">+</button>
-                                        <p class="align-self-center mx-4 mb-0">{{ $quantity }}</p>
-                                        <button class="btn btn-danger" wire:click="removeFromCart({{ $product->id }})">-</button>
+                                <div class="cart-item-details">
+                                    <h5>{{ $product->name }}</h5>
+                                    <p class="stock">Disponible: {{ $product->stock }}</p>
+                                    <p class="price">{{ $product->price }}$</p>
+                                    <div class="quantity-controls">
+                                        <button class="btn btn-sm btn-success" wire:click="addToCart({{ $product->id }})">+</button>
+                                        <span class="quantity">{{ $quantity }}</span>
+                                        <button class="btn btn-sm btn-danger"
+                                            wire:click="removeFromCart({{ $product->id }})">-</button>
                                     </div>
                                 </div>
                             </div>
                         @endforeach
+                    </div>
 
-                        <div class="row mt-5 h5">
-                            <div class="col-12">
-                                <h4>Monto a pagar</h4>
-                            </div>
-                            <div class="col">Subtotal</div>
-                            <div class="col">
-                                <p class="h5">$ {{ $subtotal }}</p>
-                            </div>
-                            <div class="w-100"></div>
-                            <div class="col">IVA</div>
-                            <div class="col">
-                                <p class="h5">$ {{ $iva }}</p>
-                            </div>
-                            <div class="w-100"></div>
-                            <div class="col">Total</div>
-                            <div class="col">
-                                <p class="h5">$ {{ $total }}</p>
-                            </div>
+                    <div class="drawer-summary">
+                        <h4>Monto a pagar</h4>
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span>$ {{ $subtotal }}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>IVA</span>
+                            <span>$ {{ $iva }}</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span>$ {{ $total }}</span>
                         </div>
                     </div>
                 @else
-                    <p>Su carrito está vacio.</p>
-                @endif
-                <div class="row">
-                    <div class="col">
-
-                        <button wire:click="toggle" class="mt-5 btn btn-block btn-secondary">Cerrar</button>
+                    <div class="empty-cart">
+                        <p>Su carrito está vacío.</p>
                     </div>
+                @endif
+
+                <div class="drawer-footer">
+                    <button wire:click="toggle" class="btn btn-secondary">Cerrar</button>
                     @if (count($cart) > 0)
-
-                        <div class="col">
-
-                            <button wire:click="save" class="mt-5 btn btn-block btn-primary">Guardar</button>
-                        </div>
+                        <button wire:click="save" class="btn btn-primary">Guardar</button>
                     @endif
                 </div>
             </div>
@@ -310,24 +299,185 @@
 
 <style>
     .drawer {
-        position: absolute;
-        top: -17px;
-        right: -300px;
-        width: 500px;
-        height: 100%;
-        min-height: 91vh;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 100%;
+        height: 100vh;
         background-color: white;
-        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
         transition: right 0.3s ease;
-        z-index: 1000;
-    }
-
-    .drawer-content {
-        padding: 20px;
+        z-index: 1050;
+        display: flex;
+        flex-direction: column;
     }
 
     .drawer.show {
-        right: -17px;
+        right: 0;
+    }
+
+    .drawer-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .drawer-header {
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+    }
+
+    .drawer-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+    }
+
+    .drawer-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem;
+    }
+
+    .cart-item {
+        display: flex;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #f5f5f5;
+    }
+
+    .cart-item-image {
+        width: 100px;
+        height: 100px;
+        flex-shrink: 0;
+        margin-right: 1rem;
+    }
+
+    .cart-item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+
+    .cart-item-details {
+        flex: 1;
+        flex-direction: row;
+    }
+
+    .cart-item-details h5 {
+        margin-top: 0;
+        margin-bottom: 0rem;
+        font-size: 1rem;
+    }
+
+    .stock {
+        color: #666;
+        font-size: 0.875rem;
+        margin-bottom: 0rem;
+    }
+
+    .price {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+    }
+
+    .quantity-controls button {
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .quantity {
+        margin: 0 0.75rem;
+        min-width: 20px;
+        text-align: center;
+    }
+
+    .drawer-summary {
+        padding: 1rem;
+        border-top: 1px solid #eee;
+    }
+
+    .drawer-summary h4 {
+        margin-bottom: 1rem;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+    }
+
+    .summary-row.total {
+        font-weight: bold;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid #eee;
+    }
+
+    .drawer-footer {
+        padding: 1rem;
+        display: flex;
+        gap: 1rem;
+        border-top: 1px solid #eee;
+    }
+
+    .drawer-footer .btn {
+        flex: 1;
+    }
+
+    .empty-cart {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    @media (min-width: 576px) {
+        .drawer {
+            width: 400px;
+        }
+
+        .drawer-header h3 {
+            font-size: 1.5rem;
+        }
+
+        .drawer-header .btn {
+            font-size: 0.875rem;
+        }
+
+        .cart-item-details h5 {
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .drawer {
+            width: 450px;
+        }
+    }
+
+    .drawer-body::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .drawer-body::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
     }
 </style>
 
