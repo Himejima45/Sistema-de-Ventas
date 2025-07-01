@@ -24,8 +24,8 @@ class ComboboxClients extends Component
             ->toArray();
 
         $genericClient = User::where('document', '999999999')->first();
-        $this->selectedValue = $genericClient->id;
-        $this->search = $genericClient->name . ' ' . $genericClient->last_name . ' ' . $genericClient->document;
+        $this->selectedValue = $genericClient->id ?? '';
+        $this->search = $genericClient ? $genericClient->name . ' ' . $genericClient->last_name . ' ' . $genericClient->document : '';
 
         $this->selectOption($this->selectedValue, $this->search);
     }

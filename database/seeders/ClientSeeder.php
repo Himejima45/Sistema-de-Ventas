@@ -16,15 +16,15 @@ class ClientSeeder extends Seeder
     public function run()
     {
         $clients = [
-            [
-                'name' => 'Cliente Genérico',
-                'last_name' => '',
-                'document' => '999999999',
-                'phone' => '00000000000',
-                'address' => 'No aplica',
-                'password' => Hash::make('cliente'),
-                'email' => 'cliente@email.com'
-            ],
+            // [
+            //     'name' => 'Cliente Genérico',
+            //     'last_name' => '',
+            //     'document' => '999999999',
+            //     'phone' => '00000000000',
+            //     'address' => 'No aplica',
+            //     'password' => Hash::make('cliente'),
+            //     'email' => 'cliente@email.com'
+            // ],
             [
                 'name' => 'Pablo',
                 'last_name' => 'Diaz',
