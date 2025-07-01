@@ -76,6 +76,7 @@ class ClientsController extends Component
         $this->document = $record->document;
         $this->phone = $record->phone;
         $this->address = $record->address;
+        $this->email = $record->email;
         $this->selected_id = $record->id;
 
         $this->emit('show-modal', 'show modal!');
@@ -85,6 +86,7 @@ class ClientsController extends Component
     public function Store()
     {
         $data = $this->validate();
+        $data['password'] = bcrypt($this->password);
         User::create($data)
             ->assignRole('Client');
 
@@ -93,20 +95,35 @@ class ClientsController extends Component
     }
     public function Update()
     {
+        $user = User::find($this->selected_id);
+
         $rules = array_merge(
             $this->rules,
             [
                 'document' => "required|digits_between:6,8|numeric|unique:users,document,{$this->selected_id}",
-                'phone' => "required|digits:11|numeric|unique:users,phone,{$this->selected_id}"
+                'phone' => "required|digits:11|numeric|unique:users,phone,{$this->selected_id}",
+                'email' => $user->email === $this->email
+                    ? 'required|string|email|max:255'
+                    : 'required|string|email|max:255|unique:users',
             ]
         );
+
+        if (!$this->password) {
+            unset($rules['password']);
+        }
+
         $data = $this->validate($rules);
 
-        User::find($this->selected_id)
-            ->update($data);
+        if ($this->password) {
+            $data['password'] = bcrypt($this->password);
+        } else {
+            unset($data['password']);
+        }
+
+        $user->update($data);
 
         $this->resetUI();
-        $this->emit('record-updated', 'Cliente Actualizada');
+        $this->emit('record-updated', 'Cliente Actualizado');
     }
 
     public function resetUI()
