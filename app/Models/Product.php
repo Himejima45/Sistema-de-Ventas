@@ -18,18 +18,24 @@ class Product extends BaseModel
 
   public function getImage()
   {
-    $defaultImage = explode('.', $this->image)[1] === 'jpeg';
+    $extension = pathinfo($this->image, PATHINFO_EXTENSION);
+    $defaultImage = $extension === 'jpeg';
     $src = $defaultImage
-      ? asset('/assets/products/' . $this->image)
-      : asset('storage/products/' . $this->image);
+      ? asset("assets/products/$this->image")
+      : asset("storage/products/$this->image");
 
     return $src;
   }
 
   public function getImagenAttribute()
   {
-    $defaultImage = explode('.', $this->image)[1] === 'jpeg';
-    return file_exists($defaultImage ? public_path() . '/assets/products' : 'storage/products/' . $this->image) ? $this->image : null;
+    $extension = pathinfo($this->image, PATHINFO_EXTENSION);
+    $defaultImage = $extension === 'jpeg';
+    return file_exists(
+      $defaultImage
+      ? public_path() . '/assets/products'
+      : "storage/products/$this->image"
+    ) ? $this->image : null;
   }
 
   public function purchases()
