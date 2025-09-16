@@ -1,14 +1,9 @@
 <div class="row justify-content-between">
     <div class="col-lg-4 col-md-4 col-sm-12">
-        <div class="input-group mb-4">
-            <div class="input-group-prepend">
-                <span class="input-group-text input-gp">
-                    <i class="fas fa-search"></i>
-                </span>
-            </div>
-            <input id="code" type="text" wire:keydown.enter.prevent="$emit('scan-code', $('#code').val())"
-                class="form-control search-form-control  ml-lg-auto" placeholder="Codigo producto...">
-        </div>
+        <livewire:combobox-products :cart="$cart" />
+        @error('client')
+            <span class="text-danger er">{{ $message }}</span>
+        @enderror
     </div>
 
     <div class="col-lg-4 col-md-4 mb-4 col-sm-12">

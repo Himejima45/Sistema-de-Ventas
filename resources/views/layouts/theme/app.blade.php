@@ -8,13 +8,7 @@
     <title>SISTEMA DE VENTAS</title>
     <link rel="icon" type="image/x-icon" href="assets/img/Logoico.ico" />
 
-
-
-    <script src="{{ asset('assets/js/alpine.js') }}"></script>
-    <!-- BEGIN GLOBAL MANDATORY STYLES -->
     @include('layouts.theme.styles')
-    <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
-
 </head>
 
 <body class="dashboard-analytics">
@@ -40,22 +34,22 @@
         <div id="content" class="main-content">
             <div class="mt-5 layout-px-spacing">
                 @php
-                    $currency = \App\Models\Currency::orderByDesc('created_at')->first();
-                    $date = is_null($currency) ? 'Error' : $currency->created_at->diffForHumans();
+$currency = \App\Models\Currency::orderByDesc('created_at')->first();
+$date = is_null($currency) ? 'Error' : $currency->created_at->diffForHumans();
                 @endphp
 
                 @if (session()->has('fetch_status'))
                             <div @class([
-                                'alert',
-                                'alert-danger' => session('fetch_status') === 'error',
-                                'alert-success' => session('fetch_status') !== 'error',
-                            ])>
+        'alert',
+        'alert-danger' => session('fetch_status') === 'error',
+        'alert-success' => session('fetch_status') !== 'error',
+    ])>
                                 {{ session('fetch_status') === 'error'
-                    ? 'No se pudo obtener la tasa del día'
-                    : "La tasa del día ha sido registrada. Última actualización: $date" }}
+        ? 'No se pudo obtener la tasa del día'
+        : "La tasa del día ha sido registrada. Última actualización: $date" }}
                             </div>
                             @php
-                                session()->forget('fetch_status');
+    session()->forget('fetch_status');
                             @endphp
                 @endif
 
@@ -75,6 +69,8 @@
 
     <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
     @include('layouts.theme.scripts')
+    @livewireScripts
+    <script src="{{ asset('assets/js/alpine.js') }}" defer></script>
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
 
 </body>

@@ -94,7 +94,20 @@
         color: #e0e6ed;
         font-weight: bolder;
     }
+
+    .transition-base {
+        transition: all .2s ease-in-out;
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .bg-hover-light-primary:hover {
+        background-color: #e7f1ff;
+    }
 </style>
 
-{{-- <link href="{{ asset('plugins/flatpickr/flatpickr.material.blue.css') }}" rel="stylesheet" type="text/css"> --}}
+{{--
+<link href="{{ asset('plugins/flatpickr/flatpickr.material.blue.css') }}" rel="stylesheet" type="text/css"> --}}
 @livewireStyles
