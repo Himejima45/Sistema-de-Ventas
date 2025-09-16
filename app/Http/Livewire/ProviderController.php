@@ -19,11 +19,11 @@ class ProviderController extends Component
             'required',
             'min:2',
             'max:40',
-            'regex:/^[A-Za-z]+(?: [A-Za-z]+)*$/',
+            'regex:/^[a-zA-ZÀ-ÿ\s\-]+$/u',
             'unique:providers,name'
         ],
         'phone' => ['required', 'numeric', 'digits:11', 'unique:providers,phone'],
-        'address' => ['required', 'min:2', 'max:100', 'regex:/^[A-Za-z]+(?: [A-Za-z]+)*$/'],
+        'address' => ['required', 'min:2', 'max:100', 'regex:/^[a-zA-ZÀ-ÿ\s\-]+$/u'],
         'rif' => ['required', 'numeric', 'digits:10', 'unique:providers,rif'],
         'document' => ['required', "in:J,V,G,E"]
     ];
@@ -116,7 +116,7 @@ class ProviderController extends Component
         $rules = array_merge(
             $this->rules,
             [
-                'name' => "required|min:2|max:40|regex:/^[A-Za-z]+(?: [A-Za-z]+)*$/|unique:providers,name,{$this->selected_id}",
+                'name' => "required|min:2|max:40|/^[a-zA-ZÀ-ÿ\s\-]+$/u|unique:providers,name,{$this->selected_id}",
                 'rif' => "required|digits:10|numeric|unique:providers,rif,{$this->selected_id}",
                 'phone' => "required|digits:11|numeric|unique:providers,phone,{$this->selected_id}"
             ]

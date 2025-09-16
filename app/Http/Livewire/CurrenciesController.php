@@ -21,7 +21,6 @@ class CurrenciesController extends Component
         'value' => [
             'required',
             'min:2',
-            'max:100',
             'numeric',
         ],
     ];

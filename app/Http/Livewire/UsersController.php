@@ -18,7 +18,7 @@ class UsersController extends Component
     public $name, $phone, $status, $image, $password, $search, $email, $selected_id, $pageTitle, $componentName, $fileLoaded, $profile;
 
     public $rules = [
-        'name' => ['required', 'min:2', 'max:30', 'regex:/^[A-Za-z]+(?: [A-Za-z]+)*$/'],
+        'name' => ['required', 'min:2', 'max:30', 'regex:/^[a-zA-ZÀ-ÿ\s\-]+$/u'],
         'email' => ['required', 'email', 'unique:users,email'],
         'password' => [
             'required',
