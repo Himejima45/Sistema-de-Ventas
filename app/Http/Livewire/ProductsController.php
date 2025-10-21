@@ -23,7 +23,7 @@ class ProductsController extends Component
             'required',
             'min:2',
             'max:120',
-            'regex:/^[A-Za-z]+(?: [A-Za-z]+)*$/',
+            'regex:/^[\p{L}]+(?: [\p{L}]+)*$/u',
             'unique:products,name'
         ],
         'barcode' => ['required', 'numeric', 'digits_between:3,20', 'unique:products,barcode'],
@@ -41,9 +41,9 @@ class ProductsController extends Component
         'barcode' => 'código de barras',
         'cost' => 'coste de compra',
         'price' => 'precio de venta',
-        'stock' => 'inventario',
+        'stock' => 'stock',
         'warranty' => 'garantía',
-        'min_stock' => 'inventario mínimo',
+        'min_stock' => 'stock mínimo',
         'image' => 'imágen',
         'category_id' => 'categoría',
         'provider_id' => 'proveedor',
@@ -150,7 +150,7 @@ class ProductsController extends Component
                     'required',
                     'min:2',
                     'max:120',
-                    'regex:/^[A-Za-z]+(?: [A-Za-z]+)*$/',
+                    'regex:/^[\p{L}]+(?: [\p{L}]+)*$/u',
                     "unique:products,name,{$this->selected_id}"
                 ],
                 'barcode' => [

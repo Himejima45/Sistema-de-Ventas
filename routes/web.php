@@ -41,7 +41,7 @@ Route::middleware('logger')->group(function () {
 });
 
 Route::middleware(['auth', 'fetch.currency', 'logger'])->group(function () {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('categories', CategoriesController::class);
     Route::get('products', ProductsController::class);
     Route::get('currencies', CurrenciesController::class);
@@ -55,9 +55,9 @@ Route::middleware(['auth', 'fetch.currency', 'logger'])->group(function () {
     Route::get('providers', ProviderController::class);
     Route::get('purchases', PurchaseController::class);
     Route::get('catalog', CatalogController::class);
-    Route::get('historial',  ClientCartsController::class);
-    Route::get('carts',  CartsController::class);
-    Route::get('budgets',  BudgetsController::class);
-    Route::get('backups',  BackupController::class);
-    Route::get('logs',  LogController::class);
+    Route::get('historial', ClientCartsController::class);
+    Route::get('carts', CartsController::class);
+    Route::get('budgets', BudgetsController::class);
+    Route::get('backups', BackupController::class);
+    Route::get('logs', LogController::class);
 });

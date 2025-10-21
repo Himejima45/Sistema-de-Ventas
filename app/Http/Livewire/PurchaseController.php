@@ -209,4 +209,11 @@ class PurchaseController extends Component
             ->extends('layouts.theme.app')
             ->section('content');
     }
+
+    public function updatedProducts($value)
+    {
+        $calc = collect($this->products)
+            ->sum(fn($p) => (float) ($p['quantity'] ?? 0) * (float) ($p['price'] ?? 0));
+        $this->cost = $calc;
+    }
 }

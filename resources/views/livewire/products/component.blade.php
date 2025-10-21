@@ -15,14 +15,15 @@
                 <div class="modal-body">
                     @if (!is_null($selectedProduct) && !is_null($selectedProduct->getImage()))
                         <span class="d-flex justify-content-center mx-auto">
-                            <img src="{{ $selectedProduct->getImage() }}" alt="imagen de ejemplo" height="400"
-                                width="400" class="rounded">
+                            <img src="{{ $selectedProduct->getImage() }}" alt="imagen de ejemplo" height="400" width="400"
+                                class="rounded">
                         </span>
                     @endif
                 </div>
             </div>
         </div>
     </div>
+
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
             <div class="widget-heading">
@@ -75,7 +76,8 @@
                                     <td>
                                         <h6
                                             class="text-center font-weight-bold @if ($product->stock < $product->min_stock) text-danger @else text-success @endif">
-                                            {{ $product->stock }}</h6>
+                                            {{ $product->stock }}
+                                        </h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $product->min_stock }}</h6>
@@ -84,8 +86,8 @@
                                     <td class="text-center">
                                         @if (!is_null($product->getImage()))
                                             <span role="button" wire:click="zoom({{ $product->id }})">
-                                                <img src="{{ $product->getImage() }}" alt="imagen de ejemplo"
-                                                    height="70" width="80" class="rounded">
+                                                <img src="{{ $product->getImage() }}" alt="imagen de ejemplo" height="70"
+                                                    width="80" class="rounded">
                                             </span>
                                         @else
                                             <p>Imágen pendiente...</p>
@@ -111,7 +113,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         window.livewire.on('modal-show', msg => {
             $('#theModal').modal('show')
         });

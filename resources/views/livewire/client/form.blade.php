@@ -1,10 +1,13 @@
 @include('common.modalHead')
 
 <div class="row">
+    <div class="col-12">
+        <span><span class="font-weight-bold">Nota</span>: Los campos marcados con (*) son requeridos</span>
+    </div>
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Nombre</label>
+            <label>Nombre <span class="text-danger font-weight-bold">*</span></label>
             <input type="text" wire:model.lazy="name" class="form-control" placeholder="Ej: Pedro">
             @error('name')
                 <span class="text-danger er">{{ $message }}</span>
@@ -14,7 +17,7 @@
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Apellido</label>
+            <label>Apellido <span class="text-danger font-weight-bold">*</span></label>
             <input type="text" wire:model.lazy="last_name" class="form-control" placeholder="Ej: Carrizal">
             @error('last_name')
                 <span class="text-danger er">{{ $message }}</span>
@@ -24,7 +27,7 @@
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Correo electrónico</label>
+            <label>Correo electrónico <span class="text-danger font-weight-bold">*</span></label>
             <input type="text" wire:model.lazy="email" class="form-control" placeholder="Ej: correo@email.com">
             @error('email')
                 <span class="text-danger er">{{ $message }}</span>
@@ -34,7 +37,7 @@
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Cedula</label>
+            <label>Cedula <span class="text-danger font-weight-bold">*</span></label>
             <input type="text" wire:model.lazy="document" class="form-control" placeholder=" Ej: 25789463">
             @error('document')
                 <span class="text-danger er">{{ $message }}</span>
@@ -44,7 +47,7 @@
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Nro. Telefono</label>
+            <label>Nro. Telefono <span class="text-danger font-weight-bold">*</span></label>
             <input type="text" wire:model.lazy="phone" class="form-control" placeholder=" Ej: 04127888844">
             @error('phone')
                 <span class="text-danger er">{{ $message }}</span>
@@ -54,7 +57,7 @@
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Direccion</label>
+            <label>Direccion <span class="text-danger font-weight-bold">*</span></label>
             <input type="text" wire:model.lazy="address" class="form-control" placeholder="Ej: Maracay">
             @error('address')
                 <span class="text-danger er">{{ $message }}</span>
@@ -64,7 +67,7 @@
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Contraseña</label>
+            <label>Contraseña <span class="text-danger font-weight-bold">*</span></label>
             <input type="password" wire:model.lazy="password" class="form-control" placeholder="Ej: **********">
             @error('password')
                 <span class="text-danger er">{{ $message }}</span>
@@ -74,8 +77,8 @@
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Confirmar contraseña</label>
-            <input type="password" wire:model.lazy="password_confirmation" class="form-control"
+            <label>Confirmar contraseña <span class="text-danger font-weight-bold">*</span></label>
+            <input type="password" wire:model.lazy="password_confirmation" wire:loading.remove class="form-control"
                 autocomplete="new-password" placeholder="Ej: **********">
             @error('password_confirmation')
                 <span class="text-danger er">{{ $message }}</span>

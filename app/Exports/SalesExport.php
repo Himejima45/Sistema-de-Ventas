@@ -38,6 +38,7 @@ class SalesExport implements FromCollection, WithDrawings, WithCustomStartCell
 
             if ($this->budget) {
                 $query->where('type', 'BUDGET');
+                $query->where('status', 'PENDING');
             }
 
             if (!$this->budget) {

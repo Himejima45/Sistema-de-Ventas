@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Product;
 use App\Models\Sale;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -10,8 +11,8 @@ class CartsController extends Component
 {
     use WithPagination;
 
-    public $showModal = false, $selected_id = 0, $details = [], $payed = 0, $change = 0, $error = '';
-    protected $listeners = ['edit', 'clearMessage'];
+    public $showModal = false, $selected_id = 0, $details = [], $payed = 0, $change = 0, $error = '', $selectedProduct;
+    protected $listeners = ['edit', 'clearMessage', 'zoom'];
 
     private $pagination = 20;
 
@@ -53,7 +54,7 @@ class CartsController extends Component
 
         if (floatval($record->cash) === 0.0 && floatval($record->bs) === 0.0 && floatval($this->payed) > 0.0) {
             $record->update([
-'user_id' => auth()->id()
+                'user_id' => auth()->id()
             ]);
         }
 
@@ -61,7 +62,7 @@ class CartsController extends Component
             'status' => $this->payed - $this->change >= $record->total ? 'PAID' : 'PENDING',
             'cash' => $this->payed,
             'change' => $this->change,
-            
+
         ]);
 
         foreach ($record->products as $detail) {
@@ -90,5 +91,11 @@ class CartsController extends Component
         ])
             ->extends('layouts.theme.app')
             ->section('content');
+    }
+
+    public function zoom(Product $product)
+    {
+        $this->selectedProduct = $product;
+        $this->emit('show-product-zoomed');
     }
 }

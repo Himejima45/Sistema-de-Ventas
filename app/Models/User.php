@@ -27,6 +27,7 @@ class User extends BaseModelAuth
         'phone',
         'status',
         'image',
+        'session_id'
     ];
 
     /**
@@ -56,5 +57,11 @@ class User extends BaseModelAuth
     public function getFullNameAttribute()
     {
         return $this->name . ' ' . $this->last_name;
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'employee_id')
+            ->orderBy('created_at', 'desc');
     }
 }

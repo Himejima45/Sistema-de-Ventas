@@ -16,13 +16,14 @@ class ClientsController extends Component
     public $name, $last_name, $document, $phone, $email, $address, $selected_id, $pageTitle, $componentName, $search, $password, $password_confirmation;
     private $pagination = 20;
     public $rules = [
-        'name' => ['required', 'min:2', 'max:30', 'regex:/^[A-Za-z]+(?: [A-Za-z]+)*$/'],
+        'name' => ['required', 'min:2', 'max:30', 'regex:/^[\p{L}]+(?: [\p{L}]+)*$/u',],
         'last_name' => 'required|min:2|max:30|alpha',
         'document' => 'required|digits_between:6,8|numeric|unique:users,document',
         'email' => 'required|string|email|max:255|unique:users',
         'phone' => 'required|digits:11|numeric|unique:users,phone',
         'password' => 'required|string|min:8|confirmed',
-        'address' => ['required', 'min:3', 'max:100', 'regex:/^[A-Za-z]+(?: [A-Za-z]+)*$/']
+        'password_confirmation' => 'required|string|min:8',
+        'address' => ['required', 'min:3', 'max:100', 'regex:/^[\p{L}]+(?: [\p{L}]+)*$/u',]
     ];
 
     protected $validationAttributes = [
@@ -32,7 +33,8 @@ class ClientsController extends Component
         'email' => 'correo electrónico',
         'phone' => 'teléfono',
         'address' => 'dirección',
-        'password' => 'contraseña'
+        'password' => 'contraseña',
+        'password_confirmation' => 'confirmar contraseña'
     ];
 
     public function mount()
@@ -128,7 +130,6 @@ class ClientsController extends Component
 
     public function resetUI()
     {
-
         $this->name = '';
         $this->last_name = '';
         $this->document = '';
@@ -136,6 +137,8 @@ class ClientsController extends Component
         $this->address = '';
         $this->search = '';
         $this->selected_id = 0;
+        $this->password = '';
+        $this->password_confirmation = '';
     }
 
     protected $listeners = ['Destroy' => 'delete'];

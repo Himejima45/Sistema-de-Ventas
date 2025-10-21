@@ -20,8 +20,7 @@ class CurrenciesController extends Component
     public $rules = [
         'value' => [
             'required',
-            'min:2',
-            'max:100',
+            'min:1',
             'numeric',
         ],
     ];

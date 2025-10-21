@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Currency;
+use App\Models\Notification;
 use App\Models\SaleDetails;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Livewire\Component;
@@ -360,8 +361,19 @@ class PosController extends Component
 
 
             if ($sale) {
+                $employees = User::select('id')
+                    ->whereHas('roles', function ($query) {
+                        $query->where('name', 'Employee')
+                            ->orWhere('name', 'Admin');
+                    })
+                    ->get();
+
+                $value = 0;
+                $products = 0;
 
                 foreach ($items as $item) {
+                    $products += 1;
+                    $value += $item->quantity * $item->price;
                     SaleDetails::create([
                         'price' => $item->price,
                         'quantity' => $item->quantity,
@@ -370,8 +382,31 @@ class PosController extends Component
                     ]);
 
                     $product = Product::find($item->id);
-                    $product->stock = $product->stock - $item->quantity;
+                    $finalStock = $product->stock - $item->quantity;
+                    if ($finalStock <= $product->min_stock) {
+                        foreach ($employees as $employee) {
+                            Notification::create([
+                                'title' => 'Producto con poco stock',
+                                'description' => "El producto ($product->name) se encuentra por debajo del stock minimo ($product->min_stock), actualmente en inventario ($finalStock)",
+                                'employee_id' => $employee->id,
+                            ]);
+                        }
+                    }
+
+                    $product->stock -= $item->quantity;
                     $product->save();
+                }
+
+                if ($this->sale_type === 'BUDGET') {
+                    $client = User::where('id', $this->client)->first();
+
+                    foreach ($employees as $employee) {
+                        Notification::create([
+                            'title' => 'Cuentas por pagar',
+                            'description' => "Una nueva cuenta por pagar ha sido registrada para el cliente ($client->full_name) por un valor de $$value y $products productos",
+                            'employee_id' => $employee->id,
+                        ]);
+                    }
                 }
             }
 
@@ -379,6 +414,7 @@ class PosController extends Component
             $this->emit('record-created', 'Venta Registrada con exito');
             $this->emit('print-ticket', $sale->id);
         } catch (Exception $e) {
+            \Log::info('' . $e->getMessage());
             $this->emit('sale-error', $e->getMessage());
         }
     }

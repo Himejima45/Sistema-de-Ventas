@@ -1,6 +1,33 @@
 <div class="col sales layout-top-spacing gap-4">
     <x-home_button />
 
+    <div class="row" style="flex-direction: column;">
+        <h2 style="padding-left: 1rem;">Carritos de compra</h2>
+    </div>
+
+    <div wire:ignore-self id="product-zoom" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #3B3F5C">
+                    <h5 class="modal-title text-white">
+                        <b>{{ $selectedProduct->name ?? '' }}</b>
+                    </h5>
+                    <button class="close" data-miss="modal" type="button" aria-label="Close">
+                        <span class="text-white">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if (!is_null($selectedProduct) && !is_null($selectedProduct->getImage()))
+                        <span class="d-flex justify-content-center mx-auto">
+                            <img src="{{ $selectedProduct->getImage() }}" alt="imagen de ejemplo" height="400" width="400"
+                                class="rounded">
+                        </span>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div wire:ignore.self class="modal fade" id="theModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
@@ -25,13 +52,13 @@
                                     </thead>
                                     <tbody>
                                         @php
-                                            $total = 0;
-                                            $quantity = 0;
+$total = 0;
+$quantity = 0;
                                         @endphp
                                         @foreach ($details as $detail)
                                             @php
-                                                $total += $detail->price * $detail->quantity * 1.16;
-                                                $quantity += $detail->quantity;
+    $total += $detail->price * $detail->quantity * 1.16;
+    $quantity += $detail->quantity;
                                             @endphp
                                             <tr>
                                                 <td>
@@ -75,14 +102,14 @@
                         <div class="col-12">
                             <div class="form-group">
                                 @php
-                                    $value = round(floatval($total ?? 0) - floatval($payed ?? 0) + floatval($change ?? 0), 2);
+$value = round(floatval($total ?? 0) - floatval($payed ?? 0) + floatval($change ?? 0), 2);
                                 @endphp
                                 <label>Monto a pagar</label>
                                 <input type="number" disabled value="{{ $value }}" @class([
-                                    'form-control font-weight-bold',
-                                    'text-success' => $value < 0,
-                                    'text-danger' => $value > 0,
-                                ])
+    'form-control font-weight-bold',
+    'text-success' => $value < 0,
+    'text-danger' => $value > 0,
+])
                                     placeholder="Ej: 10">
                             </div>
                         </div>
@@ -116,43 +143,53 @@
             @endif
             @foreach ($carts as $index => $cart)
                 @if ($cart->products()->count() > 0)
-                    <div class="row p-0">
-                        <div class="col-10">
-                            <div class="row">
-                                @foreach ($cart->products as $details)
-                                    <div class="card m-2" style="width: 16rem">
-                                        <img class="card-img-top" height="180" width="180" src="{{ $details->product->getImage() }}"
-                                            alt="Card image cap">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-center">{{ $details->product->name }}</h5>
+                        <div class="row p-0">
+                            <div class="col-sm-12 order-sm-2 order-md-1 col-md-10">
+                                <div class="row">
+                                    @foreach ($cart->products as $details)
+                                        <div class="card m-2 mx-md-1 mx-auto" style="width: 16rem">
+                                            <img class="card-img-top" height="240" width="240" src="{{ $details->product->getImage() }}"
+                                                alt="Card image cap" wire:click="zoom({{ $details->product->id }})">
+                                            <div class="card-body">
+                                                <h5 class="card-title text-center">{{ $details->product->name }}</h5>
+                                            </div>
                                         </div>
-                                    </div>
-                                @endforeach
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="col-sm-12 order-sm-1 order-md-2 col-md-2 m-0 p-0">
+                                <h3>
+                                    <?php
+        $document = '';
+        if (auth()->user()->roles->pluck('name')->first() === 'Admin') {
+            $document = "({$cart->client->document})";
+        }
+                                                                                                                                                                                                                                    ?>
+                                    {{
+            "{$cart->client->name} {$cart->client->last_name} {$document}"
+                                                                                                                                                                                                                                }}
+                                </h3>
+                                <p style="margin-top: -0.5rem;">
+                                    {{ $cart->created_at->format('d-m-Y h:i a') }}
+                                </p>
+                                <h6 class="mt-2 h6">
+                                    Productos: {{ count($cart->products) }}
+                                </h6>
+                                <h6 class="mt-2 h2 text-right">${{ $cart->total }}</h6>
+                                <button wire:click="edit({{ $cart->id }})" class="btn btn-block btn-ghost">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-pencil">
+                                        <path
+                                            d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+                                        <path d="m15 5 4 4" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
-                        <div class="col-2 m-0 p-0">
-                            <h3>{{ "{$cart->client->name} {$cart->client->last_name}" }}</h3>
-                            <p style="margin-top: -0.5rem;">
-                                {{ $cart->created_at->format('d-m-Y h:i a') }}
-                            </p>
-                            <h6 class="mt-2 h6">
-                                Productos: {{ count($cart->products) }}
-                            </h6>
-                            <h6 class="mt-2 h2 text-right">${{ $cart->total }}</h6>
-                            <button wire:click="edit({{ $cart->id }})" class="btn btn-block btn-ghost">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                    class="lucide lucide-pencil">
-                                    <path
-                                        d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
-                                    <path d="m15 5 4 4" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    @if ($index < count($carts) - 1)
-                        <div class="my-4" style="border: 1px solid rgba(0, 0, 0, 0.1)"></div>
-                    @endif
+                        @if ($index < count($carts) - 1)
+                            <div class="my-4" style="border: 1px solid rgba(0, 0, 0, 0.1)"></div>
+                        @endif
                 @endif
             @endforeach
             {{ $carts->links() }}
@@ -164,7 +201,6 @@
             @endif
         </div>
     </div>
-
 </div>
 
 
@@ -175,6 +211,9 @@
         });
         window.livewire.on('close', msg => {
             $('#theModal').modal('hide')
+        });
+        window.livewire.on('show-product-zoomed', msg => {
+            $('#product-zoom').modal('show')
         });
     });
 </script>

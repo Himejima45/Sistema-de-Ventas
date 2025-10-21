@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Category;
 use App\Models\Currency;
+use App\Models\Notification;
 use App\Models\Product;
 use App\Models\Provider;
 use App\Models\Sale;
@@ -107,13 +108,34 @@ class CatalogController extends Component
             'currency_id' => Currency::latest()->first()->id
         ]);
 
+        $value = 0;
         foreach ($this->cart as $key => $item) {
             $product = Product::find($key);
+            $value += $product->price * $item;
+
             SaleDetails::create([
                 'price' => $product->price,
                 'quantity' => $item,
                 'product_id' => $product->id,
                 'sale_id' => $sale->id
+            ]);
+        }
+
+        $employees = User::select('id')
+            ->whereHas('roles', function ($query) {
+                $query->where('name', 'Employee')
+                    ->orWhere('name', 'Admin');
+            })
+            ->get();
+
+        $client_name = auth('')->user()->full_name;
+        $products = count($this->cart);
+
+        foreach ($employees as $employee) {
+            Notification::create([
+                'title' => 'Carrito registrado',
+                'description' => "El cliente ($client_name) ha registrado un nuevo carrito de ($products) productos por un valor de $$value",
+                'employee_id' => $employee->id,
             ]);
         }
 

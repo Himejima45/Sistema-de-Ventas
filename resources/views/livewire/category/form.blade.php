@@ -3,22 +3,18 @@
 <div class="row">
 
     <div class="col-sm-12">
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">
-                    <span class="fas fa-edit">
-
-                    </span>
-                </span>
-            </div>
-            <input type="text" wire:model.lazy="name" class="form-control" placeholder=" Ej; Cauchos" maxlength="255">
-        </div>
-        @error('name')
-            <span class="text-danger error">{{ $message }}</span>
-        @enderror
-
+        <span><span class="font-weight-bold">Nota</span>: Los campos marcados con (*) son requeridos</span>
     </div>
 
+    <div class="col-sm-12">
+        <div class="form-group">
+            <label>Nombre <span class="text-danger font-weight-bold">*</span></label>
+            <input type="text" wire:model.lazy="name" class="form-control" placeholder=" Ej; Cauchos" maxlength="255">
+            @error('name')
+                <span class="text-danger error">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
 </div>
 
 @include('common.modalFooter')

@@ -8,24 +8,21 @@
                 <h6 class="text-center text-warning" wire:loading>POR FAVOR ESPERE</h6>
             </div>
             <div class="modal-body">
+                <div class="col-12">
+                    <span><span class="font-weight-bold">Nota</span>: Los campos marcados con (*) son requeridos</span>
+                </div>
 
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <span class="fas fa-edit">
-
-                                    </span>
-                                </span>
-                            </div>
-                            <input type="text" wire:model.lazy="roleName" class="form-control"
+                        <div class="form-group">
+                            <label for="roleName">Nombre <span class="text-danger font-weight-bold">*</span></label>
+                            <input type="text" id="roleName" wire:model.lazy="roleName" class="form-control"
                                 placeholder=" Ej; Admin" maxlength="255">
+                            @error('roleName')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
-                        @error('roleName')
-                            <span class="text-danger er">{{ $message }}</span>
-                        @enderror
                     </div>
                 </div>
 

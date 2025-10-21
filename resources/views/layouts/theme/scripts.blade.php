@@ -8,7 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         App.init();
     });
 </script>
@@ -27,7 +27,7 @@
 
 
 <script>
-    function noty(msg, option = 1) {
+    function noty (msg, option = 1) {
         Snackbar.show({
             text: msg.toUpperCase(),
             actionText: 'CERRAR',
@@ -39,7 +39,7 @@
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         window.livewire.on('record-created', msg => {
             Success('Registrado', msg)
             $('#theModal').modal('hide')
@@ -60,8 +60,9 @@
         });
     });
 
-    function Confirm(id, itemsLength = 0, itemsMessage = '') {
-        if (itemsLength > 0) {
+    function Confirm (id, itemsLength = 0, itemsMessage = '') {
+        if (itemsLength > 0)
+        {
             swal(itemsMessage)
             return;
         }
@@ -75,8 +76,9 @@
             cancelButtonColor: '#fff',
             confirmButtonColor: '#3B3F5C',
             confirmButtonText: 'Aceptar'
-        }).then(function(result) {
-            if (result.value) {
+        }).then(function (result) {
+            if (result.value)
+            {
                 window.livewire.emit('Destroy', id)
                 swal.close()
                 Deleted('Eliminado', 'Se ha eliminado el registro')
@@ -84,7 +86,7 @@
         })
     }
 
-    function Deleted(title, message) {
+    function Deleted (title, message) {
         swal({
             type: "warning",
             title,
@@ -93,7 +95,7 @@
         })
     }
 
-    function Success(title, message) {
+    function Success (title, message) {
         swal({
             type: "success",
             title,
@@ -102,7 +104,7 @@
         })
     }
 
-    function Info(title, message) {
+    function Info (title, message) {
         swal({
             type: "info",
             title,
@@ -110,8 +112,8 @@
             showConfirmButton: false,
         })
     }
-    
-    function Warning(title, message) {
+
+    function Warning (title, message) {
         swal({
             type: "warning",
             title,
@@ -119,6 +121,39 @@
             showConfirmButton: false,
         })
     }
+</script>
+
+<script>
+    (function () {
+        // Unique ID for this component instance
+        const bell = document.getElementById('notification-bell');
+        const dropdown = document.getElementById('notification-dropdown');
+
+        if (!bell || !dropdown) return;
+
+        // Toggle dropdown on bell click
+        bell.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const isVisible = dropdown.style.display === 'block';
+            dropdown.style.display = isVisible ? 'none' : 'block';
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!bell.contains(e.target) && !dropdown.contains(e.target))
+            {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Optional: Close on Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape')
+            {
+                dropdown.style.display = 'none';
+            }
+        });
+    })();
 </script>
 
 

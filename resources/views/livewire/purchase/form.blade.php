@@ -12,8 +12,11 @@
                 <div class="row">
 
                     <div class="col-sm-12">
+                        <span>
+                            <span class="font-weight-bold">Nota</span>: Los campos marcados con (*) son requeridos
+                        </span>
                         <div class="form-group">
-                            <label>Proveedor</label>
+                            <label>Proveedor <span class="text-danger font-weight-bold">*</span></label>
                             <select wire:model='provider' name='provider' class='form-control'>
                                 <option value="" selected>Elegir</option>
                                 @foreach ($providers as $provider)
@@ -30,7 +33,7 @@
 
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label>Costo</label>
+                            <label>Costo ($) <span class="text-danger font-weight-bold">*</span></label>
                             <input type="text" data-type="currency" wire:model.lazy="cost" class="form-control"
                                 step="0.01" placeholder="Ej: 57.33">
                             @error('cost')
@@ -41,7 +44,7 @@
 
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label>Pagado</label>
+                            <label>Pagado ($) <span class="text-danger font-weight-bold">*</span></label>
                             <input type="text" data-type="currency" wire:model.lazy="payed" class="form-control"
                                 placeholder="Ej: 13.00" step="0.01">
                             @error('payed')
@@ -52,7 +55,7 @@
 
                     <div class='col-sm-12 col-md-6'>
                         <div class='form-group'>
-                            <label>Estado</label>
+                            <label>Estado <span class="text-danger font-weight-bold">*</span></label>
                             <select wire:model='status' name='status' class='form-control'>
                                 <option value="" selected>Elegir</option>
                                 <option value='PENDING'>Pendiente</option>
@@ -67,7 +70,7 @@
 
                     <div class='col-sm-12 col-md-6'>
                         <div class='form-group'>
-                            <label>Tipo de pago</label>
+                            <label>Tipo de pago <span class="text-danger font-weight-bold">*</span></label>
                             <select wire:model='payment_type' name='payment_type' class='form-control'>
                                 <option value="" selected>Elegir</option>
                                 <option value='CASH'>Efectivo</option>
@@ -88,8 +91,7 @@
                             @foreach ($products as $index => $product)
                                 <div class='row' id='product-row-{{ $index }}'>
                                     <div class='col-md-5'>
-                                        <div class='form-group'>
-                                            <label>Producto</label>
+                                            <label>Producto <span class="text-danger font-weight-bold">*</span></label>
                                             <select wire:model.lazy='products.{{ $index }}.name'
                                                 name='products.{{ $index }}.name' class='form-control'>
                                                 <option value="" selected>Elegir</option>
@@ -97,17 +99,13 @@
                                                     <option value="{{ $product->id }}">{{ $product->name }}</option>
                                                 @endforeach
                                             </select>
-                                            @error('status')
-                                                <span class='text-danger er'>{{ $message }}</span>
-                                            @enderror
-                                        </div>
                                         @error("products.$index.name")
                                             <span class='text-danger er'>{{ $message }}</span>
                                         @enderror
                                     </div>
 
                                     <div class='col-md-3'>
-                                        <label>Cantidad</label>
+                                        <label>Cantidad <span class="text-danger font-weight-bold">*</span></label>
                                         <input type='number' wire:model.lazy='products.{{ $index }}.quantity'
                                             class='form-control' placeholder='Cantidad' min='1' />
                                         @error("products.$index.quantity")
@@ -116,7 +114,7 @@
                                     </div>
 
                                     <div class='col-md-3'>
-                                        <label>Precio unitario</label>
+                                        <label>Precio unitario ($) <span class="text-danger font-weight-bold">*</span></label>
                                         <input type='number' data-type='currency' wire:model.lazy='products.{{ $index }}.price'
                                             class='form-control' placeholder='Ej: 7.00' step="0.01" />
                                         @error("products.$index.price")
@@ -125,7 +123,7 @@
                                     </div>
 
                                     <!-- Remove Button -->
-                                    <div class='col-md-1'>
+                                    <div class='col-md-1' style="margin-top: 0.7rem">
                                         <button type='button' wire:click.prevent='removeProduct({{ $index }})'
                                             class='btn btn-danger btn-sm mt-4'>X</button>
                                     </div>

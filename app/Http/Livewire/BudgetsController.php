@@ -119,6 +119,7 @@ class BudgetsController extends Component
         ])
             ->with('user')
             ->where('type', 'BUDGET')
+            ->orWhere('status', 'PENDING')
             ->orderBy('updated_at', 'desc')
             ->get()
             ->map(function ($sale, $index) {
@@ -149,6 +150,7 @@ class BudgetsController extends Component
     public function render()
     {
         $budgets = Sale::where('type', 'BUDGET')
+            ->orWhere('status', 'PENDING')
             ->whereHas('client', function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%');
             })
