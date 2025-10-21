@@ -10,8 +10,8 @@
         <ul class="list-group list-group-flush py-1 overflow-auto" style="max-height: 280px;">
           @forelse($options as $option)
             <li wire:click="selectOption('{{ $option['barcode'] }}', '{{ $option['id'] }}')" class="list-group-item d-flex justify-content-between align-items-center
-                                              px-3 py-2 lh-sm border-0 rounded-1 mb-1 mx-1
-                                              text-dark bg-hover-light-primary cursor-pointer transition-base">
+                                                 px-3 py-2 lh-sm border-0 rounded-1 mb-1 mx-1
+                                                 text-dark bg-hover-light-primary cursor-pointer transition-base">
               <div>
                 <div class="fw-semibold fs-6">{{ $option['name'] }}</div>
                 <small class="text-muted">{{ $option['barcode'] }}</small>
