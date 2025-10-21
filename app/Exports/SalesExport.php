@@ -31,25 +31,33 @@ class SalesExport implements FromCollection, WithDrawings, WithCustomStartCell
             ? ['Nro Venta', 'Total', 'Items', 'Tipo', 'Empleado', 'Cliente', 'Hora', 'Fecha']
             : ['Nro Venta', 'Total', 'Items', 'Tipo', 'Estado', 'Empleado', 'Cliente', 'Hora', 'Fecha'];
 
+        \Log::info('headers', $headers);
         $salesData = Sale::where(function ($query) {
             if ($this->user_id > 0) {
+                \Log::info('user id greather than 0');
+                \Log::info($this->user_id);
                 $query->where('user_id', $this->user_id);
             }
 
             if ($this->budget) {
+                \Log::info('is budget');
                 $query->where('type', 'BUDGET');
                 $query->where('status', 'PENDING');
             }
 
             if (!$this->budget) {
+                \Log::info('not budget');
                 $query->where('status', 'PAID');
             }
 
+            \Log::info('time', [$this->start . ' 00:00:00', $this->end . ' 23:59:59']);
             $query->whereBetween('updated_at', [$this->start . ' 00:00:00', $this->end . ' 23:59:59']);
         })
             ->orderBy('updated_at', 'desc')
             ->get()
             ->map(function ($sale, $index) {
+                \Log::info($sale);
+
                 if ($this->budget) {
                     return [
                         ++$index,
@@ -79,6 +87,7 @@ class SalesExport implements FromCollection, WithDrawings, WithCustomStartCell
         $result = new Collection();
         $result->push($headers);
         foreach ($salesData as $sale) {
+            \Log::info('data', ['value' => $sale]);
             $result->push($sale);
         }
 

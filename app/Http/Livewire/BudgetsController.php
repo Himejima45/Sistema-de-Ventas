@@ -98,11 +98,14 @@ class BudgetsController extends Component
     }
     public function download()
     {
+        \Log::info('Downloading');
         if ($this->reportType === '0') {
+            \Log::info('Type 0');
             $this->fromDate = Carbon::now()->startOfDay();
             $this->toDate = Carbon::now()->endOfDay();
         }
 
+        \Log::info('Excel');
         return Excel::download(new SalesExport($this->fromDate, $this->toDate, 0, true), 'Reporte de cuentas por cobrar.xlsx');
     }
 
@@ -146,6 +149,11 @@ class BudgetsController extends Component
             echo $pdf->stream();
         }, 'Reporte de cuentas por cobrar.pdf');
     }
+
+    protected $casts = [
+        'fromDate' => 'date',
+        'toDate' => 'date',
+    ];
 
     public function render()
     {

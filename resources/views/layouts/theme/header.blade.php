@@ -4,7 +4,7 @@
 
 @if ($user !== null)
     <div class="header-container fixed-top">
-        <header class="header navbar navbar-expand-sm">
+        <header class="header navbar navbar-expand-sm" style="padding: 0 20px">
             <ul class="navbar-item flex-row">
                 <li class="nav-item theme-logo">
                     <a href="{{ route('home') }}">
@@ -15,10 +15,6 @@
                 </li>
             </ul>
 
-            <ul class="navbar-item flex-row search-ul">
-                {{ \Carbon\Carbon::now()->translatedFormat('l, d M Y H:i:s a')  }}
-            </ul>
-
             {{-- Shopping cart --}}
             @if (auth()->user()->hasRole('Client'))
                 <li class="navbar-item flex-row navbar-dropdown pt-2" title="Carrito">
@@ -27,8 +23,10 @@
             @endif
 
             {{-- Profile --}}
-            <ul class="navbar-item flex-row"
-                style="display: flex; justify-items: center; align-items: center; gap: 0.5rem;">
+            <ul class="navbar-item flex-row search-ul"
+                style="display: flex; justify-items: center; align-items: center; gap: 0.5rem; margin-left: auto; margin-right: 0;">
+                {{ \Carbon\Carbon::now()->translatedFormat('l, d M Y H:i:s a')  }}
+
                 <li class="nav-item">
                     <h6 class="font-weight-bold" style="margin:0; padding: 0">{{ $user->full_name }}</h6>
                 </li>

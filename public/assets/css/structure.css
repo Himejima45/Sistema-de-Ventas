@@ -875,7 +875,7 @@ code {
 }
 
 .navbar .navbar-item.search-ul {
-    margin-inline: auto;
+    margin-left: auto;
 }
 
 .navbar .navbar-item .nav-item.search-animated {

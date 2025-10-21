@@ -220,7 +220,7 @@ $total_change_bs = $total_change_usd !== 0 ? $total_change_usd * $currency : 0;
                         <div class="form-group">
                             <input type="date" wire:model="fromDate" class="form-control flatpickr"
                                 placeholder="Click para elegir" min=""
-                                max="{{ $toDate ? \Carbon\Carbon::createFromFormat('Y-m-d', $toDate)->subDay()->format('Y-m-d') : now()->format('Y-m-d') }}">
+                              max="{{ $toDate ? \Carbon\Carbon::parse($toDate)->subDay()->format('Y-m-d') : now()->format('Y-m-d') }}">
                         </div>
                     </div>
                     <div class="col-4">
