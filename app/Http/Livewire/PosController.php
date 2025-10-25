@@ -17,16 +17,15 @@ use Illuminate\Validation\Rule;
 
 class PosController extends Component
 {
-    public $subtotal, $sale_type = 'SALE', $iva, $total, $barcode, $currency, $itemsQuantity, $efectivo, $change, $totalPayed, $client, $cart, $bs, $user, $currency_id, $clients, $type, $prevBs, $prevEfectivo, $total_dollar, $pageTitle, $componentName;
+    public $sale_type = 'SALE', $total, $barcode, $currency, $itemsQuantity, $efectivo, $change, $totalPayed, $client, $cart, $bs, $user, $currency_id, $clients, $type, $prevBs, $prevEfectivo, $total_dollar, $pageTitle, $componentName;
 
     public function mount()
     {
         $this->user = Auth::user()->id;
         $last_currency = Currency::latest('created_at')->first();
         $this->currency_id = $last_currency->id ?? 0;
-        $this->subtotal = Cart::getTotal();
-        $this->iva = $this->subtotal * 0.16;
-        $this->total = $this->subtotal + $this->iva;
+        $this->total = Cart::getTotal();
+        ;
         $this->efectivo = null;
         $this->bs = null;
         $this->change = 0;
@@ -108,9 +107,7 @@ class PosController extends Component
 
     public function updateCartInfo()
     {
-        $this->subtotal = Cart::getTotal();
-        $this->iva = $this->subtotal * 0.16;
-        $this->total = $this->subtotal + $this->iva;
+        $this->total = Cart::getTotal();
         $this->itemsQuantity = Cart::getTotalQuantity();
         $this->cart = Cart::getContent()->sortBy('name');
     }
@@ -425,8 +422,6 @@ class PosController extends Component
         $this->efectivo = null;
         $this->bs = null;
         $this->change = 0;
-        $this->subtotal = 0;
-        $this->iva = 0;
         $this->total = Cart::getTotal();
         $this->itemsQuantity = Cart::getTotalQuantity();
         $this->client = 'Elegir';

@@ -1,4 +1,4 @@
-<li class="nav-item dropdown" style="margin: 0; padding: 0;" title="Notificaciones">
+<li class="nav-item dropdown" style="margin: 0; padding: 0; margin-right: 1rem;" title="Notificaciones">
     <!-- Bell Button -->
     <button id="notification-bell" class="nav-link icon position-relative p-0 bg-transparent border-0"
         style="outline: none; cursor: pointer;" type="button">

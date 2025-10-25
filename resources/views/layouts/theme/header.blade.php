@@ -4,7 +4,7 @@
 
 @if ($user !== null)
     <div class="header-container fixed-top">
-        <header class="header navbar navbar-expand-sm" style="padding: 0 20px">
+        <header class="header navbar navbar-expand-sm">
             <ul class="navbar-item flex-row">
                 <li class="nav-item theme-logo">
                     <a href="{{ route('home') }}">
@@ -15,22 +15,10 @@
                 </li>
             </ul>
 
-            {{-- Shopping cart --}}
-            @if (auth()->user()->hasRole('Client'))
-                <li class="navbar-item flex-row navbar-dropdown pt-2" title="Carrito">
-                    @livewire('cart-icon')
-                </li>
-            @endif
 
             {{-- Profile --}}
             <ul class="navbar-item flex-row search-ul"
-                style="display: flex; justify-items: center; align-items: center; gap: 0.5rem; margin-left: auto; margin-right: 0;">
-                {{ \Carbon\Carbon::now()->translatedFormat('l, d M Y H:i:s a')  }}
-
-                <li class="nav-item">
-                    <h6 class="font-weight-bold" style="margin:0; padding: 0">{{ $user->full_name }}</h6>
-                </li>
-
+                style="display: flex; justify-items: center; align-items: center; gap: 0.5rem;">
                 {{-- Help --}}
                 <li class="navbar-item flex-row" title="Ayuda">
                     <a target="_blank" href="https://www.youtube.com/playlist?list=PLZcHK-bOWfdbRMw_bgWm6dxvjKLPet8na"
@@ -45,9 +33,14 @@
                     </a>
                 </li>
 
+                {{-- Notification --}}
                 @unlessrole('Client')
                 <livewire:notification-dropdown />
                 @endunlessrole
+
+                <li class="nav-item">
+                    <h6 class="font-weight-bold">{{ $user->full_name }}</h6>
+                </li>
 
                 <li class="nav-item" style="margin:0; padding: 0;" title="Cerrar sesión">
                     <a href="{{ route('logout') }}" class="icon"

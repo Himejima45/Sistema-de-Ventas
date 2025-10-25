@@ -1,14 +1,44 @@
 <div class="position-relative col sales layout-top-spacing">
-    <x-home_button />
+    <div id="cart-icon-container" class="row">
+        <div class="col-11">
+            <x-home_button />
+        </div>
+        <div class="col-1">
+            <div class="col-12" style="margin: 0; padding: 0;">
+                <div class="col-sm-12 col-md-2 mb-4">
+                    {{-- Shopping cart --}}
+                    @if (auth()->user()->hasRole('Client'))
+                        <button id="shopping-cart" wire:click.stop="$emit('toggleCart')"
+                            class="btn btn-outline-primary d-flex align-items-center" style="gap: 1rem;">
+                            @livewire('cart-icon')
+                        </button>
 
-    <div class="row" style="flex-direction: column;">
+                        <style>
+                            .shopping-cart:hover {
+                                .badge {
+                                    background-color: #fafafa;
+                                }
+
+                                color: #007bff;
+                            }
+                        </style>
+                    @endif
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div id="cart-filters" class="row" style="flex-direction: column; margin: 1rem">
         <h2>Carrito</h2>
 
         {{-- Filter --}}
         <div class="d-flex">
             <div class="filter-container card border-0 shadow-sm mb-4">
                 <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
                         <h6 class="mb-0 font-weight-bold text-muted">FILTRAR PRODUCTOS</h6>
                         <div class="d-flex">
                             <button type="button" wire:click="clearFilters" class="btn btn-sm btn-outline-danger mr-2">

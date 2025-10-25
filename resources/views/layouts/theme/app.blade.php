@@ -63,6 +63,24 @@ $date = is_null($currency) ? 'Error' : $currency->created_at->diffForHumans();
         </div>
         <!--  END CONTENT AREA  -->
 
+        @if(auth()->check() && auth()->user()->hasRole('Admin'))
+            <script>
+                // Only for admin users
+                window.addEventListener('beforeunload', function (e) {
+                    // Send a request to clear session_id when tab closes
+                    fetch('{{ route("admin.session.cleanup") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({}),
+                        keepalive: true // This ensures the request completes even if tab closes
+                    });
+                });
+            </script>
+        @endif
+
 
     </div>
     <!-- END MAIN CONTAINER -->

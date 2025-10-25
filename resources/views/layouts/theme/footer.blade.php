@@ -1,6 +1,9 @@
 <footer class="footer">
     <div class="footer-wrapper">
         <div class="footer-section f-section-1">
+            <p>
+                {{ \Carbon\Carbon::now()->translatedFormat('l, d M Y H:i:s a')  }}
+            </p>
         </div>
         <div class="footer-section f-section-2">
             <p class="">UPTA <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"

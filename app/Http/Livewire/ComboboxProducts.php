@@ -54,6 +54,7 @@ class ComboboxProducts extends Component
       $q->where('name', 'like', "%{$this->search}%")
         ->orWhere('barcode', 'like', "%{$this->search}%");
     })
+      ->where('stock', '>', 0)
       ->when($this->selectedOptions, fn($q, $ids) => $q->whereNotIn('id', $ids))
       ->limit(10)
       ->get(['id', 'name', 'barcode'])

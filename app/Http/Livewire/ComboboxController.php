@@ -19,7 +19,7 @@ class ComboboxController extends Component
     public function updatedSearched()
     {
         if (strlen($this->searched) > 0) {
-            $excludedIds = $this->selected->pluck('id'); // Get IDs of selected products
+            $excludedIds = $this->selected->pluck('id');
 
             $this->options = Product::where('name', 'LIKE', "%$this->searched%")
                 ->whereNotIn('id', $excludedIds)

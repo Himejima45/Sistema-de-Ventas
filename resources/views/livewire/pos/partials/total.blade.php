@@ -9,14 +9,6 @@
                             <div class="task-header">
                                 <div class="d-flex flex-column">
                                     <div class="d-flex justify-content-between">
-                                        <h4>SUBTOTAL:</h4>
-                                        <h4>$ {{ number_format($subtotal, 2) }}</h4>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <h4>IVA:</h4>
-                                        <h4>$ {{ number_format($iva, 2) }}</h4>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
                                         <h4>TOTAL:</h4>
                                         <h4>$ {{ number_format($total, 2) }}</h4>
                                     </div>
