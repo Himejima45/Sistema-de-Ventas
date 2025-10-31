@@ -11,8 +11,8 @@ class CartsController extends Component
 {
     use WithPagination;
 
-    public $showModal = false, $selected_id = 0, $details = [], $payed = 0, $change = 0, $error = '', $selectedProduct;
-    protected $listeners = ['edit', 'clearMessage', 'zoom'];
+    public $showModal = false, $selected_id = 0, $details = [], $payed = 0, $change = 0, $error = '', $selectedProduct, $searchedCode, $selectedSale;
+    protected $listeners = ['edit', 'clearMessage', 'zoom', 'showPreview'];
 
     private $pagination = 20;
 
@@ -33,6 +33,12 @@ class CartsController extends Component
         $this->payed = $record->cash;
         $this->change = $record->change;
         $this->emit('open');
+    }
+
+    public function showPreview($saleId)
+    {
+        $this->selectedSale = Sale::with(['client', 'products.product', 'user'])->find($saleId);
+        $this->emit('show-sale-preview');
     }
 
     public function update()
@@ -62,7 +68,6 @@ class CartsController extends Component
             'status' => $this->payed - $this->change >= $record->total ? 'PAID' : 'PENDING',
             'cash' => $this->payed,
             'change' => $this->change,
-
         ]);
 
         foreach ($record->products as $detail) {
@@ -83,6 +88,9 @@ class CartsController extends Component
         $carts = Sale::with('products')
             ->where('type', 'CART')
             ->where('status', 'PENDING')
+            ->when($this->searchedCode, function ($query) {
+                $query->where('code', 'like', "%$this->searchedCode%");
+            })
             ->orderByDesc('created_at')
             ->paginate(20);
 
