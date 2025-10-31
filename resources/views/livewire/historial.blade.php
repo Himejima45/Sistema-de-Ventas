@@ -35,9 +35,9 @@
                                                 </small>
                                             </div>
                                             <span class="badge badge-{{ 
-                                                                        $cart->status === 'PAID' ? 'success' :
+                                                                                                $cart->status === 'PAID' ? 'success' :
                             ($cart->status === 'CANCELED' ? 'danger' : 'warning') 
-                                                                    }}">
+                                                                                            }}">
                                                 {{ $statuses[$cart->status] }}
                                             </span>
                                         </div>
@@ -99,7 +99,7 @@
                                                         <span class="d-none d-sm-inline">Cancelar</span>
                                                     </button>
                                                     <a class="btn btn-outline-success btn-sm flex-fill"
-                                                        href="https://wa.me/58{{ $cart->client->phone }}?text=Hola%2C%20acabo%20de%20registrar%20los%20productos%20que%20deseo%20comprar%2C%20este%20fue%20mi%20pedido%20%23{{ urlencode($cart->code) }}%20%C2%BFMe%20podr%C3%ADa%20indicar%20cuando%20podr%C3%ADa%20retirarlos%20de%20la%20tienda%3F%20Gracias"
+                                                        href="https://wa.me/584124692459?text=Hola%2C%20acabo%20de%20registrar%20los%20productos%20que%20deseo%20comprar%2C%20este%20fue%20mi%20pedido%20%23{{ urlencode($cart->code) }}%20%C2%BFMe%20podr%C3%ADa%20indicar%20cuando%20podr%C3%ADa%20retirarlos%20de%20la%20tienda%3F%20Gracias"
                                                         target="_blank" title="Contactar por WhatsApp">
                                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                             stroke="currentColor" stroke-width="2" stroke-linecap="round"
