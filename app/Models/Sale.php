@@ -3,12 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Str;
 
 class Sale extends BaseModel
 {
     use HasFactory;
 
-    protected $fillable = ['total', 'items', 'cash', 'change', 'bs', 'status', 'type', 'client_id', 'user_id', 'currency_id'];
+    protected $fillable = ['total', 'items', 'cash', 'change', 'bs', 'status', 'type', 'code', 'client_id', 'user_id', 'currency_id'];
+
+    protected static function booted()
+    {
+        static::creating(function (Sale $sale) {
+            $sale->code = Str::random(8);
+        });
+    }
 
     public function user()
     {
