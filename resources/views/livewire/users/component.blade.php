@@ -21,11 +21,10 @@
                     <table class="table table-bordered table-striped mt-1">
                         <thead class="text-white" style="background: #3B3F5C;">
                             <tr>
-                                <th class="table-th text-white">USUARIO</th>
+                                <th class="table-th text-white text-center">USUARIO</th>
                                 <th class="table-th text-white text-center">TELEFONO</th>
                                 <th class="table-th text-white text-center">EMAIL</th>
                                 <th class="table-th text-white text-center">ESTATUS</th>
-                                <th class="table-th text-white text-center">IMAGEN</th>
                                 <th class="table-th text-white text-center">ACCIONES</th>
                             </tr>
 
@@ -51,15 +50,9 @@
                                     </td>
                                     <td class="text-center">
                                         <span class="badge {{ $r->active == 1 ? 'badge-success' : 'badge-danger' }}
-                                                        text-uppercase">{{ $r->active ? 'Activo' : 'Inactivo' }}</span>
+                                                            text-uppercase">{{ $r->active ? 'Activo' : 'Inactivo' }}</span>
                                     </td>
 
-                                    <td class="text-center">
-                                        @if ($r->image != null)
-                                            <img src="{{ asset('storage/users/' . $r->image) }}" alt="imagen"
-                                                class="card-img-top img-fluid">
-                                        @endif
-                                    </td>
                                     <td class="text-center">
                                         <x-edit_button wire:click="Edit({{ $r->id }})" />
 
