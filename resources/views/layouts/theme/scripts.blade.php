@@ -58,6 +58,9 @@
         window.livewire.on('record-info', msg => {
             Info('Información', msg)
         });
+        window.livewire.on('not-found', msg => {
+            Warning('No encontrado', msg)
+        });
     });
 
     function Confirm (id, itemsLength = 0, itemsMessage = '') {

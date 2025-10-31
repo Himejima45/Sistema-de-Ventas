@@ -159,7 +159,7 @@
                     <div class="drawer-body">
                         @foreach ($cart as $productId => $quantity)
                             @php
-                                $product = \App\Models\Product::find($productId);
+            $product = \App\Models\Product::find($productId);
                             @endphp
                             <div class="cart-item">
                                 <div class="cart-item-image">
@@ -559,4 +559,23 @@
             document.body.style.overflow = showCart ? 'hidden' : '';
         });
     });
+
+    function NotFound (eventName, text) {
+            swal({
+                title: 'NO ENCONTRADO',
+                text: text,
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonText: 'Cerrar',
+                cancelButtonColor: '#fff',
+                confirmButtonColor: '#3B3F5C',
+                confirmButtonText: 'Aceptar'
+            }).then(function (result) {
+                if (result.value)
+                {
+                    window.livewire.emit(eventName, id)
+                    swal.close()
+                }
+            })
+        }
 </script>

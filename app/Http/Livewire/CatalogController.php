@@ -96,6 +96,24 @@ class CatalogController extends Component
     public function save()
     {
         $admin_id = User::where('email', 'admin@email.com')->first()->id;
+
+        foreach ($this->cart as $key => $item) {
+            $product = Product::find($key);
+
+            if ($product->stock === 0) {
+                unset($this->cart[$key]);
+                \Cart::session(auth()->user()->id)->remove($key);
+                $this->calculate();
+                $this->emit('not-found', "El producto $product->name no tiene stock, será removido del carrito automáticamente");
+                return;
+            }
+
+            if ($product->stock < $item) {
+                $this->emit('not-found', "El producto $product->name no tiene suficiente stock, disponible: $product->stock");
+                return;
+            }
+        }
+
         $sale = Sale::create([
             'total' => $this->total,
             'cash' => 0,
@@ -163,6 +181,8 @@ class CatalogController extends Component
     {
         $product = Product::select('stock')->find($productId);
         if (!$product || $product->stock <= 0) {
+            $this->emit('not-found', "El producto $product->name no tiene stock");
+
             return;
         }
 
