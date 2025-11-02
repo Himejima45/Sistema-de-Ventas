@@ -38,6 +38,8 @@
             </div>
             @include('common.searchbox')
 
+            <h5>Valor total del inventario: ${{ $total_cost }}</h5>
+
             <div class="widget-content">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped mt-1">

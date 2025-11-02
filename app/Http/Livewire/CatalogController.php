@@ -14,7 +14,7 @@ use Livewire\Component;
 
 class CatalogController extends Component
 {
-    public $cart = [], $showCart = false, $subtotal = 0, $iva = 0, $total = 0, $filter = '', $showFilter = false, $total_items = 0;
+    public $cart = [], $showCart = false, $total = 0, $filter = '', $showFilter = false, $total_items = 0;
     public $category_id = '', $provider_id = '', $priceMin = null, $priceMax = null, $quantity = 0;
     public $categories = [], $providers = [];
     protected $listeners = [
@@ -165,16 +165,13 @@ class CatalogController extends Component
     public function calculate()
     {
         $this->total_items = 0;
-        $this->subtotal = 0;
+        $this->total = 0;
 
         foreach ($this->cart as $key => $item) {
             $product = Product::find($key);
-            $this->subtotal += $product->price * $item;
+            $this->total += $product->price * $item;
             $this->total_items += $item;
         }
-
-        $this->iva = $this->subtotal * 0.16;
-        $this->total = $this->subtotal + $this->iva;
     }
 
     public function addToCart($productId)
@@ -228,8 +225,6 @@ class CatalogController extends Component
     public function resetUI()
     {
         $this->total = 0;
-        $this->iva = 0;
-        $this->subtotal = 0;
         $this->showCart = false;
         $this->cart = [];
         session()->put('cart', $this->cart);

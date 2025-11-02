@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Provider;
+use DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -81,7 +82,8 @@ class ProductsController extends Component
         return view('livewire.products.component', [
             'data' => $products,
             'categories' => Category::orderBy('name', 'asc')->get(),
-            'providers' => Provider::orderBy('name', 'asc')->get()
+            'providers' => Provider::orderBy('name', 'asc')->get(),
+            'total_cost' => Product::where('stock', '>', 0)->sum(DB::raw('price * stock'))
         ])->extends('layouts.theme.app')
             ->section('content');
     }

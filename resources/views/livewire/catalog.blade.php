@@ -202,14 +202,6 @@
 
                     <div class="drawer-summary">
                         <h5 class="mb-3">Resumen de Compra</h5>
-                        <div class="summary-row">
-                            <span>Subtotal</span>
-                            <span>${{ number_format($subtotal, 2) }}</span>
-                        </div>
-                        <div class="summary-row">
-                            <span>IVA (16%)</span>
-                            <span>${{ number_format($iva, 2) }}</span>
-                        </div>
                         <div class="summary-row total">
                             <span class="font-weight-bold">Total</span>
                             <span class="font-weight-bold text-primary">${{ number_format($total, 2) }}</span>
