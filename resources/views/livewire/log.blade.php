@@ -1,56 +1,3 @@
-@php
-    $statusses = [
-        'successfull' => 'Exitoso',
-        'warning' => 'Advertencia',
-        'info' => 'Información',
-        'danger' => 'Peligro',
-    ];
-    $models = [
-        'Category' => 'Categorías',
-        'ShoppingCart' => 'Carritos',
-        'Currency' => 'Tasas',
-        'Product' => 'Productos',
-        'Provider' => 'Proveedores',
-        'Purchase' => 'Compras',
-        'Sale' => 'Ventas',
-        'SaleDetails' => 'Detalles de la venta',
-        'User' => 'Usuarios',
-        'Client' => 'Clientes',
-        'Employee' => 'Empleados',
-        'Rol' => 'Roles',
-        'Sistema' => 'Sistema',
-        'categories' => 'Categorías',
-        'logs' => 'Bitácora',
-        'products' => 'Productos',
-        'currencies' => 'Tasas',
-        'pos' => 'Ventas',
-        'clients' => 'Clientes',
-        'roles' => 'Roles',
-        'permisos' => 'Permisos',
-        'user' => 'Empleados',
-        'cashout' => 'Caja',
-        'reports' => 'Reportes',
-        'providers' => 'Proveedores',
-        'purchases' => 'Compras',
-        'catalog' => 'Catálogo',
-        'historial' => 'Carritos del usuario',
-        'carts' => 'Carritos',
-        'budgets' => 'Presupuestos',
-        'backups' => 'Respaldos',
-        'logout' => 'Cierre de sesión',
-        'home' => 'Inicio',
-        'login' => 'Inicio de sesión',
-        'register' => 'Registro de usuario',
-    ];
-    $rol_translations = [
-        'Admin' => 'Administrador',
-        'Employee' => 'Empleado',
-        'Client' => 'Cliente',
-        'Sistema' => 'Sistema',
-        'Gerente' => 'Gerente',
-    ];
-@endphp
-
 <div class="row sales layout-top-spacing">
     <x-home_button />
 
@@ -82,7 +29,8 @@
                                 <option value="">Todos</option>
                                 <option value="Sistema">Sistema</option>
                                 @foreach ($roles as $rol)
-                                    <option value="{{ $rol->name }}">{{ $rol_translations[$rol->name] }}</option>
+                                    <option value="{{ $rol->name }}">{{ $rol_translations[$rol->name] ?? $rol->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -144,13 +92,13 @@
                                         <h6>{{ $row->action }}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $models[$row->module] }}</h6>
+                                        <h6>{{ $models[$row->module] ?? $row->module }}</h6>
                                     </td>
                                     <td>
                                         <h6>{{ $row->user }}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $rol_translations[$row->rol] }}</h6>
+                                        <h6>{{ $rol_translations[$row->rol] ?? $row->rol }}</h6>
                                     </td>
                                     <td>
                                         <h6 @class([
@@ -159,7 +107,7 @@
                                             'text-warning' => $row->status == 'warning',
                                             'text-info' => $row->status == 'info',
                                             'text-danger' => $row->status == 'danger',
-                                        ])>{{ $statusses[$row->status] }}</h6>
+                                        ])>{{ $statusses[$row->status] ?? $row->status }}</h6>
                                     </td>
                                     <td>
                                         <h6>{{ $row->created_at->format('d/m/Y - h:i a') }}</h6>

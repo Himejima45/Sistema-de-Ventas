@@ -27,6 +27,7 @@ class User extends BaseModelAuth
         'phone',
         'status',
         'image',
+        'active',
         'session_id'
     ];
 

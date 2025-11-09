@@ -9,4 +9,9 @@ class Currency extends BaseModel
     use HasFactory;
 
     protected $fillable = ['value', 'last_update'];
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
 }

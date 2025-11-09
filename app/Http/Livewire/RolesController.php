@@ -134,4 +134,17 @@ class RolesController extends Component
         $this->selected_id = 0;
         $this->resetValidation();
     }
+
+    public function toggle(Role $role)
+    {
+        $translations = [
+            'Admin' => 'Administrador',
+            'Client' => 'Cliente',
+            'Employee' => 'Empleado',
+        ];
+        $role->update(['is_active' => !$role->is_active]);
+        $status = $role->is_active ? 'habilitado' : 'deshabilitado';
+        $name = array_key_exists($role->name, $translations) ? $translations[$role->name] : $role->name;
+        $this->emit('record-updated', "Se actualizó el estado del rol $name a $status con éxito");
+    }
 }

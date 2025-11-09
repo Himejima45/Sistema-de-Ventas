@@ -42,19 +42,16 @@ Route::middleware('logger')->group(function () {
 
 
 Route::middleware(['auth', 'fetch.currency', 'logger'])->group(function () {
-    Route::post('/admin/session/cleanup', function ($request) {
+    Route::post('/user/session/cleanup', function ($request) {
         $user = auth()->user();
-        if ($user && $user->hasRole('Admin')) {
-            $user->update(['session_id' => null]);
+        $user->update(['session_id' => null]);
 
-            Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-            return redirect('/login');
-        }
-        return response()->json(['success' => true]);
-    })->name('admin.session.cleanup');
+        return redirect('/login');
+    })->name('user.session.cleanup');
 
     Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('categories', CategoriesController::class);

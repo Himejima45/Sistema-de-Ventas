@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Currency;
 use App\Models\Notification;
+use App\Models\Payment;
 use App\Models\SaleDetails;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Livewire\Component;
@@ -343,17 +344,25 @@ class PosController extends Component
                 }
             }
 
-            // ! TODO #4
             $sale = Sale::create([
                 'total' => $this->total,
-                'cash' => $this->efectivo == '' ? 0 : $this->efectivo ?? 0,
-                'bs' => $this->bs == '' ? 0 : $this->bs ?? 0,
-                'change' => $this->change,
                 'status' => $this->sale_type === 'BUDGET' ? 'PENDING' : $this->type,
+                'type' => $this->sale_type,
                 'client_id' => $this->client,
                 'user_id' => $this->user,
-                'type' => $this->sale_type,
-                'currency_id' => $this->currency_id
+                'currency_id' => $this->currency_id,
+            ]);
+
+            // Guardar el pago asociado
+            $currency = Currency::find($this->currency_id);
+
+            Payment::create([
+                'sale_id' => $sale->id,
+                'currency_id' => $currency->id,
+                'cash_usd' => floatval($this->efectivo ?? 0),
+                'cash_bs' => floatval($this->bs ?? 0),
+                'change_usd' => $this->change > 0 && $this->efectivo > 0 ? $this->change : 0,
+                'change_bs' => 0,
             ]);
 
 

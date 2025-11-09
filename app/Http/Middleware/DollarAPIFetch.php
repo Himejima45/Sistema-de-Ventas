@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class DollarAPIFetch
 {
+    const API_URL = "https://api.dolarvzla.com/public/exchange-rate";
     public function handle(Request $request, Closure $next)
     {
         if (!$this->isConnected()) {
@@ -18,18 +19,18 @@ class DollarAPIFetch
             return $next($request);
         }
 
+
         $currency = Currency::orderByDesc('created_at')->first();
-        $api = 'https://pydolarve.org/api/v1/dollar?monitor=bcv';
 
         if (is_null($currency) || $this->isCurrencyOutdated($currency)) {
-            $response = $this->fetchCurrencyData($api);
+            $response = $this->fetchCurrencyData(DollarAPIFetch::API_URL);
 
             if ($response) {
-                $data = json_decode($response->body());
-                $last_update = Carbon::createFromFormat('d/m/Y, h:i A', $data->last_update);
+                $data = json_decode($response->body())->current;
+                $last_update = Carbon::createFromFormat('Y-m-d', $data->date);
 
                 Currency::create([
-                    'value' => $data->price,
+                    'value' => $data->usd,
                     'last_update' => $last_update,
                 ]);
             } else {
@@ -42,7 +43,22 @@ class DollarAPIFetch
 
     private function isConnected()
     {
-        return checkdnsrr("pydolarve.org", "A");
+        $domain = parse_url(DollarAPIFetch::API_URL, PHP_URL_HOST);
+
+        // Check DNS resolution
+        if (!checkdnsrr($domain, "A")) {
+            Log::warning("DNS resolution failed for: {$domain}");
+            return false;
+        }
+
+        // Check if we can connect to the API endpoint
+        try {
+            $response = Http::timeout(5)->get(DollarAPIFetch::API_URL);
+            return $response->successful();
+        } catch (\Exception $e) {
+            Log::warning("API connection failed: " . $e->getMessage());
+            return false;
+        }
     }
 
     private function isCurrencyOutdated($currency)

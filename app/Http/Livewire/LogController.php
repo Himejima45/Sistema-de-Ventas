@@ -17,6 +17,60 @@ class LogController extends Component
 
     protected $listeners = ['dateChanged'];
 
+    // Define the translation arrays as properties
+    public $statusses = [
+        'successfull' => 'Exitoso',
+        'warning' => 'Advertencia',
+        'info' => 'Información',
+        'danger' => 'Peligro',
+    ];
+
+    public $models = [
+        'Category' => 'Categorías',
+        'ShoppingCart' => 'Carritos',
+        'Currency' => 'Tasas',
+        'Product' => 'Productos',
+        'Provider' => 'Proveedores',
+        'Purchase' => 'Compras',
+        'Sale' => 'Ventas',
+        'SaleDetails' => 'Detalles de la venta',
+        'User' => 'Usuarios',
+        'Client' => 'Clientes',
+        'Employee' => 'Empleados',
+        'Rol' => 'Roles',
+        'Sistema' => 'Sistema',
+        'categories' => 'Categorías',
+        'logs' => 'Bitácora',
+        'products' => 'Productos',
+        'currencies' => 'Tasas',
+        'pos' => 'Ventas',
+        'clients' => 'Clientes',
+        'roles' => 'Roles',
+        'permisos' => 'Permisos',
+        'user' => 'Empleados',
+        'cashout' => 'Caja',
+        'reports' => 'Reportes',
+        'providers' => 'Proveedores',
+        'purchases' => 'Compras',
+        'catalog' => 'Catálogo',
+        'historial' => 'Carritos del usuario',
+        'carts' => 'Carritos',
+        'budgets' => 'Presupuestos',
+        'backups' => 'Respaldos',
+        'logout' => 'Cierre de sesión',
+        'home' => 'Inicio',
+        'login' => 'Inicio de sesión',
+        'register' => 'Registro de usuario',
+    ];
+
+    public $rol_translations = [
+        'Admin' => 'Administrador',
+        'Employee' => 'Empleado',
+        'Client' => 'Cliente',
+        'Sistema' => 'Sistema',
+        'Gerente' => 'Gerente',
+    ];
+
     public function mount()
     {
         $this->pageTitle = 'Listado';
@@ -64,6 +118,8 @@ class LogController extends Component
                 $q->whereMonth('created_at', $this->month)
                     ->whereYear('created_at', $this->year);
             }
+
+            $q->where('module', '!=', 'user/session/cleanup');
         });
 
         $data = $query->latest()->paginate($this->pagination);
@@ -73,7 +129,10 @@ class LogController extends Component
         return view('livewire.log', [
             'data' => $data,
             'roles' => $roles,
-            'users' => $users
+            'users' => $users,
+            'statusses' => $this->statusses,
+            'models' => $this->models,
+            'rol_translations' => $this->rol_translations
         ])
             ->extends('layouts.theme.app')
             ->section('content');

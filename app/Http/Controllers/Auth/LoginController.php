@@ -48,10 +48,23 @@ class LoginController extends Controller
         $this->validateLogin($request);
 
         $user = \App\Models\User::where('email', $request->email)->first();
+        if (!$user) {
+            throw ValidationException::withMessages([
+                'email' => ['Estas credenciales no coinciden con nuestros registros.'],
+            ]);
+        }
 
-        if ($user && $user->hasRole('Admin') && !is_null($user->session_id)) {
+        $user_role = $user->roles[0];
+
+        if ($user && $user_role->reference === 'admin' && !is_null($user->session_id)) {
             throw ValidationException::withMessages([
                 'email' => ['Ya hay una sesión activa como administrador.'],
+            ]);
+        }
+
+        if (!$user_role->is_active) {
+            throw ValidationException::withMessages([
+                'email' => ['No puede acceder al sistema, su rol se encuentra desactivado.'],
             ]);
         }
 

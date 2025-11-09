@@ -30,13 +30,6 @@
 
                         </thead>
                         <tbody>
-                            @php
-                                $translations = [
-                                    'Admin' => 'Administrador',
-                                    'Client' => 'Cliente',
-                                    'Employee' => 'Empleado',
-                                ];
-                            @endphp
                             @foreach ($data as $r)
                                 <tr>
                                     <td>
@@ -49,8 +42,9 @@
                                         <h6 class="text-center">{{ $r->email }}</h6>
                                     </td>
                                     <td class="text-center">
-                                        <span class="badge {{ $r->active == 1 ? 'badge-success' : 'badge-danger' }}
-                                                            text-uppercase">{{ $r->active ? 'Activo' : 'Inactivo' }}</span>
+                                        <span
+                                            class="badge {{ isset($r->session_id) ? 'badge-success' : 'badge-danger' }}
+                                                                    text-uppercase">{{ isset($r->session_id) ? 'Activo' : 'Inactivo' }}</span>
                                     </td>
 
                                     <td class="text-center">

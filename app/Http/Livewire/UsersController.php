@@ -115,7 +115,7 @@ class UsersController extends Component
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'active' => 1,
+            'active' => 0,
             'password' => bcrypt($this->password),
         ])->assignRole('Employee');
 

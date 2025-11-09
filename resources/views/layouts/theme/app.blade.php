@@ -34,23 +34,21 @@
         <div id="content" class="main-content">
             <div class="mt-5 layout-px-spacing">
                 @php
-$currency = \App\Models\Currency::orderByDesc('created_at')->first();
-$date = is_null($currency) ? 'Error' : $currency->created_at->diffForHumans();
+                    $currency = \App\Models\Currency::orderByDesc('created_at')->first();
+                    $date = is_null($currency) ? 'Error' : $currency->created_at->diffForHumans();
                 @endphp
 
                 @if (session()->has('fetch_status'))
                             <div @class([
-        'alert',
-        'alert-danger' => session('fetch_status') === 'error',
-        'alert-success' => session('fetch_status') !== 'error',
-    ])>
+                                'alert',
+                                'alert-danger' => session('fetch_status') === 'error',
+                                'alert-success' => session('fetch_status') !== 'error',
+                            ])>
                                 {{ session('fetch_status') === 'error'
-        ? 'No se pudo obtener la tasa del día'
-        : "La tasa del día ha sido registrada. Última actualización: $date" }}
+                    ? 'No se pudo obtener la tasa del día'
+                    : "La tasa del día ha sido registrada. Última actualización: $date" }}
                             </div>
-                            @php
-    session()->forget('fetch_status');
-                            @endphp
+                            @php session()->forget('fetch_status'); @endphp
                 @endif
 
                 @yield('content')
@@ -63,19 +61,17 @@ $date = is_null($currency) ? 'Error' : $currency->created_at->diffForHumans();
         </div>
         <!--  END CONTENT AREA  -->
 
-        @if(auth()->check() && auth()->user()->hasRole('Admin'))
+        @if(auth()->check())
             <script>
-                // Only for admin users
                 window.addEventListener('beforeunload', function (e) {
-                    // Send a request to clear session_id when tab closes
-                    fetch('{{ route("admin.session.cleanup") }}', {
+                    fetch('{{ route("user.session.cleanup") }}', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
                         body: JSON.stringify({}),
-                        keepalive: true // This ensures the request completes even if tab closes
+                        keepalive: true
                     });
                 });
             </script>

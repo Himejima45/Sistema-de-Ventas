@@ -16,245 +16,21 @@
     </div>
 
     <!-- Product Zoom Modal -->
-    <div wire:ignore-self id="product-zoom" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-dark">
-                    <h5 class="modal-title text-white">
-                        <b>{{ $selectedProduct->name ?? '' }}</b>
-                    </h5>
-                    <button class="close" data-dismiss="modal" type="button" aria-label="Close">
-                        <span class="text-white">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body text-center">
-                    @if (!is_null($selectedProduct) && !is_null($selectedProduct->getImage()))
-                        <img src="{{ $selectedProduct->getImage() }}" alt="imagen de ejemplo" class="img-fluid rounded"
-                            style="max-height: 70vh;">
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <x-carts.product_zoom
+        :productName="$selectedProduct->name ?? ''"
+        :productImage="$selectedProduct?->getImage() ?? ''" 
+    />
+    
     <!-- Sale Preview Modal -->
-    <div wire:ignore.self class="modal fade" id="salePreviewModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-primary">
-                    <h5 class="modal-title text-white">
-                        <b>Vista Previa de Venta</b>
-                    </h5>
-                    <button class="close" data-dismiss="modal" type="button" aria-label="Close">
-                        <span class="text-white">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    @if($selectedSale)
-                        <div class="row mb-4">
-                            <div class="col-12 col-md-6 mb-3 mb-md-0">
-                                <h6 class="font-weight-bold">Cliente:</h6>
-                                <p class="mb-1">{{ $selectedSale->client->name }} {{ $selectedSale->client->last_name }}</p>
-                                @if(auth()->user()->roles->pluck('name')->first() === 'Admin')
-                                    <small class="text-muted">Documento: {{ $selectedSale->client->document }}</small>
-                                @endif
-                            </div>
-                            <div class="col-12 col-md-6 text-md-right">
-                                <h6 class="font-weight-bold">Información de Venta:</h6>
-                                <p class="mb-1">Código: <strong>#{{ $selectedSale->code }}</strong></p>
-                                <p class="mb-1">Fecha: {{ $selectedSale->created_at->format('d-m-Y h:i a') }}</p>
-                                <p class="mb-0">Estado:
-                                    <span
-                                        class="badge badge-{{ $selectedSale->status === 'PAID' ? 'success' : 'warning' }}">
-                                        {{ $selectedSale->status === 'PAID' ? 'PAGADO' : 'PENDIENTE' }}
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped">
-                                <thead class="bg-light">
-                                    <tr>
-                                        <th>Producto</th>
-                                        <th class="text-center">Precio Unitario</th>
-                                        <th class="text-center">Cantidad</th>
-                                        <th class="text-center">Subtotal</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-    $subtotal = 0;
-    $totalQuantity = 0;
-                                    @endphp
-                                    @foreach($selectedSale->products as $detail)
-                                        @php
-        $itemSubtotal = $detail->price * $detail->quantity;
-        $subtotal += $itemSubtotal;
-        $totalQuantity += $detail->quantity;
-                                        @endphp
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <img src="{{ $detail->product->getImage() }}"
-                                                        alt="{{ $detail->product->name }}" class="rounded mr-3"
-                                                        style="width: 50px; height: 50px; object-fit: cover;">
-                                                    <div>
-                                                        <h6 class="mb-0">{{ $detail->product->name }}</h6>
-                                                        <small class="text-muted">SKU:
-                                                            {{ $detail->product->code ?? 'N/A' }}</small>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="text-center">${{ number_format($detail->price, 2) }}</td>
-                                            <td class="text-center">{{ $detail->quantity }}</td>
-                                            <td class="text-center">${{ number_format($itemSubtotal, 2) }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                                <tfoot class="bg-light">
-                                    <tr>
-                                        <td colspan="2" class="text-right font-weight-bold">Totales:</td>
-                                        <td class="text-center font-weight-bold">{{ $totalQuantity }}</td>
-                                        <td class="text-center font-weight-bold">${{ number_format($subtotal, 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3" class="text-right font-weight-bold">IVA (16%):</td>
-                                        <td class="text-center font-weight-bold">${{ number_format($subtotal * 0.16, 2) }}
-                                        </td>
-                                    </tr>
-                                    <tr class="table-primary">
-                                        <td colspan="3" class="text-right font-weight-bold">TOTAL:</td>
-                                        <td class="text-center font-weight-bold">${{ number_format($subtotal * 1.16, 2) }}
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-
-                        @if($selectedSale->status === 'PAID')
-                            <div class="row mt-4">
-                                <div class="col-12 col-md-6 mb-3 mb-md-0">
-                                    <h6 class="font-weight-bold">Información de Pago:</h6>
-                                    <p class="mb-1">Monto Pagado: <strong>${{ number_format($selectedSale->cash, 2) }}</strong>
-                                    </p>
-                                    <p class="mb-1">Cambio: <strong>${{ number_format($selectedSale->change, 2) }}</strong></p>
-                                </div>
-                                <div class="col-12 col-md-6 text-md-right">
-                                    <h6 class="font-weight-bold">Procesado por:</h6>
-                                    <p class="mb-0">{{ $selectedSale->user->name ?? 'Sistema' }}</p>
-                                </div>
-                            </div>
-                        @endif
-                    @endif
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    @if($selectedSale && $selectedSale->status === 'PENDING')
-                        <button type="button" wire:click="edit({{ $selectedSale->id ?? 0 }})" class="btn btn-primary"
-                            data-dismiss="modal">
-                            Gestionar Pago
-                        </button>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <x-carts.preview_sale :sale="$selectedSale" :activeTab="$activeTab" :modalProducts="$modalProducts"
+        :modalPayments="$modalPayments" />
+    
     <!-- Cart Details Modal -->
-    <div wire:ignore.self class="modal fade" id="theModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-dark">
-                    <h5 class="modal-title text-white">
-                        <b>Carritos</b> | {{ $selected_id > 0 ? 'EDITAR' : 'CREAR' }}
-                    </h5>
-                    <h6 class="text-center text-warning mb-0" wire:loading>POR FAVOR ESPERE</h6>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped mt-1">
-                                    <thead class="text-white bg-dark">
-                                        <tr>
-                                            <th class="text-white">NOMBRE</th>
-                                            <th class="text-white">PRECIO</th>
-                                            <th class="text-white">CANTIDAD</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-$total = 0;
-$quantity = 0;
-                                        @endphp
-                                        @foreach ($details as $detail)
-                                            @php
-    $total += $detail->price * $detail->quantity * 1.16;
-    $quantity += $detail->quantity;
-                                            @endphp
-                                            <tr>
-                                                <td>
-                                                    <h6 class="mb-0">{{ $detail->product->name }}</h6>
-                                                </td>
-                                                <td>
-                                                    <h6 class="mb-0">${{ number_format($detail->price, 2) }}</h6>
-                                                </td>
-                                                <td>
-                                                    <h6 class="mb-0">{{ $detail->quantity }}</h6>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        <tr class="table-secondary">
-                                            <td>
-                                                <h6 class="mb-0 font-weight-bold">TOTAL</h6>
-                                            </td>
-                                            <td>
-                                                <h6 class="mb-0 font-weight-bold">${{ number_format($total, 2) }}</h6>
-                                            </td>
-                                            <td>
-                                                <h6 class="mb-0 font-weight-bold">{{ $quantity }}</h6>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="form-group">
-                                <label class="font-weight-bold">Monto pagado</label>
-                                <input type="number" wire:model="payed" class="form-control" placeholder="Ej: 10.00">
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="form-group">
-                                <label class="font-weight-bold">Cambio</label>
-                                <input type="number" wire:model="change" class="form-control" placeholder="Ej: 10.00">
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                @php
-$value = round(floatval($total ?? 0) - floatval($payed ?? 0) + floatval($change ?? 0), 2);
-                                @endphp
-                                <label class="font-weight-bold">Monto a pagar</label>
-                                <input type="number" disabled value="{{ $value }}" @class([
-    'form-control font-weight-bold',
-    'text-success' => $value <= 0,
-    'text-danger' => $value > 0,
-]) placeholder="Ej: 10.00">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" wire:click.prevent="" class="btn btn-outline-secondary"
-                        data-dismiss="modal">CERRAR</button>
-                    <button type="button" wire:click="update" class="btn btn-primary">MARCAR PAGADO</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <x-carts.sale_payments
+        :selectedId="$selected_id"
+        :totalSale="$totalSale"
+        :currencyId="$currency_id"
+    />
 
     <!-- Main Content -->
     <div class="widget-content">
@@ -327,8 +103,11 @@ $value = round(floatval($total ?? 0) - floatval($payed ?? 0) + floatval($change 
                                     </div>
 
                                     <div class="card-footer bg-white pt-3">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <h5 class="mb-0 text-primary">${{ number_format($cart->total, 2) }}</h5>
+                                        <div class="d-flex justify-content-between a
+                                        lign-items-center mb-2">
+                                            <h5 class="mb-0 text-primary">
+                                                ${{ number_format($cart->getRemainingAmount(), 2) }}
+                                            </h5>
                                             <small
                                                 class="text-{{ $cart->status === 'PAID' ? 'success' : 'warning' }} font-weight-bold">
                                                 {{ $cart->status === 'PAID' ? 'Pagado' : 'Pendiente' }}
@@ -395,16 +174,26 @@ $value = round(floatval($total ?? 0) - floatval($payed ?? 0) + floatval($change 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         window.livewire.on('open', msg => {
-            $('#theModal').modal('show')
+            $('#theModal').modal('show');
         });
+
         window.livewire.on('close', msg => {
-            $('#theModal').modal('hide')
+            $('#theModal').modal('hide');
+            // Reset the modal when it's closed
+            livewire.emit('resetModal');
         });
+
         window.livewire.on('show-product-zoomed', msg => {
-            $('#product-zoom').modal('show')
+            $('#product-zoom').modal('show');
         });
+
         window.livewire.on('show-sale-preview', msg => {
-            $('#salePreviewModal').modal('show')
+            $('#salePreviewModal').modal('show');
+        });
+
+        // Reset modal when it's hidden via backdrop click or ESC key
+        $('#theModal').on('hidden.bs.modal', function () {
+            livewire.emit('resetModal');
         });
     });
 </script>
