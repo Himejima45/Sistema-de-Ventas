@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use Cache;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
 use Illuminate\Validation\ValidationException;
 
@@ -70,8 +70,11 @@ class LoginController extends Controller
 
         if ($this->attemptLogin($request)) {
             $user->update(['session_id' => session()->getId()]);
+            Cache::put('user-ping-' . $user->id, now(), 60);
+
             return $this->sendLoginResponse($request);
         }
+
 
         return $this->sendFailedLoginResponse($request);
     }
@@ -80,6 +83,7 @@ class LoginController extends Controller
     {
         $user = Auth::user();
         if ($user) {
+            Cache::forget('user-ping-' . $user->id);
             $user->update(['session_id' => null]);
         }
 

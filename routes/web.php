@@ -42,16 +42,13 @@ Route::middleware('logger')->group(function () {
 
 
 Route::middleware(['auth', 'fetch.currency', 'logger'])->group(function () {
-    Route::post('/user/session/cleanup', function ($request) {
-        $user = auth()->user();
-        $user->update(['session_id' => null]);
-
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/login');
-    })->name('user.session.cleanup');
+    Route::post('/ping', function () {
+        if (Auth::check()) {
+            $key = 'user-ping-' . Auth::id();
+            Cache::put($key, now(), 60);
+        }
+        return response()->noContent();
+    })->middleware('auth');
 
     Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('categories', CategoriesController::class);

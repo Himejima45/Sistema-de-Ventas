@@ -63,17 +63,19 @@
 
         @if(auth()->check())
             <script>
-                window.addEventListener('beforeunload', function (e) {
-                    fetch('{{ route("user.session.cleanup") }}', {
+                function sendPing () {
+                    fetch('/ping', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({}),
-                        keepalive: true
+                        body: JSON.stringify({})
                     });
-                });
+                }
+
+                setInterval(sendPing, 45000);
+                sendPing();
             </script>
         @endif
 
