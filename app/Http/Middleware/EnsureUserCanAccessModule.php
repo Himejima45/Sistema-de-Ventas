@@ -24,6 +24,7 @@ class EnsureUserCanAccessModule
         'reports',
         'logs',
         'backups',
+        'home'
     ];
     protected array $adminOnlyRoutes = ['roles', 'user'];
 

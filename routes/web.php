@@ -50,9 +50,9 @@ Route::middleware(['auth', 'fetch.currency', 'logger'])->group(function () {
         return response()->noContent();
     })->middleware('auth');
 
-    Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     Route::middleware('can.access')->group(function () {
+        Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
         Route::get('categories', CategoriesController::class);
         Route::get('products', ProductsController::class);
         Route::get('currencies', CurrenciesController::class);
