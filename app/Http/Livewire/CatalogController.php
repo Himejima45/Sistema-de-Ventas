@@ -157,9 +157,8 @@ class CatalogController extends Component
             ]);
         }
 
-        $this->resetUI();
-        $this->emit('$refresh');
-        $this->emit('record-created', "Se guardó el carrito exitosamente");
+        session()->flash('cart-finished', 'Su pedido ha sido registrado, por favor póngase en contacto por whatsapp');
+        $this->redirect('/historial');
     }
 
     public function calculate()

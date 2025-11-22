@@ -14,7 +14,7 @@ class AddActiveColumnToRolesTable extends Migration
     public function up()
     {
         Schema::table('roles', function (Blueprint $table) {
-            $table->boolean('reference')->default(true)->after('guard_name');
+            $table->string('reference')->after('guard_name');
             $table->boolean('is_active')->default(true)->after('reference');
         });
     }

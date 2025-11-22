@@ -13,7 +13,7 @@ class CheckAdminSession
   {
     $user = Auth::user();
 
-    if ($user && $user->hasRole('Admin')) {
+    if ($user && $user->canAccess('admin')) {
       $key = 'user-ping-' . $user->id;
 
       if (!Cache::has($key)) {

@@ -4,7 +4,7 @@
     <!-- Header Section -->
     <div class="row mb-4 mx-0">
         <div class="col-12 col-md-6 mb-3 mb-md-0">
-            <h2 class="mb-0">Carritos de compra</h2>
+            <h2 class="mb-0">Mis pedidos</h2>
         </div>
         <div class="col-12 col-md-6">
             <!-- Search Input -->

@@ -28,7 +28,7 @@
             </script>
 
             <ul class="menu-categories" style="padding-bottom: 2.4rem">
-                @if (auth()->user()->hasRole('Client'))
+                @if (auth()->user()->canAccess('client'))
                     <li class="active">
                         <a href="{{ url('catalog') }}" class="menu-toggle" data-active="true">
                             <div class="base-menu">

@@ -1,26 +1,24 @@
 <div class="position-relative col sales layout-top-spacing">
-    <!-- Header Section -->
-    <div class="row mb-4">
-        <div class="col-8 col-sm-10">
-            <x-home_button />
-        </div>
-        <div class="col-4 col-sm-2 text-right">
-            @if (auth()->user()->hasRole('Client'))
-                <button id="shopping-cart" wire:click.stop="$emit('toggleCart')"
-                    class="btn btn-outline-primary position-relative">
-                    @livewire('cart-icon')
-                    @if($total_items > 0)
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            {{ $total_items }}
-                        </span>
-                    @endif
-                </button>
-            @endif
+    <div class="col-12" style="margin: 0; padding: 0;">
+        <div class="col-sm-12 col-md-2 mb-4">
+            <a href="{{ route('historial') }}" class="btn btn-outline-primary d-flex align-items-center w-100"
+                style="gap: 1rem" data-active="false">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                    <path d="M12 11h4" />
+                    <path d="M12 16h4" />
+                    <path d="M8 11h.01" />
+                    <path d="M8 16h.01" />
+                </svg>
+                <span class="font-weight-bold">Mis pedidos</span>
+            </a>
         </div>
     </div>
 
     <!-- Page Title -->
-    <div class="row mb-4">
+    <div class="row">
         <div class="col-12">
             <h1 class="h2 mb-2">Catálogo de Productos</h1>
             <p class="text-muted mb-0">Explora nuestra selección de productos disponibles</p>
@@ -28,14 +26,23 @@
     </div>
 
     <!-- Filters Section -->
-    <div class="row mb-4">
+    <div class="row">
         <div class="col-12">
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body p-3">
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
+                    <div
+                        class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
                         <h6 class="mb-2 mb-md-0 font-weight-bold text-muted">FILTRAR PRODUCTOS</h6>
                         <div class="d-flex flex-wrap" style="gap: 0.5rem">
-                            <button type="button" wire:click="clearFilters" class="btn btn-sm btn-outline-danger">
+                            @if (auth()->user()->canAccess('client'))
+                                <button id="shopping-cart" wire:click.stop="$emit('toggleCart')"
+                                    class="d-flex items-center btn btn-sm btn-outline-primary">
+                                    <span style="margin-right: 0.25rem; margin-top: 0.25rem;">Mi carrito</span>
+                                    @livewire('cart-icon')
+                                </button>
+                            @endif
+                            <button type="button" wire:click="clearFilters" class="btn btn-sm btn-outline-danger"
+                                @if(!$showFilter) disabled @endif>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="lucide lucide-eraser mr-1">
@@ -52,7 +59,7 @@
                                     stroke-linejoin="round" class="lucide lucide-filter mr-1">
                                     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
                                 </svg>
-                                {{ $showFilter ? 'Ocultar' : 'Mostrar' }}
+                                Filtros
                             </button>
                         </div>
                     </div>
@@ -92,18 +99,14 @@
                                 <div class="form-group mb-0">
                                     <label class="small font-weight-bold text-muted mb-1 d-block">RANGO DE PRECIO</label>
                                     <div class="d-flex align-items-center flex-nowrap">
-                                        <div class="flex-grow-1 me-2">
-                                            <input type="number" wire:model="priceMin" 
-                                                class="form-control form-control-sm"
-                                                placeholder="Mínimo" min="0" 
-                                                aria-label="Precio mínimo">
+                                        <div class="grow me-2">
+                                            <input type="number" wire:model="priceMin" class="form-control form-control-sm"
+                                                placeholder="Mínimo" min="0" aria-label="Precio mínimo">
                                         </div>
-                                        <span class="text-muted mx-1 flex-shrink-0">—</span>
-                                        <div class="flex-grow-1 ms-2">
-                                            <input type="number" wire:model="priceMax" 
-                                                class="form-control form-control-sm"
-                                                placeholder="Máximo" min="0" 
-                                                aria-label="Precio máximo">
+                                        <span class="text-muted mx-1 shrink-0">—</span>
+                                        <div class="grow ms-2">
+                                            <input type="number" wire:model="priceMax" class="form-control form-control-sm"
+                                                placeholder="Máximo" min="0" aria-label="Precio máximo">
                                         </div>
                                     </div>
                                 </div>
@@ -113,10 +116,8 @@
                             <div class="col-12 col-md-6 col-lg-2">
                                 <div class="form-group mb-0">
                                     <label class="small font-weight-bold text-muted mb-1">STOCK MÍNIMO</label>
-                                    <input type="number" wire:model="quantity" 
-                                        class="form-control form-control-sm"
-                                        placeholder="Ej: 10" min="1" max="1000" 
-                                        aria-label="Stock mínimo">
+                                    <input type="number" wire:model="quantity" class="form-control form-control-sm"
+                                        placeholder="Ej: 10" min="1" max="1000" aria-label="Stock mínimo">
                                 </div>
                             </div>
                         </div>
@@ -137,18 +138,18 @@
                             <span class="badge bg-primary ms-2">{{ $total_items }}</span>
                         @endif
                     </div>
+
                     @if (count($cart) > 0)
-                        <button title="Limpiar carrito" wire:click="clear" 
-                                class="btn btn-sm btn-outline-danger"
-                                onclick="return confirm('¿Estás seguro de que deseas vaciar el carrito?')">
+                        <button title="Limpiar carrito" wire:click="clear" class="btn btn-sm btn-outline-danger"
+                            onclick="return confirm('¿Estás seguro de que deseas vaciar el carrito?')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                 class="lucide lucide-trash-2">
-                                <path d="M3 6h18"/>
-                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                                <line x1="10" x2="10" y1="11" y2="17"/>
-                                <line x1="14" x2="14" y1="11" y2="17"/>
+                                <path d="M3 6h18" />
+                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                                <line x1="10" x2="10" y1="11" y2="17" />
+                                <line x1="14" x2="14" y1="11" y2="17" />
                             </svg>
                             <span class="d-none d-sm-inline">Vaciar</span>
                         </button>
@@ -159,14 +160,13 @@
                     <div class="drawer-body">
                         @foreach ($cart as $productId => $quantity)
                             @php
-            $product = \App\Models\Product::find($productId);
+                                $product = \App\Models\Product::find($productId);
                             @endphp
                             <div class="cart-item">
                                 <div class="cart-item-image">
-                                    <img src="{{ $product->getImage() }}" alt="{{ $product->name }}" 
-                                         class="img-fluid rounded">
+                                    <img src="{{ $product->getImage() }}" alt="{{ $product->name }}" class="img-fluid rounded">
                                 </div>
-                                <div class="cart-item-details flex-grow-1">
+                                <div class="cart-item-details grow">
                                     <h6 class="cart-item-title mb-1">{{ $product->name }}</h6>
                                     <p class="cart-item-stock mb-1 text-muted small">
                                         Disponible: {{ $product->stock }}
@@ -175,23 +175,19 @@
                                         ${{ number_format($product->price, 2) }}
                                     </p>
                                     <div class="quantity-controls d-flex align-items-center">
-                                        <button class="btn btn-sm btn-outline-danger" 
-                                                wire:click="removeFromCart({{ $product->id }})"
-                                                {{ $quantity <= 1 ? 'disabled' : '' }}>
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" 
-                                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-                                                 stroke-linejoin="round">
-                                                <path d="M5 12h14"/>
+                                        <button class="btn btn-sm btn-outline-danger"
+                                            wire:click="removeFromCart({{ $product->id }})" {{ $quantity <= 1 ? 'disabled' : '' }}>
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M5 12h14" />
                                             </svg>
                                         </button>
                                         <span class="quantity mx-3 font-weight-bold">{{ $quantity }}</span>
-                                        <button class="btn btn-sm btn-outline-success" 
-                                                wire:click="addToCart({{ $product->id }})"
-                                                {{ $quantity >= $product->stock ? 'disabled' : '' }}>
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" 
-                                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-                                                 stroke-linejoin="round">
-                                                <path d="M12 5v14"/><path d="M5 12h14"/>
+                                        <button class="btn btn-sm btn-outline-success" wire:click="addToCart({{ $product->id }})" {{ $quantity >= $product->stock ? 'disabled' : '' }}>
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M12 5v14" />
+                                                <path d="M5 12h14" />
                                             </svg>
                                         </button>
                                     </div>
@@ -215,7 +211,8 @@
                                 class="text-muted mb-3">
                                 <circle cx="8" cy="21" r="1"></circle>
                                 <circle cx="19" cy="21" r="1"></circle>
-                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12">
+                                </path>
                             </svg>
                             <h5 class="text-muted">Tu carrito está vacío</h5>
                             <p class="text-muted small">Agrega productos desde el catálogo</p>
@@ -225,18 +222,20 @@
 
                 <div class="drawer-footer">
                     <button wire:click="toggle" class="btn btn-outline-secondary flex-fill">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                            <path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                            <path d="M19 12H5" />
+                            <path d="m12 19-7-7 7-7" />
                         </svg>
                         Continuar Comprando
                     </button>
                     @if (count($cart) > 0)
                         <button wire:click="save" class="btn btn-primary flex-fill">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                                <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                                <polyline points="17 21 17 13 7 13 7 21" />
+                                <polyline points="7 3 7 8 15 8" />
                             </svg>
                             Guardar Pedido
                         </button>
@@ -255,10 +254,8 @@
                     <div class="col-12 col-md-4 col-lg-3 col-xl-2 mb-4">
                         <div class="card product-card h-100 border-0 shadow-sm">
                             <div class="card-img-container position-relative overflow-hidden">
-                                <img class="card-img-top" 
-                                     src="{{ $product->getImage() }}" 
-                                     alt="{{ $product->name }}"
-                                     style="height: 160px; object-fit: cover;">
+                                <img class="card-img-top" src="{{ $product->getImage() }}" alt="{{ $product->name }}"
+                                    style="height: 160px; object-fit: cover;">
                                 <div class="position-absolute top-0 end-0 p-2">
                                     <span class="badge bg-{{ $product->stock > 10 ? 'primary' : 'warning' }}">
                                         {{ $product->stock }}
@@ -266,11 +263,11 @@
                                 </div>
                                 <div class="add-to-cart-overlay">
                                     <button class="btn btn-primary btn-sm rounded-pill"
-                                            wire:click="addToCart({{ $product->id }})">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" 
-                                             stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-                                             stroke-linejoin="round" class="me-1">
-                                            <path d="M12 5v14"/><path d="M5 12h14"/>
+                                        wire:click="addToCart({{ $product->id }})">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                                            <path d="M12 5v14" />
+                                            <path d="M5 12h14" />
                                         </svg>
                                         Agregar
                                     </button>
@@ -312,9 +309,11 @@
                 <h4 class="text-muted mb-3">No se encontraron productos</h4>
                 <p class="text-muted mb-4">Intenta ajustar los filtros o buscar otros términos</p>
                 <button wire:click="clearFilters" class="btn btn-primary">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2">
-                        <path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                        <path d="M3 6h18" />
+                        <path d="M7 12h10" />
+                        <path d="M10 18h4" />
                     </svg>
                     Limpiar Filtros
                 </button>
@@ -332,7 +331,7 @@
 
     .product-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
     }
 
     .card-img-container {
@@ -346,7 +345,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0,0,0,0.7);
+        background: rgba(0, 0, 0, 0.7);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -366,7 +365,7 @@
         width: 100%;
         height: 100vh;
         background: white;
-        box-shadow: -2px 0 20px rgba(0,0,0,0.1);
+        box-shadow: -2px 0 20px rgba(0, 0, 0, 0.1);
         transition: right 0.3s ease;
         z-index: 1060;
         display: flex;
@@ -383,7 +382,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.5);
+        background: rgba(0, 0, 0, 0.5);
         z-index: 1055;
         display: none;
     }
@@ -468,7 +467,7 @@
         .drawer {
             width: 380px;
         }
-        
+
         .product-card .card-title {
             font-size: 0.85rem;
         }
@@ -478,7 +477,7 @@
         .drawer {
             width: 420px;
         }
-        
+
         .cart-item-image {
             width: 100px;
             height: 100px;
@@ -495,19 +494,19 @@
         .card-img-container {
             height: 140px;
         }
-        
+
         .cart-item {
             flex-direction: column;
             text-align: center;
         }
-        
+
         .cart-item-image {
             margin-right: 0;
             margin-bottom: 1rem;
             width: 100%;
             height: 120px;
         }
-        
+
         .quantity-controls {
             margin: 0 auto;
         }
@@ -533,41 +532,42 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Close cart when clicking outside on mobile
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             const cartDrawer = document.getElementById('cart-drawer');
             const cartButton = document.getElementById('shopping-cart');
-            
-            if (cartDrawer && cartDrawer.classList.contains('show') && 
-                !cartDrawer.contains(e.target) && 
-                !cartButton.contains(e.target)) {
+
+            if (cartDrawer && cartDrawer.classList.contains('show') &&
+                !cartDrawer.contains(e.target) &&
+                !cartButton.contains(e.target))
+            {
                 Livewire.emit('toggle');
             }
         });
 
         // Prevent body scroll when cart is open
-        Livewire.on('cartToggled', function(showCart) {
+        Livewire.on('cartToggled', function (showCart) {
             document.body.style.overflow = showCart ? 'hidden' : '';
         });
     });
 
     function NotFound (eventName, text) {
-            swal({
-                title: 'NO ENCONTRADO',
-                text: text,
-                type: 'warning',
-                showCancelButton: true,
-                cancelButtonText: 'Cerrar',
-                cancelButtonColor: '#fff',
-                confirmButtonColor: '#3B3F5C',
-                confirmButtonText: 'Aceptar'
-            }).then(function (result) {
-                if (result.value)
-                {
-                    window.livewire.emit(eventName, id)
-                    swal.close()
-                }
-            })
-        }
+        swal({
+            title: 'NO ENCONTRADO',
+            text: text,
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#fff',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function (result) {
+            if (result.value)
+            {
+                window.livewire.emit(eventName, id)
+                swal.close()
+            }
+        })
+    }
 </script>

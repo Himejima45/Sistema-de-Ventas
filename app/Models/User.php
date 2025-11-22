@@ -65,4 +65,9 @@ class User extends BaseModelAuth
         return $this->hasMany(Notification::class, 'employee_id')
             ->orderBy('created_at', 'desc');
     }
+
+    public function canAccess(string $role)
+    {
+        return $this->roles()->first()->reference === $role;
+    }
 }

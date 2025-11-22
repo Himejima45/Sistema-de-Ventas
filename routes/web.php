@@ -63,8 +63,8 @@ Route::middleware(['auth', 'fetch.currency', 'logger'])->group(function () {
     Route::get('reports', ReportsController::class);
     Route::get('providers', ProviderController::class);
     Route::get('purchases', PurchaseController::class);
-    Route::get('catalog', CatalogController::class);
-    Route::get('historial', ClientCartsController::class);
+    Route::get('catalog', CatalogController::class)->name('catalog');
+    Route::get('historial', ClientCartsController::class)->name('historial');
     Route::get('carts', CartsController::class);
     Route::get('budgets', BudgetsController::class);
     Route::get('backups', BackupController::class);

@@ -15,7 +15,7 @@ class HomeController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->hasRole('Client')) {
+        if ($user->canAccess('client')) {
             $this->links = [
                 [
                     'url' => 'catalog',
@@ -97,7 +97,7 @@ class HomeController extends Controller
                 ]
             ];
 
-            if ($user->hasRole('Admin')) {
+            if ($user->canAccess('admin')) {
                 $adminLinks = [
                     [
                         'url' => 'roles',

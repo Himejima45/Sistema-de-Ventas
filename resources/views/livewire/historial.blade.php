@@ -7,7 +7,32 @@
 @endphp
 
 <div class="col sales layout-top-spacing gap-4">
-    <x-home_button />
+    <div class="col-12" style="margin: 0; padding: 0;">
+        <div class="col-sm-12 col-md-2 mb-4">
+            <a href="{{ route('catalog') }}" class="btn btn-outline-primary d-flex align-items-center w-100"
+                style="gap: 1rem" data-active="false">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z" />
+                    <path d="m7 16.5-4.74-2.85" />
+                    <path d="m7 16.5 5-3" />
+                    <path d="M7 16.5v5.17" />
+                    <path
+                        d="M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z" />
+                    <path d="m17 16.5-5-3" />
+                    <path d="m17 16.5 4.74-2.85" />
+                    <path d="M17 16.5v5.17" />
+                    <path
+                        d="M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z" />
+                    <path d="M12 8 7.26 5.15" />
+                    <path d="m12 8 4.74-2.85" />
+                    <path d="M12 13.5V8" />
+                </svg>
+                <span class="font-weight-bold">Catálogo</span>
+            </a>
+        </div>
+    </div>
 
     <div class="widget-content">
         <div class="col mx-auto">
@@ -34,10 +59,11 @@
                                                     {{ $cart->created_at->format('d-m-Y h:i a') }}
                                                 </small>
                                             </div>
-                                            <span class="badge badge-{{ 
-                                                                                                $cart->status === 'PAID' ? 'success' :
+                                            <span
+                                                class="badge badge-{{ 
+                                                                                                                                                                                                                                                $cart->status === 'PAID' ? 'success' :
                             ($cart->status === 'CANCELED' ? 'danger' : 'warning') 
-                                                                                            }}">
+                                                                                                                                                                                                                                            }}">
                                                 {{ $statuses[$cart->status] }}
                                             </span>
                                         </div>
@@ -98,7 +124,7 @@
                                                         </svg>
                                                         <span class="d-none d-sm-inline">Cancelar</span>
                                                     </button>
-                                                    <a class="btn btn-outline-success btn-sm flex-fill"
+                                                    <a class="btn btn-primary btn-sm flex-fill"
                                                         href="https://wa.me/584124692459?text=Hola%2C%20acabo%20de%20registrar%20los%20productos%20que%20deseo%20comprar%2C%20este%20fue%20mi%20pedido%20%23{{ urlencode($cart->code) }}%20%C2%BFMe%20podr%C3%ADa%20indicar%20cuando%20podr%C3%ADa%20retirarlos%20de%20la%20tienda%3F%20Gracias"
                                                         target="_blank" title="Contactar por WhatsApp">
                                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
@@ -161,7 +187,7 @@
                     <h4 class="text-muted mb-3">No tienes pedidos registrados</h4>
                     <p class="text-muted mb-4">Cuando realices pedidos, aparecerán aquí para que puedas hacerles
                         seguimiento.</p>
-                    <a href="{{ route('products.index') }}" class="btn btn-primary">
+                    <a href="{{ route('/catalog') }}" class="btn btn-primary">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round" class="mr-2">
                             <path d="m5 12 7-7 7 7" />
@@ -174,3 +200,26 @@
         </div>
     </div>
 </div>
+
+@if (session()->has('cart-finished'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+
+            Toast.fire({
+                icon: "success",
+                title: "{{ session('cart-finished') }}"
+            });
+        });
+    </script>
+@endif

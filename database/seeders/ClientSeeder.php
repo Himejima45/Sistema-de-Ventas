@@ -56,7 +56,7 @@ class ClientSeeder extends Seeder
 
         foreach ($clients as $client) {
             User::create($client)
-                ->assignRole('Client');
+                ->assignRole('Cliente');
         }
     }
 }
