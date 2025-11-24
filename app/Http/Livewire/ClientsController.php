@@ -94,7 +94,10 @@ class ClientsController extends Component
         $data = $this->validate($createRules);
         $data['password'] = bcrypt($this->password);
         User::create($data)
-            ->assignRole('client');
+            ->assignRole('Cliente');
+
+        $this->resetUI();
+        $this->emit('record-created', 'Cliente registrado');
     }
 
     public function Update()
