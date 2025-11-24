@@ -54,10 +54,10 @@
                                 <div class="card shadow-sm h-100">
                                     <div class="card-header bg-light">
                                         <div class="d-flex justify-content-between align-items-start">
-                                            <div class="flex-grow-1">
+                                            <div class="grow">
                                                 <h6 class="font-weight-bold text-truncate">
                                                     {{ $cart->client->name }} {{ $cart->client->last_name }}
-                                                    @if(auth()->user()->roles->pluck('name')->first() === 'Admin')
+                                                    @if(auth()->user()->roles->pluck('reference')->first() === 'admin')
                                                         <small class="d-block text-muted">
                                                             ({{ $cart->client->document }}) {{ $cart->code ? "- (#$cart->code)" : '' }}
                                                         </small>

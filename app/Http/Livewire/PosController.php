@@ -37,7 +37,7 @@ class PosController extends Component
         $this->type = 'Elegir';
         $this->cart = Cart::getContent()->sortBy('name');
         $this->clients = User::whereHas('roles', function ($query) {
-            $query->where('name', 'client');
+            $query->where('reference', 'client');
         })->get(['id', 'name', 'last_name', 'document']);
         $this->pageTitle = 'Registrar';
         $this->componentName = 'Ventas';
@@ -369,8 +369,8 @@ class PosController extends Component
             if ($sale) {
                 $employees = User::select('id')
                     ->whereHas('roles', function ($query) {
-                        $query->where('name', 'Employee')
-                            ->orWhere('name', 'Admin');
+                        $query->where('reference', 'employee')
+                            ->orWhere('reference', 'admin');
                     })
                     ->get();
 

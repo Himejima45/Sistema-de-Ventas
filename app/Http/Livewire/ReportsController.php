@@ -49,7 +49,7 @@ class ReportsController extends Component
         $this->SalesByDate();
 
         $employees = User::whereHas('roles', function ($query) {
-            $query->where('name', 'Employee')->orWhere('name', 'Admin');
+            $query->where('reference', 'employee')->orWhere('reference', 'admin');
         })->orderBy('name', 'asc')->get();
 
         // Explicit pagination for modal

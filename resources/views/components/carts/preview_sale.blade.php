@@ -19,7 +19,7 @@
             <div class="col-12 col-md-6 mb-3 mb-md-0">
               <h6 class="font-weight-bold">Cliente:</h6>
               <p class="mb-1">{{ $sale->client->name }} {{ $sale->client->last_name }}</p>
-              @if(auth()->user()->roles->pluck('name')->first() === 'Admin')
+              @if(auth()->user()->roles->pluck('reference')->first() === 'admin')
                 <small class="text-muted">Documento: {{ $sale->client->document }}</small>
               @endif
             </div>

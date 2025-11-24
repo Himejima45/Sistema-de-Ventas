@@ -57,15 +57,15 @@ class UsersController extends Component
     {
         if (strlen($this->search) > 0)
             $data = User::whereHas('roles', function ($query) {
-                $query->where('name', 'Employee');
+                $query->where('reference', 'employee');
             })
                 ->where('name', 'like', '%' . $this->search . '%')
-                ->where('name', '!=', 'Admin')
+                ->where('reference', '!=', 'admin')
                 ->select('*')->orderBy('name', 'asc')->paginate($this->pagination);
         else
             $data = User::select('*')
                 ->whereHas('roles', function ($query) {
-                    $query->where('name', 'Employee');
+                    $query->where('reference', 'employee');
                 })
                 ->orderBy('name', 'asc')
                 ->where('name', '!=', 'Admin')

@@ -24,7 +24,7 @@
                                 <th class="table-th text-white">NOMBRE</th>
                                 <th class="table-th text-white">APELLIDO</th>
                                 <th class="table-th text-white">CEDULA</th>
-                                <th class="table-th text-white">NRO.TELE</th>
+                                <th class="table-th text-white">NRO.TELEFONO</th>
                                 <th class="table-th text-white">DIRECCION</th>
                                 <th class="table-th text-white">CORREO</th>
                                 <th class="table-th text-white">ACCIONES</th>

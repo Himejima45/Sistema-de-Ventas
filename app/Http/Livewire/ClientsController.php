@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use App\Models\User;
 use Livewire\WithFileUploads;
@@ -16,14 +17,12 @@ class ClientsController extends Component
     public $name, $last_name, $document, $phone, $email, $address, $selected_id, $pageTitle, $componentName, $search, $password, $password_confirmation;
     private $pagination = 20;
     public $rules = [
-        'name' => ['required', 'min:2', 'max:30', 'regex:/^[\p{L}]+(?: [\p{L}]+)*$/u',],
+        'name' => ['required', 'min:2', 'max:30', 'regex:/^[\p{L}]+(?: [\p{L}]+)*$/u'],
         'last_name' => 'required|min:2|max:30|alpha',
         'document' => 'required|digits_between:6,8|numeric|unique:users,document',
         'email' => 'required|string|email|max:255|unique:users',
         'phone' => 'required|digits:11|numeric|unique:users,phone',
-        'password' => 'required|string|min:8|confirmed',
-        'password_confirmation' => 'required|string|min:8',
-        'address' => ['required', 'min:3', 'max:100', 'regex:/^[\p{L}]+(?: [\p{L}]+)*$/u',]
+        'address' => ['required', 'min:3', 'max:100', 'regex:/^[\p{L}]+(?: [\p{L}]+)*$/u']
     ];
 
     protected $validationAttributes = [
@@ -54,14 +53,14 @@ class ClientsController extends Component
             $data = User::where('name', 'like', '%' . $this->search . '%')
                 ->with('roles')
                 ->whereHas('roles', function ($q) {
-                    $q->where('name', 'Client');
+                    $q->where('reference', 'client');
                 })
                 ->paginate($this->pagination);
         else
             $data = User::orderBy('id', 'desc')
                 ->with('roles')
                 ->whereHas('roles', function ($q) {
-                    $q->where('name', 'Client');
+                    $q->where('reference', 'client');
                 })
                 ->paginate($this->pagination);
 
@@ -87,14 +86,17 @@ class ClientsController extends Component
 
     public function Store()
     {
-        $data = $this->validate();
+        $createRules = array_merge($this->rules, [
+            'password' => 'required|string|min:8|confirmed',
+            'password_confirmation' => 'required|string|min:8',
+        ]);
+
+        $data = $this->validate($createRules);
         $data['password'] = bcrypt($this->password);
         User::create($data)
-            ->assignRole('Client');
-
-        $this->resetUI();
-        $this->emit('record-created', 'Cliente Registrado');
+            ->assignRole('client');
     }
+
     public function Update()
     {
         $user = User::find($this->selected_id);
@@ -110,8 +112,9 @@ class ClientsController extends Component
             ]
         );
 
-        if (!$this->password) {
-            unset($rules['password']);
+        if ($this->password) {
+            $rules['password'] = 'required|string|min:8|confirmed';
+            $rules['password_confirmation'] = 'required|string|min:8';
         }
 
         $data = $this->validate($rules);

@@ -17,7 +17,7 @@ class ComboboxClients extends Component
         $this->options = User::where('name', 'like', '%' . $this->search . '%')
             ->with('roles')
             ->whereHas('roles', function ($q) {
-                $q->where('name', 'Client');
+                $q->where('reference', 'client');
             })
             ->limit(10)
             ->get(['id', 'name', 'last_name', 'document'])
@@ -40,7 +40,7 @@ class ComboboxClients extends Component
             })
                 ->with('roles')
                 ->whereHas('roles', function ($q) {
-                    $q->where('name', 'Client');
+                    $q->where('reference', 'client');
                 })
                 ->limit(10)
                 ->get(['id', 'name', 'last_name', 'document'])
@@ -53,7 +53,7 @@ class ComboboxClients extends Component
             })
                 ->with('roles')
                 ->whereHas('roles', function ($q) {
-                    $q->where('name', 'Client');
+                    $q->where('reference', 'client');
                 })->limit(10)->get(['id', 'name', 'last_name', 'document'])->toArray();
         }
     }

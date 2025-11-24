@@ -30,8 +30,8 @@ class CashoutController extends Component
     public function render()
     {
         $users = User::whereHas('roles', function ($query) {
-            $query->where('name', 'Employee')
-                ->orWhere('name', 'Admin');
+            $query->where('reference', 'employee')
+                ->orWhere('reference', 'admin');
         })
             ->orderBy('name', 'asc')->get();
 
@@ -45,8 +45,8 @@ class CashoutController extends Component
             ->orderBy('updated_at', 'desc')
             ->paginate(20);
 
-            $this->sales = [
-                'data' => $paginator->getCollection()
+        $this->sales = [
+            'data' => $paginator->getCollection()
                 ->transform(function ($sale, $index) use ($paginator) {
                     $arr['number'] = $index + 1 + (($paginator->currentPage() - 1) * $paginator->perPage());
                     $arr['items'] = $sale->getTotalProducts();
@@ -61,8 +61,8 @@ class CashoutController extends Component
                     $this->total += $sale->total;
                     return $arr;
                 })->toArray(),
-                'links' => $paginator->links('pagination::bootstrap-4')->render()
-            ];
+            'links' => $paginator->links('pagination::bootstrap-4')->render()
+        ];
 
 
         return view('livewire.cashout.component', [

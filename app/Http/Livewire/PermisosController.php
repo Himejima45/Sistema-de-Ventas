@@ -117,18 +117,4 @@ class PermisosController extends Component
         $this->selected_id = 0;
         $this->resetValidation();
     }
-
-
-    /* public function AsignarRoles($rolesList)
-    {
-        if($this->userSelected > 0)
-        {
-            $user = User::find($this->userSelected);
-            if($user) {
-                $user->syncRoles($rolesList);
-                $this->emit('msg-ok', 'Roles asignados correctamente');
-                $this->resetUI();
-            }
-        }
-    } */
 }

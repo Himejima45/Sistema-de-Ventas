@@ -141,8 +141,8 @@ class CatalogController extends Component
 
         $employees = User::select('id')
             ->whereHas('roles', function ($query) {
-                $query->where('name', 'Employee')
-                    ->orWhere('name', 'Admin');
+                $query->where('reference', 'employee')
+                    ->orWhere('reference', 'admin');
             })
             ->get();
 

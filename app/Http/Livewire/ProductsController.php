@@ -83,7 +83,7 @@ class ProductsController extends Component
             'data' => $products,
             'categories' => Category::orderBy('name', 'asc')->get(),
             'providers' => Provider::orderBy('name', 'asc')->get(),
-            'total_cost' => Product::where('stock', '>', 0)->sum(DB::raw('price * stock'))
+            'total_cost' => Product::where('stock', '>', 0)->sum(DB::raw('cost * stock'))
         ])->extends('layouts.theme.app')
             ->section('content');
     }
