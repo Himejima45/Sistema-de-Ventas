@@ -15,48 +15,15 @@ class ClientSeeder extends Seeder
      */
     public function run()
     {
-        $clients = [
-            [
-                'name' => 'Pablo',
-                'last_name' => 'Diaz',
-                'document' => '11456879',
-                'phone' => '04168857552',
-                'address' => 'La Victoria/La mora',
-                'password' => Hash::make('cliente'),
-                'email' => 'cliente1@email.com'
-            ],
-            [
-                'name' => 'Aranza',
-                'last_name' => 'Perez',
-                'document' => '19486179',
-                'phone' => '04241556324',
-                'address' => 'La Victoria/Las mercedes',
-                'password' => Hash::make('cliente'),
-                'email' => 'cliente2@email.com'
-            ],
-            [
-                'name' => 'Ingrid',
-                'last_name' => 'Zamora',
-                'document' => '28996331',
-                'phone' => '04261220665',
-                'address' => 'Cagua/Centro',
-                'password' => Hash::make('cliente'),
-                'email' => 'client3@email.com'
-            ],
-            [
-                'name' => 'Jesus',
-                'last_name' => 'Bonaire',
-                'document' => '8444333',
-                'phone' => '04141777554',
-                'address' => 'La Victoria/La mora',
-                'password' => Hash::make('cliente'),
-                'email' => 'cliente4@email.com'
-            ]
-        ];
-
-        foreach ($clients as $client) {
-            User::create($client)
-                ->assignRole('Cliente');
-        }
+        User::create([
+            'name' => 'Cliente',
+            'last_name' => 'Genérico',
+            'document' => '9999999999',
+            'phone' => '00000000000',
+            'address' => 'N/A',
+            'password' => Hash::make('L71d%Y%~BT:mf>pK*RiK'),
+            'email' => 'clientegenerico@motopartshm.com'
+        ])
+            ->assignRole('Cliente');
     }
 }
