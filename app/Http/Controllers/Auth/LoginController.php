@@ -48,10 +48,14 @@ class LoginController extends Controller
 
         $user_role = $user->roles[0];
 
-        if ($user && $user_role->reference === 'admin' && !is_null($user->session_id)) {
-            throw ValidationException::withMessages([
-                'email' => ['Ya hay una sesión activa como administrador.'],
-            ]);
+        if ($user && $user_role->reference === 'admin') {
+            $cachedValue = Cache::get('user-ping-' . $user->id);
+
+            if ($cachedValue) {
+                throw ValidationException::withMessages([
+                    'email' => ['Ya hay una sesión activa como administrador.'],
+                ]);
+            }
         }
 
         if (!$user_role->is_active) {
