@@ -1,5 +1,6 @@
 @php
     $user = auth()->user();
+    $role = fn(string $value) => $user->canAccess($value);
 @endphp
 
 @if ($user !== null)
@@ -20,10 +21,23 @@
             <ul class="navbar-item flex-row search-ul"
                 style="display: flex; justify-items: center; align-items: center; gap: 0.5rem;">
 
-                {{-- Notification --}}
-                @unlessrole('Client')
-                <livewire:notification-dropdown />
-                @endunlessrole
+                @if ($role('client'))
+                    <li class="navbar-item flex-row" title="Ayuda">
+                        <a target="_blank" href="https://www.youtube.com/watch?v=clu3gsk_NGo" class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="lucide lucide-circle-help-icon lucide-circle-help">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                                <path d="M12 17h.01" />
+                            </svg>
+                        </a>
+                    </li>
+                @else
+
+                    {{-- Notification --}}
+                    <livewire:notification-dropdown />
+                @endif
 
                 <li class="nav-item">
                     <h6 class="font-weight-bold">{{ $user->full_name }}</h6>
