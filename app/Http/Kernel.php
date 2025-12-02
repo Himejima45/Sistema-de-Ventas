@@ -64,7 +64,6 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'fetch.currency' => \App\Http\Middleware\DollarAPIFetch::class,
         'logger' => \App\Http\Middleware\LogViewAccess::class,
         'can.access' => \App\Http\Middleware\EnsureUserCanAccessModule::class,
     ];
