@@ -10,7 +10,6 @@ class Product extends BaseModel
 
   protected $fillable = ['name', 'barcode', 'cost', 'price', 'stock', 'min_stock', 'image', 'category_id', 'provider_id', "warranty"];
 
-
   public function category()
   {
     return $this->belongsTo(Category::class);
@@ -18,24 +17,12 @@ class Product extends BaseModel
 
   public function getImage()
   {
-    $extension = pathinfo($this->image, PATHINFO_EXTENSION);
-    $defaultImage = $extension === 'jpeg';
-    $src = $defaultImage
-      ? asset("assets/products/$this->image")
-      : asset("storage/products/$this->image");
-
-    return $src;
+    return asset("storage/products/$this->image");
   }
 
   public function getImagenAttribute()
   {
-    $extension = pathinfo($this->image, PATHINFO_EXTENSION);
-    $defaultImage = $extension === 'jpeg';
-    return file_exists(
-      $defaultImage
-      ? public_path() . '/assets/products'
-      : "storage/products/$this->image"
-    ) ? $this->image : null;
+    return file_exists("storage/products/$this->image") ? $this->image : null;
   }
 
   public function purchases()

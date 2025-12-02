@@ -24,19 +24,20 @@ class ProductsController extends Component
             'required',
             'min:2',
             'max:120',
-            'regex:/^[\p{L}]+(?: [\p{L}]+)*$/u',
+            'regex:/^[\p{L}\p{N}\s\-\/\.\(\)\+°&"]+$/u',
             'unique:products,name'
         ],
         'barcode' => ['required', 'numeric', 'digits_between:3,20', 'unique:products,barcode'],
-        'cost' => ['required', 'min:1', 'max:100', 'numeric'],
-        'price' => ['required', 'min:1', 'max:100', 'numeric'],
-        'stock' => ['required', 'min:1', 'max:100000', 'numeric'],
+        'cost' => ['required', 'min:1', 'max:10000', 'numeric'],
+        'price' => ['required', 'min:1', 'max:10000', 'numeric'],
+        'stock' => ['required', 'min:0', 'max:100000', 'numeric'],
         'warranty' => ['required', 'min:1', 'max:100', 'numeric'],
         'min_stock' => ['required', 'min:1', 'max:100', 'numeric'],
         'image' => ['required', 'mimes:jpg,jpeg,png', 'max:2048', 'image', 'unique:products,image'],
         'category_id' => ['required', 'not_in:0,Elegir'],
-        'provider_id' => ['required', 'not_in:0,Elegir']
+        'provider_id' => ['nullable']
     ];
+
     protected $validationAttributes = [
         'name' => 'nombre',
         'barcode' => 'código de barras',
@@ -67,15 +68,18 @@ class ProductsController extends Component
     {
         if (strlen($this->search) > 0)
             $products = Product::join('categories as c', 'c.id', 'products.category_id')
-                ->select('products.*', 'c.name as category')
+                ->leftJoin('providers as p', 'p.id', 'products.provider_id')
+                ->select('products.*', 'c.name as category', 'p.name as provider_name')
                 ->where('products.name', 'like', '%' . $this->search . '%')
                 ->orWhere('products.barcode', 'like', '%' . $this->search . '%')
                 ->orWhere('c.name', 'like', '%' . $this->search . '%')
+                ->orWhere('p.name', 'like', '%' . $this->search . '%')
                 ->orderBy('products.created_at', 'desc')
                 ->paginate($this->pagination);
         else
             $products = Product::join('categories as c', 'c.id', 'products.category_id')
-                ->select('products.*', 'c.name as category')
+                ->leftJoin('providers as p', 'p.id', 'products.provider_id')
+                ->select('products.*', 'c.name as category', 'p.name as provider_name')
                 ->orderBy('products.created_at', 'desc')
                 ->paginate($this->pagination);
 
@@ -102,17 +106,23 @@ class ProductsController extends Component
     {
         $this->withValidator(function ($validator) {
             $validator->after(function ($validator) {
-                if ($this->category_id !== 'Elegir' && !Category::find($this->category_id)->exists()) {
-                    $validator->errors()->add('category_id', 'La categoria seleccionada no existe');
+                if ($this->category_id == 'Elegir' || !Category::find($this->category_id)) {
+                    $validator->errors()->add('category_id', 'La categoría seleccionada no existe');
                 }
 
-                if ($this->provider_id !== 'Elegir' && !Provider::find($this->provider_id)->exists()) {
+                // Only check provider if it's not "Elegir" and not null
+                if ($this->provider_id != 'Elegir' && $this->provider_id && !Provider::find($this->provider_id)) {
                     $validator->errors()->add('provider_id', 'El proveedor seleccionado no existe');
                 }
             });
         })->validate();
 
         $data = $this->validate();
+
+        // Convert "Elegir" to null for provider
+        if ($data['provider_id'] == 'Elegir') {
+            $data['provider_id'] = null;
+        }
 
         $img_url = '';
         if ($this->image) {
@@ -138,63 +148,79 @@ class ProductsController extends Component
         $this->warranty = $product->warranty;
         $this->min_stock = $product->min_stock;
         $this->category_id = $product->category_id;
-        $this->provider_id = $product->provider_id;
+        $this->provider_id = $product->provider_id ?: 'Elegir';
         $this->image = $product->getImagenAttribute();
         $this->emit('modal-show', 'show modal!');
     }
 
     public function Update()
     {
-        $rules = array_merge(
-            $this->rules,
-            [
-                'name' => [
-                    'required',
-                    'min:2',
-                    'max:120',
-                    'regex:/^[\p{L}]+(?: [\p{L}]+)*$/u',
-                    "unique:products,name,{$this->selected_id}"
-                ],
-                'barcode' => [
-                    'required',
-                    'numeric',
-                    'digits_between:3,20',
-                    "unique:products,barcode,{$this->selected_id}"
-                ],
-                'image' => [
-                    is_string($this->image) ? [
-                        'required',
-                        'mimes:jpg,jpeg,png',
-                        'max:2048',
-                        'image',
-                        "unique:products,image,{$this->selected_id}"
-                    ] : [
-                        'nullable'
-                    ]
-                ]
-            ]
-        );
+        $rules = [
+            'name' => [
+                'required',
+                'min:2',
+                'max:120',
+                'regex:/^[\p{L}\p{N}\s\-\/\.\(\)\+°&"]+$/u',
+                "unique:products,name,{$this->selected_id}"
+            ],
+            'barcode' => [
+                'required',
+                'numeric',
+                'digits_between:3,20',
+                "unique:products,barcode,{$this->selected_id}"
+            ],
+            'cost' => ['required', 'min:1', 'max:10000', 'numeric'],
+            'price' => ['required', 'min:1', 'max:10000', 'numeric'],
+            'stock' => ['required', 'min:0', 'max:100000', 'numeric'],
+            'warranty' => ['required', 'min:1', 'max:100', 'numeric'],
+            'min_stock' => ['required', 'min:1', 'max:100', 'numeric'],
+            'category_id' => ['required', 'not_in:0,Elegir'],
+            'provider_id' => ['nullable', 'not_in:0']
+        ];
+
+        // Handle image validation - if it's a new upload, validate it
+        if (is_object($this->image) && !is_string($this->image)) {
+            $rules['image'] = ['required', 'mimes:jpg,jpeg,png', 'max:2048', 'image'];
+        } else {
+            $rules['image'] = ['nullable'];
+        }
 
         $data = $this->validate($rules);
-        $product = Product::find($this->selected_id);
-        if ($this->image !== $product->getImagenAttribute()) {
-            $path = $product->getImagenAttribute();
-            Storage::delete("/products/$path");
 
-            $img_url = '';
+        // Convert "Elegir" to null for provider
+        if ($data['provider_id'] == 'Elegir') {
+            $data['provider_id'] = null;
+        }
+
+        $product = Product::find($this->selected_id);
+
+        // Check if a new image was uploaded
+        if (is_object($this->image) && !is_string($this->image)) {
+            // Delete old image if exists
+            if ($product->image) {
+                $oldImagePath = 'public/products/' . $product->image;
+                if (Storage::exists($oldImagePath)) {
+                    Storage::delete($oldImagePath);
+                }
+            }
+
+            // Upload new image
             $img_url = uniqid() . '_.' . $this->image->extension();
             $this->image->storeAs('public/products', $img_url);
             $data['image'] = $img_url;
+        } else {
+            // Keep the existing image
+            unset($data['image']);
         }
 
         $product->update($data);
 
         $this->resetUI();
-        $this->emit('record-updated', 'Producto Actulizado');
+        $this->emit('record-updated', 'Producto Actualizado');
     }
+
     public function resetUI()
     {
-
         $this->name = '';
         $this->warranty = '';
         $this->barcode = '';
@@ -221,7 +247,6 @@ class ProductsController extends Component
     {
         $imageTemp = $product->image;
         $product->delete();
-
 
         if ($imageTemp != null) {
             if (file_exists('storage/products/' . $imageTemp)) {

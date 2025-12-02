@@ -265,14 +265,25 @@ class CartsController extends Component
             $this->exchange_rate = 1;
         }
 
-        $totalPaidUSD = ($this->cash_usd ?? 0) + (($this->cash_bs ?? 1) / ($this->exchange_rate ?? 1));
-        $remainingAmount = $this->paymentSummary['remaining_amount'] ?? $this->totalSale;
+        // Cast all values to float to ensure numeric operations
+        $exchange_rate = (float) $this->exchange_rate;
+        $cash_usd = (float) ($this->cash_usd ?? 0);
+        $cash_bs = (float) ($this->cash_bs ?? 0);
+
+        // Calculate total paid in USD
+        $totalPaidUSD = $cash_usd + ($cash_bs / $exchange_rate);
+
+        // Get remaining amount or total sale
+        $remainingAmount = isset($this->paymentSummary['remaining_amount'])
+            ? (float) $this->paymentSummary['remaining_amount']
+            : (float) $this->totalSale;
+
         $overpaid = $totalPaidUSD - $remainingAmount;
 
         if ($overpaid > 0) {
             $this->change_usd = floor($overpaid * 100) / 100;
             $remainingChangeUSD = $overpaid - $this->change_usd;
-            $this->change_bs = round($remainingChangeUSD * $this->exchange_rate, 2);
+            $this->change_bs = round($remainingChangeUSD * $exchange_rate, 2);
         } else {
             $this->change_usd = 0;
             $this->change_bs = 0;
@@ -297,7 +308,19 @@ class CartsController extends Component
 
     private function getNetPayment()
     {
-        return ($this->cash_usd - $this->change_usd) + (($this->cash_bs - $this->change_bs) / $this->exchange_rate);
+        // Cast all values to float to ensure numeric operations
+        $cash_usd = (float) $this->cash_usd;
+        $change_usd = (float) $this->change_usd;
+        $cash_bs = (float) $this->cash_bs;
+        $change_bs = (float) $this->change_bs;
+        $exchange_rate = (float) $this->exchange_rate;
+
+        // Ensure exchange_rate is valid to avoid division by zero
+        if ($exchange_rate <= 0) {
+            $exchange_rate = 1;
+        }
+
+        return ($cash_usd - $change_usd) + (($cash_bs - $change_bs) / $exchange_rate);
     }
 
     private function getRemainingAmount()

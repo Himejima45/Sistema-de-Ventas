@@ -19,7 +19,7 @@ class ClientsController extends Component
     public $rules = [
         'name' => ['required', 'min:2', 'max:30', 'regex:/^[\p{L}]+(?: [\p{L}]+)*$/u'],
         'last_name' => 'required|min:2|max:30|alpha',
-        'document' => 'required|digits_between:6,8|numeric|unique:users,document',
+        'document' => 'required|digits_between:6,9|numeric|unique:users,document',
         'email' => 'required|string|email|max:255|unique:users',
         'phone' => 'required|digits:11|numeric|unique:users,phone',
         'address' => ['required', 'min:3', 'max:100', 'regex:/^[\p{L}]+(?: [\p{L}]+)*$/u']

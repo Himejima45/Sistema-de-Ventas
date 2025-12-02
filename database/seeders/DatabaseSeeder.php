@@ -19,8 +19,6 @@ class DatabaseSeeder extends Seeder
         Role::create(['name' => 'Cliente', 'reference' => 'client']);
 
         $this->call(CategorySeeder::class);
-        $this->call(ProviderSeeder::class);
-        $this->call(ProductSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(ClientSeeder::class);
     }

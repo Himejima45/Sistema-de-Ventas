@@ -109,8 +109,8 @@
     <div class="col-12">
         <label for="">Imagen <span class="text-danger font-weight-bold">*</span></label>
         <div class="form-group custom-file">
-            <input id="iamge" type="file" class="custom-file-input form-control" wire:model="image"
-                accept="image/x-png, image/x-jpg, image/x-jpeg">
+            <input id="image" type="file" class="custom-file-input form-control" wire:model="image"
+                accept=".png,.jpg,.jpeg">
             <label class="custom-file-label">Imagen {{ $image }}</label>
             @error('image')
                 <span class="text-danger er">{{ $message }}</span>

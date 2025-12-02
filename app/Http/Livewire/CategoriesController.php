@@ -81,7 +81,7 @@ class CategoriesController extends Component
     public function Update()
     {
         $rules = [
-            'name' => "required|min:2|max:30|regex:/^[\p{L}]+(?: [\p{L}]+)*$/u|unique:categories,name,{$this->selected_id}",
+            'name' => ["required", "min:2", "max:30", 'regex:/^[\p{L}\p{N}\s\-\/\.\(\)\+°&"]+$/u', "unique:categories,name,{$this->selected_id}"]
         ];
 
         $data = $this->validate($rules);

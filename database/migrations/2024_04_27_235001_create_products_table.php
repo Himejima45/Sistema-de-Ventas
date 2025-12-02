@@ -26,8 +26,9 @@ class CreateProductsTable extends Migration
 
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->references('id')->on('categories');
-            $table->unsignedBigInteger('provider_id');
+            $table->unsignedBigInteger('provider_id')->nullable();
             $table->foreign('provider_id')->references('id')->on('providers');
+            $table->index('barcode', 'barcode_idx');
             $table->timestamps();
         });
     }

@@ -66,7 +66,7 @@ class LoginController extends Controller
 
         if ($this->attemptLogin($request)) {
             $user->update(['session_id' => session()->getId()]);
-            Cache::put('user-ping-' . $user->id, now(), 60);
+            Cache::put('user-ping-' . $user->id, now(), 600);
 
             return $this->sendLoginResponse($request);
         }

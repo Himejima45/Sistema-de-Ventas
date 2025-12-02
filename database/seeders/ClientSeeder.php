@@ -21,7 +21,7 @@ class ClientSeeder extends Seeder
             'document' => '9999999999',
             'phone' => '00000000000',
             'address' => 'N/A',
-            'password' => Hash::make('L71d%Y%~BT:mf>pK*RiK'),
+            'password' => Hash::make('Lituania1771'),
             'email' => 'clientegenerico@motopartshm.com'
         ])
             ->assignRole('Cliente');
