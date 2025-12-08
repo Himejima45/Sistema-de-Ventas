@@ -58,8 +58,8 @@
                                     <input id="document" type="text"
                                         class="form-control @error('document') is-invalid @enderror" name="document"
                                         value="{{ old('document') }}" required autocomplete="document"
-                                        placeholder="Ej: 12512102" autofocus minlength="6" maxlength="11"
-                                        pattern="^\d{6,11}$" title="Entre 6 y 11 dígitos numéricos">
+                                        placeholder="Ej: 12512102" autofocus minlength="6" maxlength="9" pattern="^\d{6,9}$"
+                                        title="Entre 6 y 9 dígitos numéricos">
 
                                     @error('document')
                                         <span class="invalid-feedback" role="alert">
