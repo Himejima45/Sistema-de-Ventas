@@ -36,7 +36,9 @@ class UsersController extends Component
         'email.email' => 'Ingresa un correo valido',
         'email.unique' => 'El email ya existe en el sistema',
         'password.required' => 'Ingresa la contraseña',
+        'password.regex' => 'La contraseña debe tener al menos 3 caracteres, incluyendo al menos una letra y un número.',
         'password.min' => 'La contraseña debe tener al menos 3 caracteres',
+        'phone.unique' => 'Este número de télefono ya ha sido registrado'
     ];
 
     private $pagination = 20;
@@ -55,21 +57,19 @@ class UsersController extends Component
 
     public function render()
     {
-        if (strlen($this->search) > 0)
-            $data = User::whereHas('roles', function ($query) {
-                $query->where('reference', 'employee');
-            })
-                ->where('name', 'like', '%' . $this->search . '%')
-                ->where('reference', '!=', 'admin')
-                ->select('*')->orderBy('name', 'asc')->paginate($this->pagination);
-        else
-            $data = User::select('*')
-                ->whereHas('roles', function ($query) {
-                    $query->where('reference', 'employee');
-                })
-                ->orderBy('name', 'asc')
-                ->where('name', '!=', 'Admin')
-                ->paginate($this->pagination);
+        $query = User::whereHas('roles', function ($subQuery) {
+            $subQuery->where('reference', 'employee');
+        });
+
+        if (strlen($this->search) > 0) {
+            $query->where(function ($q) {
+                $q->where('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('email', 'like', '%' . $this->search . '%');
+            });
+        }
+
+        $data = $query->orderBy('name', 'asc')
+            ->paginate($this->pagination);
 
         return view('livewire.users.component', [
             'data' => $data,
@@ -117,7 +117,7 @@ class UsersController extends Component
             'phone' => $this->phone,
             'active' => 0,
             'password' => bcrypt($this->password),
-        ])->assignRole('Employee');
+        ])->assignRole('Empleado');
 
 
         $this->resetUI();

@@ -10,6 +10,7 @@ use App\Models\Provider;
 use App\Models\Sale;
 use App\Models\SaleDetails;
 use App\Models\User;
+use Illuminate\Support\Facades\Artisan;
 use Livewire\Component;
 
 class CatalogController extends Component
@@ -114,6 +115,14 @@ class CatalogController extends Component
             }
         }
 
+        $currency = Currency::latest()->first();
+
+        if (empty($currency)) {
+            Artisan::call('app:fetch-dollar-rate');
+
+            $currency = Currency::latest()->first();
+        }
+
         $sale = Sale::create([
             'total' => $this->total,
             'cash' => 0,
@@ -123,7 +132,7 @@ class CatalogController extends Component
             'type' => 'CART',
             'client_id' => auth()->id(),
             'user_id' => $admin_id,
-            'currency_id' => Currency::latest()->first()->id
+            'currency_id' => $currency->id
         ]);
 
         $value = 0;
@@ -158,6 +167,7 @@ class CatalogController extends Component
         }
 
         session()->flash('cart-finished', 'Su pedido ha sido registrado, por favor póngase en contacto por whatsapp');
+        $this->clear();
         $this->redirect('/historial');
     }
 
