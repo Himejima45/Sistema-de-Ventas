@@ -167,7 +167,10 @@ class CatalogController extends Component
         }
 
         session()->flash('cart-finished', 'Su pedido ha sido registrado, por favor póngase en contacto por whatsapp');
-        $this->clear();
+        $this->cart = [];
+        session()->put('cart', $this->cart);
+        $this->total_items = 0;
+        $this->showCart = false;
         $this->redirect('/historial');
     }
 
