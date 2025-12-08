@@ -61,9 +61,9 @@
                                             </div>
                                             <span
                                                 class="badge badge-{{ 
-                                                                                                                                                                                                                                                $cart->status === 'PAID' ? 'success' :
+                                                                                                                                                                                                                                                            $cart->status === 'PAID' ? 'success' :
                             ($cart->status === 'CANCELED' ? 'danger' : 'warning') 
-                                                                                                                                                                                                                                            }}">
+                                                                                                                                                                                                                                                        }}">
                                                 {{ $statuses[$cart->status] }}
                                             </span>
                                         </div>
@@ -187,7 +187,7 @@
                     <h4 class="text-muted mb-3">No tienes pedidos registrados</h4>
                     <p class="text-muted mb-4">Cuando realices pedidos, aparecerán aquí para que puedas hacerles
                         seguimiento.</p>
-                    <a href="{{ route('/catalog') }}" class="btn btn-primary">
+                    <a href="{{ route('catalog') }}" class="btn btn-primary">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round" class="mr-2">
                             <path d="m5 12 7-7 7 7" />
