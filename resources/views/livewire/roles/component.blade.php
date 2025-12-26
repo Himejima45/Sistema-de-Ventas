@@ -49,7 +49,7 @@
                                     <td class="text-center">
                                         <x-edit_button wire:click="Edit({{ $role->id }})" />
 
-                                        @if ($role->name !== 'Admin')
+                                        @if ($role->name !== 'Administrador')
                                             <button wire:click="toggle({{ $role->id }})" class="btn btn-warning mtmobile"
                                                 title="{{ $role->is_active ? 'Deshabilitar' : 'Habilitar' }}">
                                                 @if ($role->is_active)

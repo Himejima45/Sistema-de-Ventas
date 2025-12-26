@@ -34,6 +34,7 @@ class ClientCartsController extends Component
     public function render()
     {
         $carts = Sale::with(['products.product'])
+            ->where('type', 'CART')
             ->where('client_id', auth()->id())
             ->orderByDesc('created_at')
             ->paginate(20);

@@ -96,7 +96,9 @@ class CatalogController extends Component
 
     public function save()
     {
-        $admin_id = User::where('email', 'admin@email.com')->first()->id;
+        $admin_id = User::with('roles')->whereHas('roles', function ($query) {
+            $query->where('reference', 'admin');
+        })->first()->id;
 
         foreach ($this->cart as $key => $item) {
             $product = Product::find($key);
