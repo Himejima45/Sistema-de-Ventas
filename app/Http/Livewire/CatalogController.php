@@ -15,7 +15,7 @@ use Livewire\Component;
 
 class CatalogController extends Component
 {
-    public $cart = [], $showCart = false, $total = 0, $filter = '', $showFilter = false, $total_items = 0;
+    public $cart = [], $showCart = false, $total = 0, $filter = '', $showFilter = false, $total_items = 0, $exchange_rate;
     public $category_id = '', $provider_id = '', $priceMin = null, $priceMax = null, $quantity = 0;
     public $categories = [], $providers = [];
     protected $listeners = [
@@ -269,15 +269,18 @@ class CatalogController extends Component
                 $query->where('stock', '>=', $this->quantity);
             })
             ->when($this->priceMin > 0, function ($query) {
-                $query->where('price', '>=', $this->priceMin);
+                $price_min = number_format($this->priceMin / $this->exchange_rate, 2);
+                $query->where('price', '>=', $price_min);
             })
             ->when($this->priceMax > 0, function ($query) {
-                $query->where('price', '<=', $this->priceMax);
+                $price_max = number_format($this->priceMax / $this->exchange_rate, 2);
+                $query->where('price', '<=', $price_max);
             })
             ->paginate(20);
 
         $this->categories = Category::all(['id', 'name']);
         $this->providers = Provider::all(['id', 'name']);
+        $this->exchange_rate = Currency::latest()->first()->value;
 
         return view('livewire.catalog', [
             'products' => $products,

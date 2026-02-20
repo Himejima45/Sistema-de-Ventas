@@ -24,21 +24,29 @@ class UsersController extends Component
             'required',
             'min:3',
             'max:12',
-            'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x]).*$/
-'
+            'regex:/^(?=.*[A-Za-z])(?=.*\d).+$/'
         ],
         'phone' => ['required', 'digits:11', 'unique:users,phone', 'numeric']
     ];
     public $messages = [
         'name.required' => 'Ingresa el nombre',
         'name.min' => 'El nombre de usuario debe tener al menos 3 caracteres',
+        'name.max' => 'El nombre no puede tener más de 30 caracteres',
+        'name.regex' => 'El nombre solo puede contener letras y espacios entre palabras',
+
         'email.required' => 'Ingresa el correo',
-        'email.email' => 'Ingresa un correo valido',
+        'email.email' => 'Ingresa un correo válido',
         'email.unique' => 'El email ya existe en el sistema',
+
         'password.required' => 'Ingresa la contraseña',
-        'password.regex' => 'La contraseña debe tener al menos 3 caracteres, incluyendo al menos una letra y un número.',
         'password.min' => 'La contraseña debe tener al menos 3 caracteres',
-        'phone.unique' => 'Este número de télefono ya ha sido registrado'
+        'password.max' => 'La contraseña no puede tener más de 12 caracteres',
+        'password.regex' => 'La contraseña debe contener al menos una letra y un número',
+
+        'phone.required' => 'Ingresa el teléfono',
+        'phone.digits' => 'El teléfono debe tener exactamente 11 dígitos',
+        'phone.unique' => 'El teléfono ya existe en el sistema',
+        'phone.numeric' => 'El teléfono solo puede contener números',
     ];
 
     private $pagination = 20;

@@ -172,11 +172,11 @@
                                         Disponible: {{ $product->stock }}
                                     </p>
                                     <p class="cart-item-price mb-2 font-weight-bold text-primary">
-                                        ${{ number_format($product->price, 2) }}
+                                        Bs. {{ number_format($product->price * $exchange_rate, 2) }}
                                     </p>
                                     <div class="quantity-controls d-flex align-items-center">
                                         <button class="btn btn-sm btn-outline-danger"
-                                            wire:click="removeFromCart({{ $product->id }})" {{ $quantity <= 1 ? 'disabled' : '' }}>
+                                            wire:click="removeFromCart({{ $product->id }})">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <path d="M5 12h14" />
@@ -200,7 +200,8 @@
                         <h5 class="mb-3">Resumen de Compra</h5>
                         <div class="summary-row total">
                             <span class="font-weight-bold">Total</span>
-                            <span class="font-weight-bold text-primary">${{ number_format($total, 2) }}</span>
+                            <span class="font-weight-bold text-primary">Bs.
+                                {{ number_format($exchange_rate * $total, 2) }}</span>
                         </div>
                     </div>
                 @else
@@ -278,7 +279,7 @@
                                 <div class="mt-auto">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <span class="text-primary font-weight-bold h6 mb-0">
-                                            ${{ number_format($product->price, 2) }}
+                                            Bs. {{ number_format($product->price * $exchange_rate, 2) }}
                                         </span>
                                     </div>
                                     <small class="text-muted d-block">
