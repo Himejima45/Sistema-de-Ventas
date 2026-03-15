@@ -32,45 +32,46 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+        $this->middleware("guest")->except("logout");
     }
 
     public function login(Request $request)
     {
         $this->validateLogin($request);
 
-        $user = \App\Models\User::where('email', $request->email)->first();
+        $user = \App\Models\User::where("email", $request->email)->first();
         if (!$user) {
             throw ValidationException::withMessages([
-                'email' => ['Estas credenciales no coinciden con nuestros registros.'],
+                "email" => [
+                    "Estas credenciales no coinciden con nuestros registros.",
+                ],
             ]);
         }
 
         $user_role = $user->roles[0];
 
-        if ($user && $user_role->reference === 'admin') {
-            $cachedValue = Cache::get('user-ping-' . $user->id);
+        $cachedValue = Cache::get("user-ping-" . $user->id);
 
-            if ($cachedValue) {
-                throw ValidationException::withMessages([
-                    'email' => ['Ya hay una sesión activa como administrador.'],
-                ]);
-            }
+        if ($cachedValue) {
+            throw ValidationException::withMessages([
+                "email" => ["Ya hay una sesión activa."],
+            ]);
         }
 
         if (!$user_role->is_active) {
             throw ValidationException::withMessages([
-                'email' => ['No puede acceder al sistema, su rol se encuentra desactivado.'],
+                "email" => [
+                    "No puede acceder al sistema, su rol se encuentra desactivado.",
+                ],
             ]);
         }
 
         if ($this->attemptLogin($request)) {
-            $user->update(['session_id' => session()->getId()]);
-            Cache::put('user-ping-' . $user->id, now(), 600);
+            $user->update(["session_id" => session()->getId()]);
+            Cache::put("user-ping-" . $user->id, now(), 600);
 
             return $this->sendLoginResponse($request);
         }
-
 
         return $this->sendFailedLoginResponse($request);
     }
@@ -79,25 +80,24 @@ class LoginController extends Controller
     {
         $user = Auth::user();
         if ($user) {
-            Cache::forget('user-ping-' . $user->id);
-            $user->update(['session_id' => null]);
+            Cache::forget("user-ping-" . $user->id);
+            $user->update(["session_id" => null]);
         }
 
         $this->guard()->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect("/");
     }
 
     protected function authenticated(Request $request, $user)
     {
         $role = $user->roles()->first();
-        if ($role && $role->reference === 'client') {
-            return redirect('/catalog');
-
+        if ($role && $role->reference === "client") {
+            return redirect("/catalog");
         } else {
-            return redirect('/home');
+            return redirect("/home");
         }
     }
 }
