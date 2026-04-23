@@ -28,8 +28,8 @@ class ProductsController extends Component
             'unique:products,name'
         ],
         'barcode' => ['required', 'numeric', 'digits_between:3,20', 'unique:products,barcode'],
-        'cost' => ['required', 'min:1', 'max:10000', 'numeric'],
-        'price' => ['required', 'min:1', 'max:10000', 'numeric'],
+        'cost' => ['required', 'min:0.1', 'max:10000', 'numeric'],
+        'price' => ['required', 'min:0.1', 'max:10000', 'numeric'],
         'stock' => ['required', 'min:0', 'max:100000', 'numeric'],
         'warranty' => ['required', 'min:1', 'max:100', 'numeric'],
         'min_stock' => ['required', 'min:1', 'max:100', 'numeric'],
